@@ -43,7 +43,6 @@ class ClassParser {
     }
 
     private fun extractField(field: Field, value: TypeField, clazz: Class<*>): FieldView {
-        val annotation = field.annotations.find { it is Schema } as? Schema
         var addInfo: Any? = null
         when (value) {
             TypeField.PRIMITIVE -> addInfo = null
@@ -57,9 +56,9 @@ class ClassParser {
         return FieldView(
             name = field.name,
             type = field.type.simpleName,
-            description = annotation?.description,
+            description = extractAnnotationsScheme(clazz, field.name)?.description,
             example = extractAnnotationsScheme(clazz, field.name)?.example,
-            required = annotation?.required,
+            required = extractAnnotationsScheme(clazz, field.name)?.required,
             typeField = value,
             addInfo = addInfo
         )

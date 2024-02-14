@@ -26,14 +26,6 @@ class ModelDataTest {
         }
     }
 
-    @Test
-    fun test2() {
-        val fields = Film::class.constructors.toList()[0].parameters
-        for (f in fields) {
-            println(f)
-        }
-    }
-
 
     @Test
     fun test3() {
