@@ -9,7 +9,6 @@ interface DocumentViewGenerator {
 
 }
 
-
 enum class DocumentViewType {
     HTML, MARKDOWN
 }
@@ -20,5 +19,5 @@ data class DocumentationSources(
 
 data class DocumentationEndpoint(
     val endpoint: ApplicationEndpoint,
-    val view: MethodView?,
+    val view: List<MethodView>?,
 )

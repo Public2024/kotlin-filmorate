@@ -19,10 +19,10 @@ import javax.validation.constraints.*
 @Schema(description = "Информация о фильме")
 data class Film(
     //TODO: нужен тест что работает без  field: (надо посикать аннотации не только в полях но и в конструкторах)
-    @field:Schema(description = "Идентификатор фильма", required = false)
+    @Schema(description = "Идентификатор фильма", required = false)
     //UUII добавить
     var id: Int,
-    @field:Schema(description = "Наименование фильма", example = "Пирожок")
+    @Schema(description = "Наименование фильма", example = "Пирожок")
     val name: String,
     @field:Schema(description = "Дата релиза фильма")
     val releaseDate: LocalDate,
