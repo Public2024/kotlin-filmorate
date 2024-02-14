@@ -1,11 +1,9 @@
 package com.example.javafilmoratekotlin.model
 
 import io.swagger.v3.oas.annotations.media.Schema
-import nonapi.io.github.classgraph.json.Id
 import java.time.LocalDate
 import java.util.*
 import javax.validation.constraints.*
-
 
 /**
  *
@@ -31,14 +29,23 @@ data class Film(
     @field:Schema(description = "Продолжительность фильма", required = false)
     val duration: Int?,
     @field:Schema(description = "Тэги", required = true)
-    val tags: Collection<FilmTag>,
+    val tags: FilmTag,
     @field:Schema(description = "Пользователи", required = false)
     val users: Collection<User>,
+    @field:Schema(description = "Жанр", required = false)
+    val genre: Genre
 )
 
 enum class FilmTag {
-    @Schema(description = "18+")
+    @field:Schema(description = "18+")
     GORE,
     @Schema(description = "comedy")
-    COMEDY
+    COMEDY,
+    TRAGEDY
+
 }
+@Schema(description = "Информация о фильме")
+data class Genre(
+    val id: Int,
+    val name: String
+)

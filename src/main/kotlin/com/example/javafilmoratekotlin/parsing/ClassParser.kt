@@ -1,145 +1,163 @@
 package com.example.javafilmoratekotlin.parsing
 
-import io.swagger.v3.oas.annotations.Operation
+import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import java.lang.reflect.Constructor
 import java.lang.reflect.Field
-import kotlin.reflect.KClass
-import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty1
-import kotlin.reflect.KType
-import kotlin.reflect.full.declaredMemberFunctions
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.findAnnotations
-import kotlin.reflect.full.valueParameters
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 @Component
 class ClassParser {
-    @Suppress("UNCHECKED_CAST")
-    fun <R> readInstanceProperty(instance: Any, propertyName: String): R {
-        val property = instance::class.declaredMemberProperties
-            .first { it.name == propertyName } as KProperty1<Any, *>
-        return property.get(instance) as R
-    }
 
-    fun extractData(clazz: KClass<*>): ObjectViewClass {
-        return ObjectViewClass(
+    val typeSeparator = TypeSeparator()
+
+
+    fun extractClassInfo(clazz: Class<*>): ClassView {
+
+        val (primitiveFields, objectFields) = clazz.declaredFields.partition { typeSeparator.getPrimitiveTypes(it) }
+
+        val (enumObject, other) = objectFields.partition { it.type.isEnum }
+
+        val (collectionAll, unique) = other.partition { typeSeparator.getCollectionTypes(it) }
+
+        val (collectionPrimitive, collectionUnique) = collectionAll.partition { getPrimitiveCollection(it) }
+
+        return ClassView(
             simpleName = clazz.simpleName.toString(),
-            pkg = clazz.java.packageName,
-            primitiveConstructor = clazz.java.constructors,
-            nestedFields = clazz.java.declaredFields,
+            pkg = clazz.packageName,
+            fieldNamesSorted = clazz.declaredFields.map { it.name },
+            primitives = primitiveFields.map { extractPrimitiveField(it) },
+            enum = enumObject.map { extractEnumField(it) },
+            unique = unique.map { extractClassInfo(it.type) },
+            collectionPrimitive = collectionPrimitive.map { extractPrimitiveCollectionField(it) },
+            collectionUnique = collectionUnique.map {extractUniqueCollectionField(it)}
         )
     }
 
-    fun extractDataAnnotationClass(clazz: KClass<*>): ObjectViewAnnotationClass {
-        return ObjectViewAnnotationClass(
-            description = clazz.findAnnotations(Schema::class)[0].description
-        )
-
-    }
-
-    fun extractDataFiled(clazz: Class<*>, number: Int): ObjectViewField {
-        val fields = clazz.declaredFields
-        return ObjectViewField(
-            name = fields[number].name,
-            type = fields[number].type.toString(),
-            description = fields[number].getAnnotation(Schema::class.java).description,
-            example = "",
-//            example = clazz.getDeclaredField(fields[number].name).let { field ->
-//                field.isAccessible = true
-//                return@let field.get(this)
-//            },
-            nullable = fields[number].getAnnotation(Schema::class.java).nullable
+    private fun extractPrimitiveField(field: Field): FieldViewPrimitive {
+        val annotation = field.annotations.find { it is Schema } as? Schema
+        return FieldViewPrimitive(
+            name = field.name,
+            type = field.type.simpleName,
+            description = annotation?.description,
+            example = annotation?.example,
+            required = annotation?.required
         )
     }
 
-    fun extractDataMethod(clazz: KClass<*>, name: String): ObjectViewMethod {
-        return ObjectViewMethod(
-            name = clazz.declaredMemberFunctions.find { it.name == name }?.name,
-            inputParameters = clazz.declaredMemberFunctions.find { it.name == name }?.valueParameters,
-            outputParameter = clazz.declaredMemberFunctions.find { it.name == name }?.returnType,
+    private fun extractEnumField(field: Field): FieldViewEnum {
+        val annotation = field.annotations.find { it is Schema } as? Schema
+        return FieldViewEnum(
+            name = field.name,
+            type = field.type.simpleName,
+            values = extractClassEnum(field.type),
+            description = annotation?.description,
+            example = annotation?.example,
+            required = annotation?.required
         )
     }
 
-    fun extractDataAnnotationPostMethod(
-        clazz: KClass<*>,
-        name: String,
-        post: Class<PostMapping>
-    ): ObjectViewCRUDAnnotation {
-        return ObjectViewCRUDAnnotation(
-            annotation = clazz.java.declaredMethods.find { it.name == name }?.getAnnotation(post),
-            path = clazz.java.declaredMethods.find { it.name == "createFilm" }
-                ?.getAnnotation(post)?.path?.toList()
+    private fun extractPrimitiveCollectionField(field: Field): FieldViewPrimitiveCollection {
+        val annotation = field.annotations.find { it is Schema } as? Schema
+        return FieldViewPrimitiveCollection(
+            name = field.name,
+            type = field.type,
+            objectCollection = field.genericType,
+            description = annotation?.description,
+            example = annotation?.example,
+            required = annotation?.required
         )
     }
 
-    fun extractDataAnnotationGetMethod(
-        clazz: KClass<*>,
-        name: String,
-        get: Class<GetMapping>
-    ): ObjectViewCRUDAnnotation {
-        return ObjectViewCRUDAnnotation(
-            annotation = clazz.java.declaredMethods.find { it.name == name }?.getAnnotation(get),
-            path = clazz.java.declaredMethods.find { it.name == "createFilm" }
-                ?.getAnnotation(get)?.path?.toList()
+    private fun extractUniqueCollectionField(field: Field): FieldViewUniqueCollection {
+        val annotation = field.annotations.find { it is Schema } as? Schema
+        val clazz = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        return FieldViewUniqueCollection(
+            name = field.name,
+            type = field.type,
+            objectCollection = extractClassInfo(clazz),
+            description = annotation?.description,
+            example = annotation?.example,
+            required = annotation?.required
         )
     }
 
-    fun extractDataAnnotationPutMethod(
-        clazz: KClass<*>,
-        name: String,
-        put: Class<PutMapping>
-    ): ObjectViewCRUDAnnotation {
-        return ObjectViewCRUDAnnotation(
-            annotation = clazz.java.declaredMethods.find { it.name == name }?.getAnnotation(put),
-            path = clazz.java.declaredMethods.find { it.name == "createFilm" }
-                ?.getAnnotation(put)?.path?.toList()
-        )
-    }
-
-    fun extractDataAnnotationMethod(clazz: KClass<*>, name: String): ObjectViewAnnotationMethod {
-        return ObjectViewAnnotationMethod(
-            description = clazz.java.declaredMethods.find { it.name == name }
-                ?.getAnnotation(Operation::class.java)?.summary,
-
+    private fun extractClassEnum(clazz: Class<*>): MutableList<ClassEnumView> {
+        val enum: MutableList<ClassEnumView> = mutableListOf()
+        val list = clazz.declaredFields
+        for (l in list) {
+            enum.add(
+                ClassEnumView(
+                    value = l.name,
+                    description = (l.annotations.find { it is Schema } as? Schema)?.description
+                )
             )
+        }
+        return enum
     }
+
+    private fun getPrimitiveCollection(field: Field): Boolean {
+        val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        return typeSeparator.getPrimitiveTypesClass(getObjectCollection)
+    }
+
+
+    //TODO: посмотреть у Сережи и определять простой объект типа Inststant или сложный класс
+    fun Field.isPrimitive() = true
+
 }
 
-data class ObjectViewClass(
+//TODO: оличать класс от List<класс> у сережи тоже отличает надо списапать
+data class ClassView(
     val simpleName: String,
     val pkg: String,
-    val primitiveConstructor: Array<Constructor<*>>,
-    val nestedFields: Array<Field>
+    val fieldNamesSorted: List<String>,
+
+    //TODO: ENUM d обжекстс или отдлельно?
+    val primitives: List<FieldViewPrimitive>?,
+    val enum: List<FieldViewEnum>?,
+    val unique: List<ClassView>,
+    val collectionPrimitive: List<FieldViewPrimitiveCollection>,
+    val collectionUnique: List<FieldViewUniqueCollection>,
 )
 
-data class ObjectViewAnnotationClass(
-    val description: String
+data class ClassEnumView(
+    val value: String,
+    val description: String?
 )
 
-data class ObjectViewField(
+data class FieldViewPrimitive(
     val name: String,
     val type: String,
-    val description: String,
-    val example: String,
-    val nullable: Boolean,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
 )
 
-data class ObjectViewMethod(
-    val name: String?,
-    val inputParameters: List<KParameter>?,
-    val outputParameter: KType?
+data class FieldViewEnum(
+    val name: String,
+    val type: String,
+    val values: MutableList<ClassEnumView>,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
 )
 
-data class ObjectViewCRUDAnnotation(
-    val annotation: Annotation?,
-    val path: List<String>?
+data class FieldViewPrimitiveCollection(
+    val name: String,
+    val type: Class<*>,
+    val objectCollection: Type,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
 )
 
-data class ObjectViewAnnotationMethod(
-    val description: String?
+data class FieldViewUniqueCollection(
+    val name: String,
+    val type: Class<*>,
+    val objectCollection: ClassView,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
 )

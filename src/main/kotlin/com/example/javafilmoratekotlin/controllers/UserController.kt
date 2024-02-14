@@ -23,7 +23,7 @@ class UserController {
      * Функция получения всех пользователей
      */
     @GetMapping
-    @Operation(summary = "Показать всех пользователей")
+    @Operation(description = "Показать всех пользователей")
     fun returnAllUsers(): ArrayList<User> {
         return ArrayList(users.values)
     }
