@@ -24,7 +24,7 @@ class FilmController {
     /**
      * Функция получения всех фильмов
      */
-    @GetMapping
+    @GetMapping("/all")
     @Operation(summary = "Показать все фильмы")
     fun returnAllFilms(): ArrayList<Film> {
         return ArrayList(films.values)

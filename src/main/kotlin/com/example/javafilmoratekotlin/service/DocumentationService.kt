@@ -14,11 +14,11 @@ class DocumentationService(
     private val generators: List<DocumentViewGenerator>,
 ) {
 
-    fun buildDocumentation(): Map<DocumentViewType, String> {
-        val endpoints = endpointsFinder.findAllEndpoints()
-        val documentedEndpoints = endpoints.map { DocumentationEndpoint(it, methodParser.extractClassInfo(it.method)) }
-
-       return generators.associate { it.type to it.generate(DocumentationSources(documentedEndpoints)) }
-    }
+//    fun buildDocumentation(): Map<DocumentViewType, String> {
+//        val endpoints = endpointsFinder.findAllEndpoints()
+//        val documentedEndpoints = endpoints.map { DocumentationEndpoint(it, methodParser.extractClassInfo(it.method)) }
+//
+//       return generators.associate { it.type to it.generate(DocumentationSources(documentedEndpoints)) }
+//    }
 
 }

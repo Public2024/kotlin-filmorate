@@ -25,8 +25,8 @@ fun main(args: Array<String>) {
     val module: String = "com.example"
     val reflections = Reflections(module)
 
-    val dataClasses = reflections.getTypesAnnotatedWith(Schema::class.java)
-    val controllerClass = reflections.getTypesAnnotatedWith(RestController::class.java)
+//    val dataClasses = reflections.getTypesAnnotatedWith(Schema::class.java)
+//    val controllerClass = reflections.getTypesAnnotatedWith(RestController::class.java)
 //
 //    println(ModelParsing().getConstructor(dataClasses))
 //    println(ControllerParsing().getMethod(controllerClass))

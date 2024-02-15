@@ -30,8 +30,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2")
 	// https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
-	implementation("org.thymeleaf:thymeleaf:3.0.15.RELEASE")
-	implementation("org.jeasy:easy-random-core:5.0.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.reflections:reflections:0.10.2")
 }

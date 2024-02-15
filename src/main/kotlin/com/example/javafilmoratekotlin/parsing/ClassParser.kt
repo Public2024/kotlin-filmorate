@@ -1,74 +1,91 @@
 package com.example.javafilmoratekotlin.parsing
 
-import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import kotlin.reflect.full.findAnnotations
 
 @Component
-class ClassParser {
+class ClassParser() {
 
     val typeSeparator = TypeSeparator()
+//    private val methodParser = MethodParser(ClassParser())
 
     fun extractClassInfo(clazz: Class<*>): ClassView {
+        val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
         return ClassView(
             simpleName = clazz.simpleName.toString(),
             pkg = clazz.packageName,
             fieldNamesSorted = clazz.declaredFields.map { it.name },
             fields = separateField(clazz),
-            description = "schemaAnnotation"
+            description = schemaAnnotation?.description
         )
     }
 
-    private fun separateField(clazz: Class<*>): List<FieldView> {
+    private fun separateField(clazz: Class<*>): MutableMap<String, FieldView> {
 
-        val fields = mutableListOf<FieldView>()
+        val fields = mutableMapOf<String, FieldView>()
 
         val (primitiveFields, objectFields) = clazz.declaredFields.partition { typeSeparator.getPrimitiveTypes(it) }
         val (enumFields, other) = objectFields.partition { it.type.isEnum }
         val (collectionAll, unique) = other.partition { typeSeparator.getCollectionTypes(it) }
         val (collectionPrimitive, collectionUnique) = collectionAll.partition { getPrimitiveCollection(it) }
 
-        primitiveFields.forEach { p -> fields.add(extractField(p, TypeField.PRIMITIVE, clazz)) }
-        enumFields.forEach { p -> fields.add(extractField(p, TypeField.ENUM, clazz)) }
-        unique.forEach { p -> fields.add(extractField(p, TypeField.UNIQUE, clazz)) }
-        collectionPrimitive.forEach { p -> fields.add(extractField(p, TypeField.COLLECTION_PRIMITIVE, clazz)) }
-        collectionUnique.forEach { p -> fields.add(extractField(p, TypeField.COLLECTION_UNIQUE, clazz)) }
+        primitiveFields.forEach { p -> fields[p.name] = extractField(p, TypeField.PRIMITIVE) }
+        enumFields.forEach { p -> fields[p.name] = extractField(p, TypeField.ENUM) }
+        unique.forEach { p -> fields[p.name] = extractField(p, TypeField.UNIQUE) }
+        collectionPrimitive.forEach { p -> fields[p.name] = extractField(p, TypeField.COLLECTION_PRIMITIVE) }
+        collectionUnique.forEach { p -> fields[p.name] = extractField(p, TypeField.COLLECTION_UNIQUE) }
 
         return fields
     }
 
-    private fun extractField(field: Field, value: TypeField, clazz: Class<*>): FieldView {
-        var addInfo: Any? = null
+    private fun extractField(field: Field, value: TypeField): FieldView {
+        var classOfEnum: List<ClassEnumView>? = null
+        var classOfUnique: ClassView? = null
+        var classOfPrimitiveCollection: Type? = null
+        var classOfUniqueCollection: ClassView? = null
         when (value) {
-            TypeField.PRIMITIVE -> addInfo = null
-            TypeField.ENUM -> addInfo = extractClassEnum(field.type)
-            TypeField.UNIQUE -> addInfo = extractClassInfo(field.type)
-            TypeField.COLLECTION_PRIMITIVE -> addInfo = "Type Collection " + field.genericType
+            TypeField.PRIMITIVE -> classOfEnum = null
+            TypeField.ENUM -> classOfEnum = extractClassEnum(field.type)
+            TypeField.UNIQUE -> classOfUnique = extractClassInfo(field.type)
+            TypeField.COLLECTION_PRIMITIVE -> classOfPrimitiveCollection = field.genericType
             TypeField.COLLECTION_UNIQUE ->
-                addInfo =
+                classOfUniqueCollection =
                     extractClassInfo((field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>)
         }
         return FieldView(
             name = field.name,
             type = field.type.simpleName,
-            description = extractAnnotationsScheme(clazz, field.name)?.description,
-            example = extractAnnotationsScheme(clazz, field.name)?.example,
-            required = extractAnnotationsScheme(clazz, field.name)?.required,
+            description = extractAnnotationsScheme(field)?.description,
+            example = extractAnnotationsScheme(field)?.example,
+            required = extractAnnotationsScheme(field)?.required,
             typeField = value,
-            addInfo = addInfo
+            classOfEnum = classOfEnum,
+            classOfUnique = classOfUnique,
+            classOfPrimitiveCollection = classOfPrimitiveCollection,
+            classOfUniqueCollection = classOfUniqueCollection
         )
     }
 
-    private fun extractAnnotationsScheme(clazz: Class<*>, name: String): Schema? {
-        val field = clazz.declaredFields.find { it.name.equals(name) }?.annotations?.find { it is Schema } as? Schema
-        val fieldConstruct =
-            clazz.constructors[0].parameters.find { it.name.equals(name) }?.annotations?.find { it is Schema } as? Schema
-        return field ?: fieldConstruct
+    fun extractAnnotationsScheme(field: Field?): Schema? {
+        var annotationSchema = field?.annotations?.find { it is Schema } as? Schema
+        if (annotationSchema == null) {
+            val valueConstructor = field?.declaringClass?.constructors
+            var n = 0
+            if (valueConstructor != null) while (n < valueConstructor.size) {
+                val value = field.declaringClass?.constructors?.get(n)?.parameters?.find { it.name.equals(field.name) }
+                val schema = value?.annotations?.find { it is Schema } as? Schema
+                if (schema != null) {
+                    annotationSchema = schema
+                    break
+                }
+                n += 1
+            }
+        }
+        return annotationSchema
     }
 
     private fun extractClassEnum(clazz: Class<*>): MutableList<ClassEnumView> {
@@ -90,9 +107,8 @@ class ClassParser {
         return typeSeparator.getPrimitiveTypesClass(getObjectCollection)
     }
 
-
     //TODO: посмотреть у Сережи и определять простой объект типа Inststant или сложный класс
-    fun Field.isPrimitive() = true
+//    fun Field.isPrimitive() = true
 
 }
 
@@ -101,9 +117,8 @@ data class ClassView(
     val simpleName: String,
     val pkg: String,
     val fieldNamesSorted: List<String>,
-
     //TODO: ENUM d обжекстс или отдлельно?
-    val fields: List<FieldView>?,
+    val fields: MutableMap<String, FieldView>,
     val description: String?
 )
 
@@ -119,7 +134,10 @@ data class FieldView(
     val example: String?,
     val required: Boolean?,
     val typeField: TypeField,
-    val addInfo: Any?
+    val classOfEnum: List<ClassEnumView>?,
+    val classOfUnique: ClassView?,
+    val classOfPrimitiveCollection: Type?,
+    val classOfUniqueCollection: ClassView?
 )
 
 enum class TypeField {
