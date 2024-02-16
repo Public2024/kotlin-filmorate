@@ -11,7 +11,6 @@ import java.lang.reflect.Type
 class ClassParser() {
 
     val typeSeparator = TypeSeparator()
-//    private val methodParser = MethodParser(ClassParser())
 
     fun extractClassInfo(clazz: Class<*>): ClassView {
         val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
@@ -108,7 +107,7 @@ class ClassParser() {
     }
 
     //TODO: посмотреть у Сережи и определять простой объект типа Inststant или сложный класс
-//    fun Field.isPrimitive() = true
+    fun Field.isPrimitive() = true
 
 }
 

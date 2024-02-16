@@ -4,10 +4,14 @@ import com.example.javafilmoratekotlin.controllers.FilmController
 import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.model.Genre
 import com.example.javafilmoratekotlin.parsing.ClassParser
+import com.example.javafilmoratekotlin.parsing.InputParameter
+import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.time.LocalDate
+
 
 
 class ModelDataTest {

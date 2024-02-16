@@ -61,6 +61,10 @@ class TypeSeparator {
         return primitives.containsKey(clazz)
     }
 
+    fun getCollectionTypesClass(clazz: Class<*>): Boolean{
+        return primitives.containsKey(clazz)
+    }
+
     fun getPrimitiveTypes(field: Field): Boolean {
         return primitives.containsKey(field.type)
     }
@@ -68,4 +72,6 @@ class TypeSeparator {
     fun getCollectionTypes(field: Field): Boolean {
         return collections.containsKey(field.type)
     }
+
+
 }
