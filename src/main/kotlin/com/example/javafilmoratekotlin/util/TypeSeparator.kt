@@ -1,5 +1,6 @@
 package com.example.javafilmoratekotlin.util
 
+import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 import java.math.BigDecimal
@@ -7,7 +8,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-
+import kotlin.collections.HashMap
+@Component
 class TypeSeparator {
     private val primitives = mapOf<Class<*>, Boolean>(
         Int::class.javaObjectType to true,
@@ -48,6 +50,9 @@ class TypeSeparator {
         Set::class.javaObjectType to true,
 
         Map::class.javaObjectType to true,
+        HashMap::class.javaObjectType to true,
+
+
 
         Collection::class.java to true,
         List::class.java to true,
@@ -55,6 +60,7 @@ class TypeSeparator {
         Set::class.java to true,
 
         Map::class.java to true,
+        HashMap::class.java to true
     )
 
     fun getPrimitiveTypesClass(clazz: Class<*>): Boolean{
@@ -73,5 +79,13 @@ class TypeSeparator {
         return collections.containsKey(field.type)
     }
 
+    fun isCollection(clazz: Class<*>): Boolean {
+        return collections[clazz] ?: collections[clazz.superclass] ?: false
+    }
+
+    fun isPresent(clazz: Class<*>): Boolean {
+        return primitives[clazz] ?: primitives[clazz.superclass]
+        ?: false
+    }
 
 }

@@ -19,6 +19,7 @@ class ClassParser() {
             pkg = clazz.packageName,
             fieldNamesSorted = clazz.declaredFields.map { it.name },
             fields = separateField(clazz),
+            methods = MethodParser(this).extractClassInfo(clazz),
             description = schemaAnnotation?.description
         )
     }
@@ -27,7 +28,8 @@ class ClassParser() {
 
         val fields = mutableMapOf<String, FieldView>()
 
-        val (primitiveFields, objectFields) = clazz.declaredFields.partition { typeSeparator.getPrimitiveTypes(it) }
+        val (primitiveFields, objectFields) = clazz.declaredFields.filter { extractAnnotationsScheme(it)!=null }
+            .partition { typeSeparator.getPrimitiveTypes(it) }
         val (enumFields, other) = objectFields.partition { it.type.isEnum }
         val (collectionAll, unique) = other.partition { typeSeparator.getCollectionTypes(it) }
         val (collectionPrimitive, collectionUnique) = collectionAll.partition { getPrimitiveCollection(it) }
@@ -118,6 +120,7 @@ data class ClassView(
     val fieldNamesSorted: List<String>,
     //TODO: ENUM d обжекстс или отдлельно?
     val fields: MutableMap<String, FieldView>,
+    val methods: List<MethodView>?,
     val description: String?
 )
 
@@ -146,3 +149,4 @@ enum class TypeField {
     COLLECTION_PRIMITIVE,
     COLLECTION_UNIQUE
 }
+

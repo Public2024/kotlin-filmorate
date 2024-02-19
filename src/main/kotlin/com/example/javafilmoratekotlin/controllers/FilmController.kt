@@ -35,7 +35,7 @@ class FilmController {
      */
     @PostMapping
     @Operation(summary = "Добавить фильм")
-    fun createFilm(@Parameter(required = true) @Valid  @RequestBody film: Film, id: Int, users: List<User>, values: List<Int>): Film {
+    fun createFilm(@Parameter(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
         validateFilm(film)
         film.id = generateId()
         films[film.id] = film
