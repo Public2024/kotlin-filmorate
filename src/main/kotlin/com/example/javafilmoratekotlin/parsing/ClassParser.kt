@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import kotlin.reflect.full.declaredMemberFunctions
 
 @Component
 class ClassParser() {
@@ -14,13 +15,16 @@ class ClassParser() {
 
     fun extractClassInfo(clazz: Class<*>): ClassView {
         val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
+        val methods = clazz.kotlin.declaredMemberFunctions.toList()
         return ClassView(
             simpleName = clazz.simpleName.toString(),
             pkg = clazz.packageName,
-            fieldNamesSorted = clazz.declaredFields.map { it.name },
+            description = schemaAnnotation?.description,
+            fieldNamesSorted = clazz.declaredFields.filter { extractAnnotationsScheme(it)!=null }.map { it.name }.sorted(),
+            methodNameSorted = MethodParser(this).filterRequestMappingAnnotation(methods).map{it.name}.sorted(),
             fields = separateField(clazz),
             methods = MethodParser(this).extractClassInfo(clazz),
-            description = schemaAnnotation?.description
+
         )
     }
 
@@ -117,11 +121,13 @@ class ClassParser() {
 data class ClassView(
     val simpleName: String,
     val pkg: String,
+    val description: String?,
     val fieldNamesSorted: List<String>,
     //TODO: ENUM d обжекстс или отдлельно?
+    val methodNameSorted: List<String>,
     val fields: MutableMap<String, FieldView>,
-    val methods: List<MethodView>?,
-    val description: String?
+    val methods: List<MethodView>?
+
 )
 
 data class ClassEnumView(

@@ -35,7 +35,7 @@ class FilmController {
      */
     @PostMapping
     @Operation(summary = "Добавить фильм")
-    fun createFilm(@Parameter(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
+    fun createFilm(@RequestParam(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
         validateFilm(film)
         film.id = generateId()
         films[film.id] = film
@@ -47,7 +47,7 @@ class FilmController {
      */
     @PutMapping
     @Operation(summary = "Изменить фильм")
-    fun changeFilm(@Parameter(required = true) @Valid @RequestBody film: Film): Film {
+    fun changeFilm(@RequestParam(required = true) @Valid @RequestBody film: Film): Film {
         validateFilm(film)
         if (films.containsKey(film.id))
             films.replace(film.id, film)
