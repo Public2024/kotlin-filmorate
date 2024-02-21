@@ -31,8 +31,8 @@ class MethodParser(private val classParser: ClassParser) {
         if (k.annotations.filterIsInstance<GetMapping>() != emptyList<Annotation>()) {
             return (k.annotations.find { it is GetMapping } as GetMapping).value
         }
-        if (k.annotations.filterIsInstance<GetMapping>() != emptyList<Annotation>()) {
-            return (k.annotations.find { it is GetMapping } as GetMapping).value
+        if (k.annotations.filterIsInstance<PostMapping>() != emptyList<Annotation>()) {
+            return (k.annotations.find { it is PostMapping } as PostMapping).value
         }
         if (k.annotations.filterIsInstance<PutMapping>() != emptyList<Annotation>()) {
             return (k.annotations.find { it is PutMapping } as PutMapping).value

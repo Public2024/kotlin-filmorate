@@ -75,7 +75,7 @@ class ClassParser() {
         )
     }
 
-    fun extractAnnotationsScheme(field: Field?): Schema? {
+    private fun extractAnnotationsScheme(field: Field?): Schema? {
         var annotationSchema = field?.annotations?.find { it is Schema } as? Schema
         if (annotationSchema == null) {
             val valueConstructor = field?.declaringClass?.constructors
