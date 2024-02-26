@@ -26,7 +26,6 @@ data class ApplicationEndpoint(
     val method: Method,
 )
 
-
 enum class ApplicationEndpointType {
     REST
 }

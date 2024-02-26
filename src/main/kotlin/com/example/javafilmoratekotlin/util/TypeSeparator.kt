@@ -48,15 +48,16 @@ class TypeSeparator {
         List::class.javaObjectType to true,
         Array::class.javaObjectType to true,
         Set::class.javaObjectType to true,
+        ArrayList::class.java to true,
 
         Map::class.javaObjectType to true,
         HashMap::class.javaObjectType to true,
 
 
-
         Collection::class.java to true,
         List::class.java to true,
         Array::class.java to true,
+        ArrayList::class.java to true,
         Set::class.java to true,
 
         Map::class.java to true,

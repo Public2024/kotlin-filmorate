@@ -3,10 +3,14 @@ package com.example.javafilmoratekotlin.parsing
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.lang.reflect.Type
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
 import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.valueParameters
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.jvmErasure
 
 @Component
 class MethodParser(private val classParser: ClassParser) {
@@ -42,21 +46,28 @@ class MethodParser(private val classParser: ClassParser) {
         } else return arrayOf("")
     }
 
-    private fun extractMethodInfo(kFunction: KFunction<*>, clazzParser: ClassParser): MethodView {
+    private fun extractMethodInfo(function: KFunction<*>, clazzParser: ClassParser): MethodView {
         var description = ""
         var summary = ""
-        if (kFunction.annotations.filterIsInstance<Operation>() != emptyList<Annotation>()) {
-            val operation = kFunction.annotations.find { it is Operation } as Operation
+        if (function.annotations.filterIsInstance<Operation>() != emptyList<Annotation>()) {
+            val operation = function.annotations.find { it is Operation } as Operation
             description = operation.description
             summary = operation.summary
         }
         return MethodView(
-            name = kFunction.name,
-            path = getPath(kFunction),
+            name = function.name,
+            path = getPath(function),
             description = description,
             summary = summary,
-            parameters = getAllParameters(kFunction.parameters).filter { it.name != null },
-            result =  parseUniqueParameter(kFunction.returnType)
+            parameters = getAllParameters(function.valueParameters).filter { it.name != null },
+            result = getResult(function.returnType)
+        )
+    }
+
+    private fun getResult(result: KType): OutputResult {
+        return OutputResult(
+            type = result.javaType,
+            uniqueParameter = parseUniqueParameter(result)
         )
     }
 
@@ -75,20 +86,24 @@ class MethodParser(private val classParser: ClassParser) {
         }
     }
 
-    private fun parseUniqueParameter(type: KType): ClassView? {
+    fun parseUniqueParameter(type: KType): ClassView? {
         var aClass: ClassView? = null
-        if (classParser.typeSeparator.isPresent(type.javaClass)) {
+        if (classParser.typeSeparator.isPresent(type.javaClass))
             aClass = null
-        } else if (classParser.typeSeparator.isCollection(type.javaClass)){
-            if(!classParser.typeSeparator.isPresent(type.arguments.javaClass))
-                aClass = classParser.extractClassInfo(type.arguments.javaClass)
+        if (type.jvmErasure.javaObjectType.let { classParser.typeSeparator.isCollection(it) }) {
+            if (type.arguments.first().type?.jvmErasure?.java?.let { classParser.typeSeparator.isPresent(it) } != true)
+                aClass = type.arguments.first().type?.jvmErasure?.java?.let { classParser.extractClassInfo(it) }
         } else {
-            aClass = classParser.extractClassInfo(type.javaClass)
+            aClass = classParser.extractClassInfo(type.jvmErasure.java)
         }
         return aClass
     }
-
 }
+
+data class OutputResult(
+    val type: Type?,
+    val uniqueParameter: ClassView?
+)
 
 data class InputParameter(
     val name: String?,
@@ -104,5 +119,5 @@ data class MethodView(
     val description: String?,
     val summary: String?,
     val parameters: List<InputParameter>,
-    val result: ClassView?
+    val result: OutputResult
 )

@@ -20,29 +20,29 @@ class ClassParser() {
             simpleName = clazz.simpleName.toString(),
             pkg = clazz.packageName,
             description = schemaAnnotation?.description,
-            fieldNamesSorted = clazz.declaredFields.filter { extractAnnotationsScheme(it)!=null }.map { it.name }.sorted(),
-            methodNameSorted = MethodParser(this).filterRequestMappingAnnotation(methods).map{it.name}.sorted(),
+            fieldNamesSorted = clazz.declaredFields.filter { extractAnnotationsScheme(it) != null }.map { it.name }
+                .sorted(),
+            methodNameSorted = MethodParser(this).filterRequestMappingAnnotation(methods).map { it.name }.sorted(),
             fields = separateField(clazz),
             methods = MethodParser(this).extractClassInfo(clazz),
-
-        )
+            )
     }
 
-    private fun separateField(clazz: Class<*>): MutableMap<String, FieldView> {
+    private fun separateField(clazz: Class<*>): List<FieldView> {
 
-        val fields = mutableMapOf<String, FieldView>()
+        val fields = mutableListOf<FieldView>()
 
-        val (primitiveFields, objectFields) = clazz.declaredFields.filter { extractAnnotationsScheme(it)!=null }
+        val (primitiveFields, objectFields) = clazz.declaredFields.filter { extractAnnotationsScheme(it) != null }
             .partition { typeSeparator.getPrimitiveTypes(it) }
         val (enumFields, other) = objectFields.partition { it.type.isEnum }
         val (collectionAll, unique) = other.partition { typeSeparator.getCollectionTypes(it) }
         val (collectionPrimitive, collectionUnique) = collectionAll.partition { getPrimitiveCollection(it) }
 
-        primitiveFields.forEach { p -> fields[p.name] = extractField(p, TypeField.PRIMITIVE) }
-        enumFields.forEach { p -> fields[p.name] = extractField(p, TypeField.ENUM) }
-        unique.forEach { p -> fields[p.name] = extractField(p, TypeField.UNIQUE) }
-        collectionPrimitive.forEach { p -> fields[p.name] = extractField(p, TypeField.COLLECTION_PRIMITIVE) }
-        collectionUnique.forEach { p -> fields[p.name] = extractField(p, TypeField.COLLECTION_UNIQUE) }
+        primitiveFields.forEach { fields.add(extractField(it, TypeField.PRIMITIVE))  }
+        enumFields.forEach { fields.add(extractField(it, TypeField.ENUM))}
+        unique.forEach { fields.add(extractField(it, TypeField.UNIQUE))}
+        collectionPrimitive.forEach {fields.add(extractField(it, TypeField.COLLECTION_PRIMITIVE))  }
+        collectionUnique.forEach {fields.add(extractField(it, TypeField.COLLECTION_UNIQUE))  }
 
         return fields
     }
@@ -54,7 +54,7 @@ class ClassParser() {
         var classOfUniqueCollection: ClassView? = null
         when (value) {
             TypeField.PRIMITIVE -> classOfEnum = null
-            TypeField.ENUM -> classOfEnum = extractClassEnum(field.type)
+            TypeField.ENUM -> classOfEnum = extractClassEnum(field.type).dropLast(1)
             TypeField.UNIQUE -> classOfUnique = extractClassInfo(field.type)
             TypeField.COLLECTION_PRIMITIVE -> classOfPrimitiveCollection = field.genericType
             TypeField.COLLECTION_UNIQUE ->
@@ -125,9 +125,8 @@ data class ClassView(
     val fieldNamesSorted: List<String>,
     //TODO: ENUM d обжекстс или отдлельно?
     val methodNameSorted: List<String>,
-    val fields: MutableMap<String, FieldView>,
+    val fields: List<FieldView>,
     val methods: List<MethodView>?
-
 )
 
 data class ClassEnumView(
