@@ -2,15 +2,15 @@ package com.example.javafilmoratekotlin.util
 
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.HashMap
+
 @Component
 class TypeSeparator {
+    //TODO: тут всё должно быть сетами?
     private val primitives = mapOf<Class<*>, Boolean>(
         Int::class.javaObjectType to true,
         Boolean::class.javaObjectType to true,

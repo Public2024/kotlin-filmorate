@@ -4,13 +4,12 @@ import com.example.javafilmoratekotlin.controllers.FilmController
 import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.model.User
 import com.example.javafilmoratekotlin.parsing.*
+import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
-import java.lang.reflect.Type
-import kotlin.reflect.KType
-import kotlin.reflect.full.declaredMemberFunctions
+import java.time.DayOfWeek
+import java.time.LocalDate
 import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 
@@ -96,10 +95,7 @@ class ControllerClassTest {
         simpleName = "User",
         pkg = "com.example.javafilmoratekotlin.model",
         description = "Информация о пользователе",
-        fieldNamesSorted = listOf("birthday", "email", "id", "login", "name"),
-        methodNameSorted = emptyList(),
         fields = fieldsUser,
-        methods = emptyList()
     )
 
     //TODO enum класс genre
@@ -108,10 +104,7 @@ class ControllerClassTest {
         simpleName = "Genre",
         pkg = "com.example.javafilmoratekotlin.model",
         description = "Информация о фильме",
-        fieldNamesSorted = emptyList(),
-        methodNameSorted = emptyList(),
         fields = mutableListOf(),
-        methods = emptyList()
     )
 
     //TODO film class
@@ -231,9 +224,7 @@ class ControllerClassTest {
         pkg = "com.example.javafilmoratekotlin.model",
         description = "Информация о фильме",
         fieldNamesSorted = listOf("duration", "genre", "id", "name", "releaseDate", "tags", "users"),
-        methodNameSorted = emptyList(),
         fields = fieldsFilm,
-        methods = emptyList()
     )
 
 
@@ -243,7 +234,7 @@ class ControllerClassTest {
         name = "film",
         type = typeOf<com.example.javafilmoratekotlin.model.Film>(),
         required = true,
-        uniqueParameter = film
+        classView = film
     )
 
     private val methodViewChangeFilm = MethodView(
@@ -264,21 +255,21 @@ class ControllerClassTest {
         name = "id",
         type = typeOf<Int>(),
         required = true,
-        uniqueParameter = null
+        classView = null
     )
 
     private val parameterInputCreateFilmForUsers = InputParameter(
         name = "user",
-        type = typeOf<Collection<com.example.javafilmoratekotlin.model.User>>(),
+        type = typeOf<Collection<User>>(),
         required = true,
-        uniqueParameter = user
+        classView = user
     )
 
     private val parameterInputCreateFilmForValues = InputParameter(
         name = "values",
         type = typeOf<List<Int>>(),
         required = true,
-        uniqueParameter = null
+        classView = null
     )
 
     private val methodViewCreateFilm = MethodView(
@@ -325,10 +316,7 @@ class ControllerClassTest {
         simpleName = "FilmController",
         pkg = "com.example.javafilmoratekotlin.controllers",
         description = null,
-        fieldNamesSorted = emptyList(),
-        methodNameSorted = methodNameSortedFilmController.sorted(),
-        fields = mutableListOf<FieldView>(),
-        methods = methodsFilmController,
+        fields = mutableListOf(),
     )
 
     private val actualClassController = parser.extractClassInfo(FilmController::class.java)
@@ -350,15 +338,6 @@ class ControllerClassTest {
 
         AssertionErrors.assertEquals("Pass", actualDescription, expectedDescription)
 
-        val expectedFieldNamesSorted = expectedClassFilmController.fieldNamesSorted
-        val actualFieldNamesSorted = actualClassController.fieldNamesSorted
-
-        AssertionErrors.assertEquals("Pass", actualFieldNamesSorted, expectedFieldNamesSorted)
-
-        val expectedMethodNameSorted = expectedClassFilmController.methodNameSorted
-        val actualMethodNameSorted = actualClassController.methodNameSorted
-
-        AssertionErrors.assertEquals("Pass", actualMethodNameSorted, expectedMethodNameSorted)
 
         val expectedField = expectedClassFilmController.fields
         val actualField = actualClassController.fields
@@ -367,31 +346,7 @@ class ControllerClassTest {
 
     }
 
-    @Test
-    fun test_method_change_film() {
-        val expectedChangeFilm = expectedClassFilmController.methods?.find { it.name == ("changeFilm") }
-        val actualChangeFilm = actualClassController.methods?.find { it.name == ("changeFilm") }
 
-        AssertionErrors.assertEquals("Pass", expectedChangeFilm.toString(), actualChangeFilm.toString())
-    }
-
-    @Test
-    fun test_method_return_all_films() {
-        val expectedReturnAllFilms = expectedClassFilmController.methods?.find { it.name == ("returnAllFilms") }
-        val actualReturnAllFilms = actualClassController.methods?.find { it.name == ("returnAllFilms") }
-
-        AssertionErrors.assertEquals("Pass", expectedReturnAllFilms.toString(), actualReturnAllFilms.toString())
-
-    }
-
-    @Test
-    fun test_method_create_film() {
-        val expectedCreateFilm = expectedClassFilmController.methods?.find { it.name == ("createFilm") }?.result
-        val actualCreateFilm = actualClassController.methods?.find { it.name == ("createFilm") }?.result
-
-        AssertionErrors.assertEquals("Pass", expectedCreateFilm.toString(), actualCreateFilm.toString())
-
-    }
 
     @Test
     fun test_data_class_film() {
@@ -402,8 +357,26 @@ class ControllerClassTest {
 
     @Test
     fun test_data_class_user() {
-        val expectedUser = user
-        val actualUser = parser.extractClassInfo(User::class.java)
+
+        @Schema(description = "Информация о пользователе")
+        data class TestUser(
+            @Schema(description = "Идентификатор пользователя", example = "8")
+            val id: Int,
+            @Schema(description = "Почта пользователя")
+            val favoriteDay: DayOfWeek,
+            @Schema(description = "Дата рождения")
+            val birthday: LocalDate,
+            @Schema(description = "Родители")
+            val parents: List<TestUser>,
+        )
+
+        val expectedUser = ClassView(
+            simpleName = "TestUser",
+            pkg = "com.example.javafilmoratekotlin.model",
+            description = "Информация о пользователе",
+            fields = fieldsUser,
+        )
+        val actualUser = parser.extractClassInfo(TestUser::class.java)
         AssertionErrors.assertEquals("Pass", expectedUser, actualUser)
     }
 

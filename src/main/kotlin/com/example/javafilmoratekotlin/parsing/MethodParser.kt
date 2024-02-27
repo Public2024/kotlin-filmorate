@@ -15,13 +15,16 @@ import kotlin.reflect.jvm.jvmErasure
 @Component
 class MethodParser(private val classParser: ClassParser) {
 
+    //TODO: сюда приходит уже готовый Method и надо его распорсить
     fun extractClassInfo(clazz: Class<*>): List<MethodView>? {
         val methods = clazz.kotlin.declaredMemberFunctions.toList()
-        return filterRequestMappingAnnotation(methods).map { extractMethodInfo(it, classParser) }
+        return filterRequestMappingAnnotation(methods).map { extractMethodInfo(it) }
     }
 
     fun filterRequestMappingAnnotation(request: List<KFunction<*>>): List<KFunction<*>> {
         val items = mutableListOf<KFunction<*>>()
+
+        //TODO: завести сет интересующих аннотайций и делать фильтр и добавить @RequestMapping
         for (r in request) {
             if (r.annotations.filterIsInstance<GetMapping>() != emptyList<Annotation>()) items.add(r)
             if (r.annotations.filterIsInstance<PostMapping>() != emptyList<Annotation>()) items.add(r)
@@ -46,7 +49,7 @@ class MethodParser(private val classParser: ClassParser) {
         } else return arrayOf("")
     }
 
-    private fun extractMethodInfo(function: KFunction<*>, clazzParser: ClassParser): MethodView {
+    private fun extractMethodInfo(function: KFunction<*>): MethodView {
         var description = ""
         var summary = ""
         if (function.annotations.filterIsInstance<Operation>() != emptyList<Annotation>()) {
@@ -77,11 +80,11 @@ class MethodParser(private val classParser: ClassParser) {
             if (it.annotations.filterIsInstance<RequestParam>() != emptyList<Annotation>()) {
                 required = (it.annotations.find { it is RequestParam } as RequestParam).required
             }
-            return@map InputParameter(
+            InputParameter(
                 name = it.name,
                 type = it.type,
                 required = required,
-                uniqueParameter = parseUniqueParameter(it.type)
+                classView = parseUniqueParameter(it.type)
             )
         }
     }
@@ -109,7 +112,7 @@ data class InputParameter(
     val name: String?,
     val type: KType,
     val required: Boolean,
-    val uniqueParameter: ClassView?
+    val classView: ClassView?
 )
 
 data class MethodView(
