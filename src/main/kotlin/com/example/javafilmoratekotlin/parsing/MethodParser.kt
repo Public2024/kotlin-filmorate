@@ -1,45 +1,126 @@
 package com.example.javafilmoratekotlin.parsing
 
-import com.example.javafilmoratekotlin.controllers.FilmController
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.stereotype.Component
-import java.lang.reflect.Method
+import org.springframework.web.bind.annotation.*
+import java.lang.reflect.Type
+import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
+import kotlin.reflect.KType
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.valueParameters
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.jvmErasure
 
 @Component
 class MethodParser(private val classParser: ClassParser) {
 
-    fun extractClassInfo(methods: List<Method>): List<MethodView>? {
-        return methods.map{extractMethodInfo(it, classParser)}
+    //TODO: сюда приходит уже готовый Method и надо его распорсить
+    fun extractClassInfo(clazz: Class<*>): List<MethodView>? {
+        val methods = clazz.kotlin.declaredMemberFunctions.toList()
+        return filterRequestMappingAnnotation(methods).map { extractMethodInfo(it) }
     }
 
-    private fun extractMethodInfo(method: Method, clazzParser: ClassParser): MethodView {
-        val operation = io.swagger.v3.oas.annotations.Operation::class.java
+    fun filterRequestMappingAnnotation(request: List<KFunction<*>>): List<KFunction<*>> {
+        val items = mutableListOf<KFunction<*>>()
+
+        //TODO: завести сет интересующих аннотайций и делать фильтр и добавить @RequestMapping
+        for (r in request) {
+            if (r.annotations.filterIsInstance<GetMapping>() != emptyList<Annotation>()) items.add(r)
+            if (r.annotations.filterIsInstance<PostMapping>() != emptyList<Annotation>()) items.add(r)
+            if (r.annotations.filterIsInstance<PutMapping>() != emptyList<Annotation>()) items.add(r)
+            if (r.annotations.filterIsInstance<DeleteMapping>() != emptyList<Annotation>()) items.add(r)
+        }
+        return items
+    }
+
+    private fun getPath(k: KFunction<*>): Array<String> {
+        if (k.annotations.filterIsInstance<GetMapping>() != emptyList<Annotation>()) {
+            return (k.annotations.find { it is GetMapping } as GetMapping).value
+        }
+        if (k.annotations.filterIsInstance<PostMapping>() != emptyList<Annotation>()) {
+            return (k.annotations.find { it is PostMapping } as PostMapping).value
+        }
+        if (k.annotations.filterIsInstance<PutMapping>() != emptyList<Annotation>()) {
+            return (k.annotations.find { it is PutMapping } as PutMapping).value
+        }
+        if (k.annotations.filterIsInstance<DeleteMapping>() != emptyList<Annotation>()) {
+            return (k.annotations.find { it is DeleteMapping } as DeleteMapping).value
+        } else return arrayOf("")
+    }
+
+    private fun extractMethodInfo(function: KFunction<*>): MethodView {
+        var description = ""
+        var summary = ""
+        if (function.annotations.filterIsInstance<Operation>() != emptyList<Annotation>()) {
+            val operation = function.annotations.find { it is Operation } as Operation
+            description = operation.description
+            summary = operation.summary
+        }
         return MethodView(
-            name = method.name,
-            path = "",
-            description = method.getAnnotation(operation).description,
-            summary = method.getAnnotation(operation).summary,
-            parameters = null,
-            result = null
+            name = function.name,
+            path = getPath(function),
+            description = description,
+            summary = summary,
+            parameters = getAllParameters(function.valueParameters).filter { it.name != null },
+            result = getResult(function.returnType)
         )
     }
 
-//    private fun inputParameters(method: Method): List<ClassView>{
-//        val inputs = method.parameters.toList()
-//        for(i in inputs){
-//
-//        }
-//        classParser.typeSeparator
-//
-//
-//    }
+    private fun getResult(result: KType): OutputResult {
+        return OutputResult(
+            type = result.javaType,
+            uniqueParameter = parseUniqueParameter(result)
+        )
+    }
+
+    private fun getAllParameters(parameter: List<KParameter>): List<InputParameter> {
+        var required = true
+        return parameter.map { it ->
+            if (it.annotations.filterIsInstance<RequestParam>() != emptyList<Annotation>()) {
+                required = (it.annotations.find { it is RequestParam } as RequestParam).required
+            }
+            InputParameter(
+                name = it.name,
+                type = it.type,
+                required = required,
+                classView = parseUniqueParameter(it.type)
+            )
+        }
+    }
+
+    fun parseUniqueParameter(type: KType): ClassView? {
+        var aClass: ClassView? = null
+        if (classParser.typeSeparator.isPresent(type.javaClass))
+            aClass = null
+        if (type.jvmErasure.javaObjectType.let { classParser.typeSeparator.isCollection(it) }) {
+            if (type.arguments.first().type?.jvmErasure?.java?.let { classParser.typeSeparator.isPresent(it) } != true)
+                aClass = type.arguments.first().type?.jvmErasure?.java?.let { classParser.extractClassInfo(it) }
+        } else {
+            aClass = classParser.extractClassInfo(type.jvmErasure.java)
+        }
+        return aClass
+    }
 }
+
+data class OutputResult(
+    val type: Type?,
+    val uniqueParameter: ClassView?
+)
+
+data class InputParameter(
+    val name: String?,
+    val type: KType,
+    val required: Boolean,
+    val classView: ClassView?
+)
 
 data class MethodView(
     val name: String,
     // POST /films
-    val path: String,
+    val path: Array<String>,
     val description: String?,
     val summary: String?,
-    val parameters: List<ClassView>?,
-    val result: ClassView?
+    val parameters: List<InputParameter>,
+    val result: OutputResult
 )
