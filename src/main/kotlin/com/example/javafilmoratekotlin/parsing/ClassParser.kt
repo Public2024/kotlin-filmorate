@@ -23,6 +23,81 @@ class ClassParser() {
      * // TODO: писать в логи, если поле не наллабл, но required = false и наоборот
      * // TODO: в кейсе когда у нас есть поле х, а аннотация @Scheme висит над конструктором с параметром х (в обычно java классе)
      */
+
+    /*Парсинг data класса*/
+    private fun extractClassInfoNew(clazz: Class<*>): ClassViewNew {
+        val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
+
+        /*поля с аннотацией field*/
+        val fields = clazz.declaredFields
+            .map { FieldWithAnnotation(field = it, annotation = extractAnnotationsScheme(it)) }
+            .filter { it.annotation != null }
+
+        /*fields со schema в конструкторе */
+        return ClassViewNew(
+            simpleName = clazz.simpleName.toString(),
+            pkg = clazz.packageName,
+            description = schemaAnnotation?.description,
+            fields = getAllFields(fields),
+        )
+    }
+
+    /*Получение полей data класса*/
+    private fun getAllFields(fields: List<FieldWithAnnotation>): List<FieldViewNew> {
+        val fieldsView = mutableListOf<FieldViewNew>()
+        fields.forEach { fieldsView.add(extractFieldNew(it.field, getTypeField(it.field), it.annotation)) }
+        return fieldsView
+    }
+
+    /*Получение типа поля*/
+    private fun getTypeField(field: Field): TypeField {
+        val typeField: TypeField
+        if (typeSeparator.getPrimitiveTypes(field)) {
+            typeField = TypeField.PRIMITIVE
+        } else if (field.type.isEnum) {
+            typeField = TypeField.ENUM
+        } else if (typeSeparator.getCollectionTypes(field)) {
+            typeField = if (checkingOnPrimitiveCollection(field)) TypeField.COLLECTION_PRIMITIVE
+            else TypeField.COLLECTION_UNIQUE
+        } else {
+            typeField = TypeField.UNIQUE
+        }
+        return typeField
+    }
+
+    /*Парсинг полей*/
+    private fun extractFieldNew(field: Field, value: TypeField, annotation: Schema?): FieldViewNew {
+        var classOfEnum: List<ClassEnumView>? = null
+        var classOfUnique: ClassView? = null
+
+        if (value == TypeField.ENUM) classOfEnum = extractClassEnum(field.type).dropLast(1)
+        if (value == TypeField.UNIQUE) classOfUnique = extractClassInfo(field.type)
+        if (value == TypeField.COLLECTION_UNIQUE) classOfUnique = extractClassUniqueCollection(field)
+
+        return FieldViewNew(
+            name = field.name,
+            type = field.type,
+            description = annotation?.description,
+            example = annotation?.example,
+            required = annotation?.required,
+            typeField = value,
+            classOfEnum = classOfEnum,
+            classOfUnique = classOfUnique
+        )
+    }
+
+    private fun extractClassUniqueCollection(field: Field): ClassView {
+        return extractClassInfo((field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>)
+    }
+
+    /*Убрать в TypeSeparator*/
+    /*Проверка field на коллекцию с примитивным типом данных*/
+    private fun checkingOnPrimitiveCollection(field: Field): Boolean {
+        val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        return typeSeparator.getPrimitiveTypesClass(getObjectCollection)
+    }
+
+
     fun extractClassInfo(clazz: Class<*>): ClassView {
         val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
         return ClassView(
@@ -32,6 +107,7 @@ class ClassParser() {
             fields = separateField(clazz),
         )
     }
+
 
     private fun separateField(clazz: Class<*>): List<FieldView> {
 
@@ -117,6 +193,11 @@ class ClassParser() {
 
 }
 
+data class FieldWithAnnotation(
+    val field: Field,
+    val annotation: Schema?
+)
+
 data class ClassView(
     val simpleName: String,
     val pkg: String,
@@ -127,6 +208,26 @@ data class ClassView(
 data class ClassEnumView(
     val value: String,
     val description: String?
+)
+
+data class ClassViewNew(
+    val simpleName: String,
+    val pkg: String,
+    val description: String?,
+    val fields: List<FieldViewNew>,
+)
+
+data class FieldViewNew(
+    val name: String,
+    val type: Class<*>,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
+    val typeField: TypeField,
+    // сложный объект чтобы знать какой енам каким бывает
+    val classOfEnum: List<ClassEnumView>?,
+    // если объект составной, то тут лежит его описание
+    val classOfUnique: ClassView?
 )
 
 data class FieldView(

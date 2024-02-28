@@ -4,8 +4,10 @@ plugins {
 	id("org.springframework.boot") version "2.7.2"
 	id("io.spring.dependency-management") version "1.1.4"
 	id("org.jetbrains.dokka") version "1.6.21"
+	id("io.freefair.lombok") version "8.1.0"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
+	kotlin("plugin.lombok") version "1.9.22"
 }
 
 group = "ru.devmark"

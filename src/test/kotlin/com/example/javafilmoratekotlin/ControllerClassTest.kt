@@ -223,7 +223,6 @@ class ControllerClassTest {
         simpleName = "Film",
         pkg = "com.example.javafilmoratekotlin.model",
         description = "Информация о фильме",
-        fieldNamesSorted = listOf("duration", "genre", "id", "name", "releaseDate", "tags", "users"),
         fields = fieldsFilm,
     )
 
