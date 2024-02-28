@@ -379,6 +379,31 @@ class ControllerClassTest {
         AssertionErrors.assertEquals("Pass", expectedUser, actualUser)
     }
 
+    @Test
+    fun test_new_class_parser(){
+
+        @Schema(description = "Информация о пользователе")
+        data class ActualUser(
+
+            @Schema(description = "Идентификатор пользователя")
+            var id: Int,
+
+            @Schema(description = "Почта пользователя")
+            var email: String,
+
+            @Schema(description = "Логин пользователя")
+            var login: String,
+            @Schema(description = "Имя пользователя")
+            var name: String?,
+
+            @Schema(description = "Дата рождения")
+            var birthday: LocalDate
+        )
+
+        println(parser.extractClassInfoNew(Film::class.java))
+
+    }
+
 }
 
 

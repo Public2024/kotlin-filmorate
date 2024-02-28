@@ -1,5 +1,7 @@
-package com.example.javafilmoratekotlin.model;
+package org.example.model;
 
+import com.example.javafilmoratekotlin.model.Film;
+import com.example.javafilmoratekotlin.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

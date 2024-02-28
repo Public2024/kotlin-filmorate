@@ -25,7 +25,7 @@ class ClassParser() {
      */
 
     /*Парсинг data класса*/
-    private fun extractClassInfoNew(clazz: Class<*>): ClassViewNew {
+    fun extractClassInfoNew(clazz: Class<*>): ClassViewNew {
         val schemaAnnotation = clazz.annotations.find { it is Schema } as? Schema
 
         /*поля с аннотацией field*/
@@ -49,22 +49,6 @@ class ClassParser() {
         return fieldsView
     }
 
-    /*Получение типа поля*/
-    private fun getTypeField(field: Field): TypeField {
-        val typeField: TypeField
-        if (typeSeparator.getPrimitiveTypes(field)) {
-            typeField = TypeField.PRIMITIVE
-        } else if (field.type.isEnum) {
-            typeField = TypeField.ENUM
-        } else if (typeSeparator.getCollectionTypes(field)) {
-            typeField = if (checkingOnPrimitiveCollection(field)) TypeField.COLLECTION_PRIMITIVE
-            else TypeField.COLLECTION_UNIQUE
-        } else {
-            typeField = TypeField.UNIQUE
-        }
-        return typeField
-    }
-
     /*Парсинг полей*/
     private fun extractFieldNew(field: Field, value: TypeField, annotation: Schema?): FieldViewNew {
         var classOfEnum: List<ClassEnumView>? = null
@@ -86,16 +70,32 @@ class ClassParser() {
         )
     }
 
+    /*Получение типа поля*/
+    private fun getTypeField(field: Field): TypeField {
+        val typeField: TypeField
+        if (typeSeparator.getPrimitiveTypes(field)) {
+            typeField = TypeField.PRIMITIVE
+        } else if (field.type.isEnum) {
+            typeField = TypeField.ENUM
+        } else if (typeSeparator.getCollectionTypes(field)) {
+            typeField = if (typeSeparator.checkingOnPrimitiveCollection(field)) TypeField.COLLECTION_PRIMITIVE
+            else TypeField.COLLECTION_UNIQUE
+        } else {
+            typeField = TypeField.UNIQUE
+        }
+        return typeField
+    }
+
+
+    /*Получение объекта уникального класса коллекции*/
     private fun extractClassUniqueCollection(field: Field): ClassView {
         return extractClassInfo((field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>)
     }
 
-    /*Убрать в TypeSeparator*/
-    /*Проверка field на коллекцию с примитивным типом данных*/
-    private fun checkingOnPrimitiveCollection(field: Field): Boolean {
-        val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
-        return typeSeparator.getPrimitiveTypesClass(getObjectCollection)
-    }
+
+
+
+
 
 
     fun extractClassInfo(clazz: Class<*>): ClassView {
