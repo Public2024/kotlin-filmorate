@@ -20,7 +20,6 @@ import javax.validation.constraints.*
 data class Film(
     //TODO: нужен тест что работает без  field: (надо посикать аннотации не только в полях но и в конструкторах)
     @Schema(description = "Идентификатор фильма", required = false)
-    //UUII добавить
     var id: Int,
     @Schema(description = "Наименование фильма", example = "Пирожок")
     val name: String,
@@ -42,7 +41,6 @@ enum class FilmTag {
     @Schema(description = "comedy")
     COMEDY,
     TRAGEDY
-
 }
 @Schema(description = "Информация о фильме")
 data class Genre(
