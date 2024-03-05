@@ -1,8 +1,7 @@
-package com.example.javafilmoratekotlin
+package com.example.javafilmoratekotlin.parsing
 
 import com.example.javafilmoratekotlin.model.FilmTag
 import com.example.javafilmoratekotlin.model.Genre
-import com.example.javafilmoratekotlin.parsing.*
 import io.swagger.v3.oas.annotations.media.Schema
 import nonapi.io.github.classgraph.json.Id
 import org.junit.jupiter.api.Test
@@ -12,7 +11,7 @@ import java.util.*
 import javax.validation.constraints.Email
 
 
-class ModelDataTest {
+class DataClassParserTest {
 
     private val parser = ClassParser()
 

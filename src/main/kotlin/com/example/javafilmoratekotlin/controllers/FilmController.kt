@@ -3,7 +3,6 @@ package com.example.javafilmoratekotlin.controllers
 import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.model.User
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -30,11 +29,13 @@ class FilmController {
     fun returnAllFilms(): ArrayList<Film> {
         return ArrayList(films.values)
     }
+
     /**
      * Функция создания нового фильма
      */
     @PostMapping
-    @Operation(summary = "Добавить фильм")
+    @Operation(summary = "Добавить фильм", description = "Добавление фильма в коллекцию")
+    @ResponseBody
     fun createFilm(@RequestParam(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
         validateFilm(film)
         film.id = generateId()

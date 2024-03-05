@@ -3,6 +3,7 @@ package com.example.javafilmoratekotlin.util
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -63,6 +64,8 @@ class TypeSeparator {
 
         Map::class.java to true,
         HashMap::class.java to true
+
+
     )
 
     fun getPrimitiveTypesClass(clazz: Class<*>): Boolean {
@@ -79,6 +82,10 @@ class TypeSeparator {
 
     fun isCollection(clazz: Class<*>): Boolean {
         return collections[clazz] ?: collections[clazz.superclass] ?: false
+    }
+
+    fun isCollectionType(clazz: Type): Boolean {
+        return collections[clazz] ?: collections[clazz] ?: false
     }
 
     fun isPresent(clazz: Class<*>): Boolean {

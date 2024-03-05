@@ -8,6 +8,10 @@ spring:
   thymeleaf:
     cache: false
     prefix: resources/templates/index.html
+  banner:
+    location: classpath:/banner.txt
 server:
   port: 8080
+  contextPath: com/example/javafilmoratekotlin
+
 
