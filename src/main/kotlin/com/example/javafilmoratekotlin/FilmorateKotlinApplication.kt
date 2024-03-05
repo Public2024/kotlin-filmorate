@@ -1,11 +1,9 @@
 package com.example.javafilmoratekotlin
 
-import io.swagger.v3.oas.annotations.media.Schema
 import org.reflections.Reflections
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.web.bind.annotation.RestController
-import kotlin.reflect.full.*
+
 
 
 /**
