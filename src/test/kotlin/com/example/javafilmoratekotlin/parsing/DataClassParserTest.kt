@@ -10,7 +10,6 @@ import java.time.LocalDate
 import java.util.*
 import javax.validation.constraints.Email
 
-
 class DataClassParserTest {
 
     private val parser = ClassParser()

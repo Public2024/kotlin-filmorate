@@ -13,67 +13,74 @@ import java.util.*
 @Component
 class TypeSeparator {
     //TODO: тут всё должно быть сетами?
-    private val primitives = mapOf<Class<*>, Boolean>(
-        Int::class.javaObjectType to true,
-        Boolean::class.javaObjectType to true,
-        Double::class.javaObjectType to true,
-        Float::class.javaObjectType to true,
-        Integer::class.javaObjectType to true,
-        Long::class.javaObjectType to true,
-        BigDecimal::class.javaObjectType to true,
+    private val primitivesJava = mapOf<Class<*>, Boolean>(
+            Int::class.javaObjectType to true,
+            Boolean::class.javaObjectType to true,
+            Double::class.javaObjectType to true,
+            Float::class.javaObjectType to true,
+            Integer::class.javaObjectType to true,
+            Long::class.javaObjectType to true,
+            BigDecimal::class.javaObjectType to true,
 
-        String::class.javaObjectType to true,
-        LocalDateTime::class.javaObjectType to true,
-        LocalDate::class.javaObjectType to true,
-        Instant::class.javaObjectType to true,
+            String::class.javaObjectType to true,
+            LocalDateTime::class.javaObjectType to true,
+            LocalDate::class.javaObjectType to true,
+            Instant::class.javaObjectType to true,
 
-        UUID::class.javaObjectType to true,
+            UUID::class.javaObjectType to true,
+            Unit::class.javaObjectType to true,
 
-        Int::class.java to true,
-        Boolean::class.java to true,
-        Double::class.java to true,
-        Float::class.java to true,
-        Integer::class.java to true,
-        Long::class.java to true,
-        BigDecimal::class.java to true,
+            Int::class.java to true,
+            Boolean::class.java to true,
+            Double::class.java to true,
+            Float::class.java to true,
+            Integer::class.java to true,
+            Long::class.java to true,
+            BigDecimal::class.java to true,
 
-        String::class.java to true,
-        LocalDateTime::class.java to true,
-        LocalDate::class.java to true,
-        Instant::class.java to true,
+            String::class.java to true,
+            LocalDateTime::class.java to true,
+            LocalDate::class.java to true,
+            Instant::class.java to true,
 
-        UUID::class.java to true,
+            UUID::class.java to true,
+            Unit::class.java to true
+
+    )
+
+    val primitivesKotlin = listOf<String>(
+            "kotlin.Int"
     )
 
     private val collections = mapOf<Class<*>, Boolean>(
-        Collection::class.javaObjectType to true,
-        List::class.javaObjectType to true,
-        Array::class.javaObjectType to true,
-        Set::class.javaObjectType to true,
-        ArrayList::class.java to true,
+            Collection::class.javaObjectType to true,
+            List::class.javaObjectType to true,
+            Array::class.javaObjectType to true,
+            Set::class.javaObjectType to true,
+            ArrayList::class.java to true,
 
-        Map::class.javaObjectType to true,
-        HashMap::class.javaObjectType to true,
+            Map::class.javaObjectType to true,
+            HashMap::class.javaObjectType to true,
 
 
-        Collection::class.java to true,
-        List::class.java to true,
-        Array::class.java to true,
-        ArrayList::class.java to true,
-        Set::class.java to true,
+            Collection::class.java to true,
+            List::class.java to true,
+            Array::class.java to true,
+            ArrayList::class.java to true,
+            Set::class.java to true,
 
-        Map::class.java to true,
-        HashMap::class.java to true
+            Map::class.java to true,
+            HashMap::class.java to true
 
 
     )
 
     fun getPrimitiveTypesClass(clazz: Class<*>): Boolean {
-        return primitives.containsKey(clazz)
+        return primitivesJava.containsKey(clazz)
     }
 
     fun getPrimitiveTypes(field: Field): Boolean {
-        return primitives.containsKey(field.type)
+        return primitivesJava.containsKey(field.type)
     }
 
     fun getCollectionTypes(field: Field): Boolean {
@@ -88,8 +95,12 @@ class TypeSeparator {
         return collections[clazz] ?: collections[clazz] ?: false
     }
 
-    fun isPresent(clazz: Class<*>): Boolean {
-        return primitives[clazz] ?: primitives[clazz.superclass]
+    fun test(clazz: Class<*>): Boolean{
+        return primitivesKotlin.contains(clazz.toString())
+    }
+
+    fun isPrimitive(clazz: Class<*>): Boolean {
+        return primitivesJava[clazz] ?: primitivesJava[clazz.superclass]
         ?: false
     }
 
