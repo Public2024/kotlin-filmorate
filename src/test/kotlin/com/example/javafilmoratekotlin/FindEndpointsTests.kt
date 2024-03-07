@@ -8,7 +8,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.test.util.AssertionErrors
 
-
+//TODO: @SpringBootTest
 class FindEndpointsTests {
     private val applicationTest: ApplicationContext = SpringApplication.run(FilmorateKotlinApplication::class.java)
     private val finder = ApplicationEndpointsFinder(applicationTest)
@@ -28,8 +28,8 @@ class FindEndpointsTests {
                         name = "postMethod",
                         description = "",
                         summary = "",
-                        responseBody = false,
-                        parameters = emptyList(),
+
+                    parameters = emptyList(),
                         result = null
                 )
         )
@@ -52,7 +52,6 @@ class FindEndpointsTests {
                         name = "getMethod",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )
@@ -77,7 +76,6 @@ class FindEndpointsTests {
                         name = "putMethod",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )
@@ -102,7 +100,6 @@ class FindEndpointsTests {
                         name = "deleteMethod",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )
@@ -127,7 +124,6 @@ class FindEndpointsTests {
                         name = "requestPost",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )
@@ -151,7 +147,6 @@ class FindEndpointsTests {
                         name = "requestGet",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )
@@ -176,7 +171,6 @@ class FindEndpointsTests {
                         name = "requestDelete",
                         description = "",
                         summary = "",
-                        responseBody = false,
                         parameters = emptyList(),
                         result = null
                 )

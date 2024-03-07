@@ -249,6 +249,8 @@ class MethodParserTest {
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+
+        print(actual)
         /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
     }
 

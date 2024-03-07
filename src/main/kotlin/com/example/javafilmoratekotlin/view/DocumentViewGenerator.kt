@@ -19,5 +19,5 @@ data class DocumentationSources(
 
 data class DocumentationEndpoint(
         val endpoint: ApplicationEndpoint,
-        val view: List<MethodView>?,
+        val view: MethodView?,
 )

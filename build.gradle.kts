@@ -7,7 +7,7 @@ plugins {
 	id("io.freefair.lombok") version "8.1.0"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
-	kotlin("plugin.lombok") version "1.9.22"
+//	kotlin("plugin.lombok") version "1.9.22"
 }
 
 group = "ru.devmark"

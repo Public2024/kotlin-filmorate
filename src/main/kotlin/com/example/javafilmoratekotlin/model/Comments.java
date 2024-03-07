@@ -1,9 +1,7 @@
 package com.example.javafilmoratekotlin.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 
-@Data
 @Schema(description = "Комментарии к фильму")
 public class Comments {
     @Schema(description = "Идентификатор")
