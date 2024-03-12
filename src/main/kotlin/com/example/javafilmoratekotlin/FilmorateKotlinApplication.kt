@@ -7,7 +7,6 @@ import org.springframework.boot.runApplication
 
 
 /**
- * ���������� �������� �������
  *
  * @author Artyom Sevostyanov
  */

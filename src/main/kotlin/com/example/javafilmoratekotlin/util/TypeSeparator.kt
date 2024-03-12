@@ -1,112 +1,97 @@
 package com.example.javafilmoratekotlin.util
 
-import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-@Component
+
 class TypeSeparator {
-    //TODO: тут всё должно быть сетами?
-    private val primitivesJava = mapOf<Class<*>, Boolean>(
-            Int::class.javaObjectType to true,
-            Boolean::class.javaObjectType to true,
-            Double::class.javaObjectType to true,
-            Float::class.javaObjectType to true,
-            Integer::class.javaObjectType to true,
-            Long::class.javaObjectType to true,
-            BigDecimal::class.javaObjectType to true,
+    companion object {
+        private val primitivesJava = listOf<Class<*>>(
+             Int::class.javaObjectType,
+             Boolean::class.javaObjectType,
+             Double::class.javaObjectType,
+             Float::class.javaObjectType,
+             Integer::class.javaObjectType,
+             Long::class.javaObjectType,
+             BigDecimal::class.javaObjectType,
 
-            String::class.javaObjectType to true,
-            LocalDateTime::class.javaObjectType to true,
-            LocalDate::class.javaObjectType to true,
-            Instant::class.javaObjectType to true,
+             String::class.javaObjectType,
+             LocalDateTime::class.javaObjectType,
+             LocalDate::class.javaObjectType,
+             Instant::class.javaObjectType,
 
-            UUID::class.javaObjectType to true,
-            Unit::class.javaObjectType to true,
+             UUID::class.javaObjectType,
+             Unit::class.javaObjectType,
 
-            Int::class.java to true,
-            Boolean::class.java to true,
-            Double::class.java to true,
-            Float::class.java to true,
-            Integer::class.java to true,
-            Long::class.java to true,
-            BigDecimal::class.java to true,
+             Int::class.java,
+             Boolean::class.java,
+             Double::class.java,
+             Float::class.java,
+             Integer::class.java,
+             Long::class.java,
+             BigDecimal::class.java,
 
-            String::class.java to true,
-            LocalDateTime::class.java to true,
-            LocalDate::class.java to true,
-            Instant::class.java to true,
+             String::class.java,
+             LocalDateTime::class.java,
+             LocalDate::class.java,
+             Instant::class.java,
 
-            UUID::class.java to true,
-            Unit::class.java to true
+             UUID::class.java,
+             Unit::class.java
 
-    )
+        )
 
-    val primitivesKotlin = listOf<String>(
-            "kotlin.Int"
-    )
+        private val collections = listOf<Class<*>>(
+             Collection::class.javaObjectType,
+             List::class.javaObjectType,
+             Array::class.javaObjectType,
+             Set::class.javaObjectType,
+             ArrayList::class.java,
 
-    private val collections = mapOf<Class<*>, Boolean>(
-            Collection::class.javaObjectType to true,
-            List::class.javaObjectType to true,
-            Array::class.javaObjectType to true,
-            Set::class.javaObjectType to true,
-            ArrayList::class.java to true,
+             Map::class.javaObjectType,
+             HashMap::class.javaObjectType,
 
-            Map::class.javaObjectType to true,
-            HashMap::class.javaObjectType to true,
+             Collection::class.java,
+             List::class.java,
+             Array::class.java,
+             ArrayList::class.java,
+             Set::class.java,
 
-
-            Collection::class.java to true,
-            List::class.java to true,
-            Array::class.java to true,
-            ArrayList::class.java to true,
-            Set::class.java to true,
-
-            Map::class.java to true,
-            HashMap::class.java to true
+             Map::class.java,
+             HashMap::class.java
 
 
-    )
+        )
 
-    fun getPrimitiveTypesClass(clazz: Class<*>): Boolean {
-        return primitivesJava.containsKey(clazz)
+        private fun getPrimitiveTypesClass(clazz: Class<*>): Boolean {
+            return primitivesJava.contains(clazz)
+        }
+
+        fun getPrimitiveTypes(field: Field): Boolean {
+            return primitivesJava.contains(field.type)
+        }
+
+        fun getCollectionTypes(field: Field): Boolean {
+            return collections.contains(field.type)
+        }
+
+        fun isCollection(clazz: Class<*>): Boolean {
+            return collections.contains(clazz) ?: collections.contains(clazz.superclass) ?: false
+        }
+
+        fun isPrimitive(clazz: Class<*>): Boolean {
+            return primitivesJava.contains(clazz) ?: primitivesJava.contains(clazz.superclass)
+            ?: false
+        }
+
+        fun checkingOnPrimitiveCollection(field: Field): Boolean {
+            val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+            return getPrimitiveTypesClass(getObjectCollection)
+        }
     }
-
-    fun getPrimitiveTypes(field: Field): Boolean {
-        return primitivesJava.containsKey(field.type)
-    }
-
-    fun getCollectionTypes(field: Field): Boolean {
-        return collections.containsKey(field.type)
-    }
-
-    fun isCollection(clazz: Class<*>): Boolean {
-        return collections[clazz] ?: collections[clazz.superclass] ?: false
-    }
-
-    fun isCollectionType(clazz: Type): Boolean {
-        return collections[clazz] ?: collections[clazz] ?: false
-    }
-
-    fun test(clazz: Class<*>): Boolean{
-        return primitivesKotlin.contains(clazz.toString())
-    }
-
-    fun isPrimitive(clazz: Class<*>): Boolean {
-        return primitivesJava[clazz] ?: primitivesJava[clazz.superclass]
-        ?: false
-    }
-
-    fun checkingOnPrimitiveCollection(field: Field): Boolean {
-        val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
-        return getPrimitiveTypesClass(getObjectCollection)
-    }
-
 }

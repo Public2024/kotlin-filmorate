@@ -15,11 +15,8 @@ import kotlin.reflect.jvm.kotlinFunction
 
 @Component
 class MethodParser(
-    private val classParser: ClassParser,
-    private val typeSeparator: TypeSeparator,
+     private val classParser: ClassParser
 ) {
-
-
 
     /*Парсинг метода в MethodView*/
     //TODO: с джавовыми методами
@@ -28,11 +25,11 @@ class MethodParser(
         val description = extractDescription(method)
 
         return MethodView(
-            name = method.name,
-            description = description?.description,
-            summary = description?.summary,
-            parameters = getAllParameters(method.kotlinFunction?.valueParameters),
-            result = getResult(method)
+             name = method.name,
+             description = description?.description,
+             summary = description?.summary,
+             parameters = getAllParameters(method.kotlinFunction?.valueParameters),
+             result = getResult(method)
         )
     }
 
@@ -43,13 +40,13 @@ class MethodParser(
     }
 
     private data class MethodDescription(
-        val description: String,
-        val summary: String,
+         val description: String,
+         val summary: String,
     )
 
     /*Парсинг входящих параметров метода*/
     fun getAllParameters(
-        parameters: List<KParameter>?
+         parameters: List<KParameter>?
     ): List<InputParameter>? {
         var required = true
         return parameters?.map { it ->
@@ -57,10 +54,10 @@ class MethodParser(
                 required = (it.annotations.find { it is RequestParam } as RequestParam).required
             }
             InputParameter(
-                name = it.name,
-                type = it.type.javaType,
-                required = required,
-                classView = checkOnCompositeParameter(it.type)
+                 name = it.name,
+                 type = it.type.javaType,
+                 required = required,
+                 classView = checkOnCompositeParameter(it.type)
             )
         }
     }
@@ -69,13 +66,13 @@ class MethodParser(
     private fun checkOnCompositeParameter(type: KType): ClassView? {
 
         var aClass =
-            if (typeSeparator.isPrimitive(type.jvmErasure.java)) null
-            else classParser.extractClassInfo(type.jvmErasure.java)
+             if (TypeSeparator.isPrimitive(type.jvmErasure.java)) null
+             else classParser.extractClassInfo(type.jvmErasure.java)
 
         /*Если collection*/
-        if (typeSeparator.isCollection(type.jvmErasure.javaObjectType)) {
+        if (TypeSeparator.isCollection(type.jvmErasure.javaObjectType)) {
             val forCheck = type.arguments.first().type?.jvmErasure?.java
-            aClass = if (forCheck?.let { typeSeparator.isPrimitive(it) } != true) forCheck?.let {
+            aClass = if (forCheck?.let { TypeSeparator.isPrimitive(it) } != true) forCheck?.let {
                 classParser.extractClassInfo(it)
             }
             else null
@@ -88,24 +85,28 @@ class MethodParser(
         val returnType = method.kotlinFunction?.returnType ?: return null
         if (returnType.toString() == "kotlin.Unit") return null
         return OutputResult(
-            type = returnType.javaType, uniqueParameter = checkOnCompositeParameter(returnType)
+             type = returnType.javaType, uniqueParameter = checkOnCompositeParameter(returnType)
         )
     }
 }
 
 data class OutputResult(
-    val type: Type?, val uniqueParameter: ClassView?
+     val type: Type?,
+     val uniqueParameter: ClassView?
 )
 
 data class InputParameter(
-    val name: String?, val type: Type, val required: Boolean, val classView: ClassView?
+     val name: String?,
+     val type: Type,
+     val required: Boolean,
+     val classView: ClassView?
 )
 
 data class MethodView(
-    val name: String,
-    val description: String?,
-    val summary: String?,
-    val parameters: List<InputParameter>?,
-    val result: OutputResult?
+     val name: String,
+     val description: String?,
+     val summary: String?,
+     val parameters: List<InputParameter>?,
+     val result: OutputResult?
 )
 

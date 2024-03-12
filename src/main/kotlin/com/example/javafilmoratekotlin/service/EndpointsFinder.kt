@@ -1,9 +1,14 @@
 package com.example.javafilmoratekotlin.service
 
+import com.example.javafilmoratekotlin.FilmorateKotlinApplication
+import com.example.javafilmoratekotlin.parsing.ClassParser
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.parsing.MethodView
+import com.example.javafilmoratekotlin.util.ApplicationContextProviders
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
-import org.springframework.context.event.ContextRefreshedEvent
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo
@@ -11,69 +16,44 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 
 @Component
-class ApplicationEndpointsFinder(
-    private val context: ApplicationContext,
-    private val methodParser: MethodParser,
-) {
+class ApplicationEndpointsFinder(private val methodParser : MethodParser) {
 
-    private final val applicationContext = context
 
-    val event = ContextRefreshedEvent(applicationContext)
-
-    //TODO: скорее всего должен сам уметь найти пакет текущего приложения
-    /* Поиск все эндпоинтов в пакете*/
-    fun findAllEndpoints(packageName: String): List<ApplicationEndpoint> {
-        val context = event.applicationContext
-        val requestMappingHandlerMapping = context
-            .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping::class.java)
+    /*Поиск всех энедпоинтов приложения*/
+    fun findAllEndpoints(): List<ApplicationEndpoint> {
+        val requestMappingHandlerMapping = ApplicationContextProviders.getApplicationContext()
+             .getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping::class.java)
         val restMethodsByPath = requestMappingHandlerMapping.handlerMethods
-        val filteredEndpoint = filterAndSortedEndpoints(restMethodsByPath, packageName)
+        val filteredEndpoint = filterAndSortedEndpoints(restMethodsByPath)
         return filteredEndpoint.map { getApplicationEndpoint(it) }
     }
 
-    /*Сортировка и фильтр списка всех эндпоинтов*/
+    /** Сортировка и фильтр списка всех эндпоинтов*/
     private fun filterAndSortedEndpoints(
-        methods: Map<RequestMappingInfo, HandlerMethod>,
-        packageName: String
+         methods: Map<RequestMappingInfo, HandlerMethod>
     ): Map<RequestMappingInfo, HandlerMethod> {
-        val filterMethods = methods.filter {
-            it.value.toString().contains(packageName, ignoreCase = true)
+        val filterMethods = methods.filterNot {
+            it.key.toString().contains(ApplicationContextProviders.deleteExtraEndpoints)
         }
         return filterMethods
-            .toSortedMap(compareBy(String.CASE_INSENSITIVE_ORDER) { it.toString() })
+             .toSortedMap(compareBy(String.CASE_INSENSITIVE_ORDER) { it.toString() })
     }
-
 
     /*Парсинг эндпоинта*/
     private fun getApplicationEndpoint(entry: Map.Entry<RequestMappingInfo, HandlerMethod>): ApplicationEndpoint {
-
-        val endpoint = regex.replace(entry.key.toString(), "")
+        val endpoint = ApplicationContextProviders.deleteBrackets.replace(entry.key.toString(), "")
         val (type, path) = endpoint.split(" ")
         return ApplicationEndpoint(
-            type = type,
-            path = path,
-            method = methodParser.extractMethodInfo(entry.value.method)
+             type = type,
+             path = path,
+             method = methodParser.extractMethodInfo(entry.value.method)
         )
     }
-
-    companion object {
-        //TODO: перенезвать понятно или напистаь что делает
-        private val regex = """[{}\]\[]""".toRegex()
-    }
-
 }
 
 data class ApplicationEndpoint(
-    val type: String,
-    // откуда вызывается
-    val path: String,
-
-    val method: MethodView,
+     val type: String,
+     // откуда вызывается
+     val path: String,
+     val method: MethodView,
 )
-
-enum class ApplicationEndpointType {
-    POST,
-    GET,
-    PUT,
-    DELETE
-}

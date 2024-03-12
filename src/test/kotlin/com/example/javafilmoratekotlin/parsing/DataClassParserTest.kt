@@ -1,24 +1,92 @@
 package com.example.javafilmoratekotlin.parsing
 
+import ch.qos.logback.classic.pattern.Util
+import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.model.FilmTag
 import com.example.javafilmoratekotlin.model.Genre
+import com.example.javafilmoratekotlin.model.User
 import io.swagger.v3.oas.annotations.media.Schema
 import nonapi.io.github.classgraph.json.Id
+import org.example.model.Comments
+import org.hibernate.validator.internal.util.ReflectionHelper
+import org.hibernate.validator.internal.util.ReflectionHelper.typeOf
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.test.util.AssertionErrors
+import java.lang.reflect.Type
 import java.time.LocalDate
 import java.util.*
 import javax.validation.constraints.Email
+import kotlin.reflect.javaType
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+
 
 class DataClassParserTest {
 
     private val parser = ClassParser()
 
+    @OptIn(ExperimentalStdlibApi::class)
+    @Test
+    fun `тест_парсинга_java_класса`(){
+
+        val actualFilm = parser.extractClassInfo(Comments::class.java)
+
+        /*Примитивный тип поля*/
+        val expectedIdParse = FieldView(
+             name = "id",
+             type = Integer::class.java,
+             description = "Идентификатор",
+             example = "",
+             required = false,
+             classOfEnum = null,
+             classOfComposite = null,
+        )
+
+        val actualIdParse = actualFilm.fields.find { it.name == "id" }
+
+        AssertionErrors.assertEquals("Pass", expectedIdParse, actualIdParse)
+
+        val expectedTextParse = FieldView(
+             name = "text",
+             type = typeOf<List<String>>().javaType,
+             description = "Комментарий",
+             example = "",
+             required = false,
+             classOfEnum = null,
+             classOfComposite = null,
+        )
+
+        val actualTextParse = actualFilm.fields.find { it.name == "text" }
+
+        AssertionErrors.assertEquals("Pass", expectedTextParse, actualTextParse)
+
+        val classViewMock: ClassView = Mockito.mock(ClassView::class.java)
+
+        val expectedUserParse = FieldView(
+             name = "film",
+             type = typeOf<Collection<Film>>().javaType,
+             description = "Комментарий",
+             example = "",
+             required = false,
+             classOfEnum = null,
+             classOfComposite = classViewMock
+        )
+
+        val actualFilmParse = actualFilm.fields.find { it.name == "film" }
+
+
+        println(classViewMock)
+
+    }
+
     @Test
     fun `тест_парсинга_примитивных_полей_дата_класса_Int_и_String`() {
 
         data class ActualFilm(
-                @Schema(description = "Идентификатор фильма", required = false)
+                @field:Schema(description = "Идентификатор фильма", required = false)
                 var id: Int,
                 @Schema(description = "Наименование фильма", example = "Пирожок")
                 val name: String
@@ -37,18 +105,16 @@ class DataClassParserTest {
                                 description = "Идентификатор фильма",
                                 example = "",
                                 required = false,
-                                typeField = TypeField.PRIMITIVE,
                                 classOfEnum = null,
-                                classOfUnique = null,
+                                classOfComposite = null,
                         ), FieldView(
                         name = "name",
                         type = String::class.java,
                         description = "Наименование фильма",
                         example = "Пирожок",
                         required = false,
-                        typeField = TypeField.PRIMITIVE,
                         classOfEnum = null,
-                        classOfUnique = null,
+                        classOfComposite = null,
                 )
                 )
         )
@@ -75,7 +141,6 @@ class DataClassParserTest {
                                 description = "Тэги",
                                 example = "",
                                 required = true,
-                                typeField = TypeField.ENUM,
                                 classOfEnum = listOf(
                                         ClassEnumView(
                                                 value = "GORE",
@@ -88,7 +153,7 @@ class DataClassParserTest {
                                         description = null
                                 )
                                 ),
-                                classOfUnique = null,
+                                classOfComposite = null,
                         )
                 )
         )
@@ -115,9 +180,8 @@ class DataClassParserTest {
                         description = "Жанр",
                         example = "",
                         required = false,
-                        typeField = TypeField.COMPOSITE,
                         classOfEnum = null,
-                        classOfUnique = ClassView(
+                        classOfComposite = ClassView(
                                 simpleName = "Genre",
                                 pkg = "com.example.javafilmoratekotlin.model",
                                 description = "Информация о фильме",
@@ -161,9 +225,8 @@ class DataClassParserTest {
                         description = "Пользователи",
                         example = "",
                         required = false,
-                        typeField = TypeField.COLLECTION_COMPOSITE,
                         classOfEnum = null,
-                        classOfUnique = ClassView(
+                        classOfComposite = ClassView(
                                 simpleName = "ActualUser",
                                 pkg = "com.example.javafilmoratekotlin",
                                 description = "Информация о пользователе",
@@ -173,9 +236,8 @@ class DataClassParserTest {
                                         description = "Почта пользователя",
                                         example = "",
                                         required = false,
-                                        typeField = TypeField.PRIMITIVE,
                                         classOfEnum = null,
-                                        classOfUnique = null
+                                        classOfComposite = null
                                 ))
                         )
                 ))

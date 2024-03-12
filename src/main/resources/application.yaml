@@ -12,6 +12,5 @@ spring:
     location: classpath:/banner.txt
 server:
   port: 8080
-  contextPath: com/example/javafilmoratekotlin
 
 

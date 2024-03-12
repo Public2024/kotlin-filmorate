@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
 
 class MethodParserTest {
@@ -22,12 +20,11 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "method",
-                description = "",
-                summary = "Метод, который ничего не возвращает",
-                responseBody = false,
-                parameters = emptyList(),
-                result = null
+             name = "method",
+             description = "",
+             summary = "Метод, который ничего не возвращает",
+             parameters = emptyList(),
+             result = null
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
@@ -48,15 +45,14 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "method",
-                description = "",
-                summary = "Метод, который возвращает примитивный объект",
-                responseBody = false,
-                parameters = emptyList(),
-                result = OutputResult(
-                        type = Int::class.java,
-                        uniqueParameter = null
-                )
+             name = "method",
+             description = "",
+             summary = "Метод, который возвращает примитивный объект",
+             parameters = emptyList(),
+             result = OutputResult(
+                  type = Int::class.java,
+                  uniqueParameter = null
+             )
         )
 
         val test = Test::class.java.methods[0]
@@ -76,20 +72,19 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "method",
-                description = "",
-                summary = "Метод, который возвращает сложный объект",
-                responseBody = false,
-                parameters = emptyList(),
-                result = OutputResult(
-                        type = Genre::class.java,
-                        uniqueParameter = ClassView(
-                                simpleName = "Genre",
-                                pkg = "com.example.javafilmoratekotlin.model",
-                                description = "Информация о фильме",
-                                fields = emptyList()
-                        )
-                )
+             name = "method",
+             description = "",
+             summary = "Метод, который возвращает сложный объект",
+             parameters = emptyList(),
+             result = OutputResult(
+                  type = Genre::class.java,
+                  uniqueParameter = ClassView(
+                       simpleName = "Genre",
+                       pkg = "com.example.javafilmoratekotlin.model",
+                       description = "Информация о фильме",
+                       fields = emptyList()
+                  )
+             )
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
@@ -107,16 +102,15 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "returnCollectionPrimitive",
-                description = "",
-                summary = "Метод, который возвращает коллекцию с примитивом",
-                responseBody = false,
-                parameters = emptyList(),
-                result = OutputResult(
-                        /*??????? java.util.List<java.lang.String> */
-                        type = List::class.java,
-                        uniqueParameter = null
-                )
+             name = "returnCollectionPrimitive",
+             description = "",
+             summary = "Метод, который возвращает коллекцию с примитивом",
+             parameters = emptyList(),
+             result = OutputResult(
+                  /*??????? java.util.List<java.lang.String> */
+                  type = List::class.java,
+                  uniqueParameter = null
+             )
         )
 
         val test = Test::class.java.methods[0]
@@ -136,21 +130,20 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "returnCollectionComposite",
-                description = "",
-                summary = "Метод, который возвращает коллекцию со сложным объектом",
-                responseBody = false,
-                parameters = emptyList(),
-                result = OutputResult(
-                        /*??????? java.util.List<com.example.javafilmoratekotlin.model.Genre> */
-                        type = List::class.java,
-                        uniqueParameter = ClassView(
-                                simpleName = "Genre",
-                                pkg = "com.example.javafilmoratekotlin.model",
-                                description = "Информация о фильме",
-                                fields = emptyList()
-                        )
-                )
+             name = "returnCollectionComposite",
+             description = "",
+             summary = "Метод, который возвращает коллекцию со сложным объектом",
+             parameters = emptyList(),
+             result = OutputResult(
+                  /*??????? java.util.List<com.example.javafilmoratekotlin.model.Genre> */
+                  type = List::class.java,
+                  uniqueParameter = ClassView(
+                       simpleName = "Genre",
+                       pkg = "com.example.javafilmoratekotlin.model",
+                       description = "Информация о фильме",
+                       fields = emptyList()
+                  )
+             )
         )
 
         val test = Test::class.java.methods[0]
@@ -168,19 +161,18 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-                name = "inputPrimitiveParameter",
-                description = "",
-                summary = "Метод с примитивным входящим параметром",
-                responseBody = false,
-                parameters = listOf(
-                        InputParameter(
-                                name = "double",
-                                type = Double::class.java,
-                                required = true,
-                                classView = null
-                        )
-                ),
-                result = null
+             name = "inputPrimitiveParameter",
+             description = "",
+             summary = "Метод с примитивным входящим параметром",
+             parameters = listOf(
+                  InputParameter(
+                       name = "double",
+                       type = Double::class.java,
+                       required = true,
+                       classView = null
+                  )
+             ),
+             result = null
         )
 
         val test = Test::class.java.methods[0]
@@ -189,33 +181,32 @@ class MethodParserTest {
     }
 
     @Test
-    fun `тест_метода_с_композитным_входящим_параметром`(){
-        class Test{
+    fun `тест_метода_с_композитным_входящим_параметром`() {
+        class Test {
             @PostMapping("/v7")
             @Operation(summary = "Метод с композитным входящим параметром")
-            fun inputCompositeParameter(genre: Genre){
+            fun inputCompositeParameter(genre: Genre) {
             }
         }
 
         val expected = MethodView(
-                name = "inputCompositeParameter",
-                description = "",
-                summary = "Метод с композитным входящим параметром",
-                responseBody = false,
-                parameters = listOf(
-                        InputParameter(
-                                name = "genre",
-                                type = Genre::class.java,
-                                required = true,
-                                classView = ClassView(
-                                        simpleName = "Genre",
-                                        pkg = "com.example.javafilmoratekotlin.model",
-                                        description = "Информация о фильме",
-                                        fields = emptyList()
-                                )
-                        )
-                ),
-                result = null
+             name = "inputCompositeParameter",
+             description = "",
+             summary = "Метод с композитным входящим параметром",
+             parameters = listOf(
+                  InputParameter(
+                       name = "genre",
+                       type = Genre::class.java,
+                       required = true,
+                       classView = ClassView(
+                            simpleName = "Genre",
+                            pkg = "com.example.javafilmoratekotlin.model",
+                            description = "Информация о фильме",
+                            fields = emptyList()
+                       )
+                  )
+             ),
+             result = null
         )
 
         val test = Test::class.java.methods[0]
@@ -224,28 +215,28 @@ class MethodParserTest {
     }
 
     @Test
-    fun `тест_метода_с_входящим_параметром_примитивной_коллекцией`(){
-        class Test{
+    fun `тест_метода_с_входящим_параметром_примитивной_коллекцией`() {
+        class Test {
             @PostMapping("/v8")
             @Operation(summary = "Метод с параметром примитивной коллекцией")
-            fun inputPrimitiveCollectionParameter(list: List<Float>){
+            fun inputPrimitiveCollectionParameter(list: List<Float>) {
             }
         }
+
         val expected = MethodView(
-                name = "inputPrimitiveCollectionParameter",
-                description = "",
-                summary = "Метод с параметром примитивной коллекцией",
-                responseBody = false,
-                parameters = listOf(
-                        InputParameter(
-                                name = "list",
-                                /*????? java.util.List<java.lang.Float>*/
-                                type = List::class.java,
-                                required = true,
-                                classView = null
-                        )
-                ),
-                result = null
+             name = "inputPrimitiveCollectionParameter",
+             description = "",
+             summary = "Метод с параметром примитивной коллекцией",
+             parameters = listOf(
+                  InputParameter(
+                       name = "list",
+                       /*????? java.util.List<java.lang.Float>*/
+                       type = List::class.java,
+                       required = true,
+                       classView = null
+                  )
+             ),
+             result = null
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
@@ -255,35 +246,34 @@ class MethodParserTest {
     }
 
     @Test
-    fun `тест_метода_с_входящим_параметром_композитной_коллекцией`(){
-        class Test{
+    fun `тест_метода_с_входящим_параметром_композитной_коллекцией`() {
+        class Test {
             @PostMapping("/v9")
             @Operation(summary = "Метод с параметром композитной коллекцией")
-            fun inputCompositeCollectionParameter(collection: Collection<Genre>){
+            fun inputCompositeCollectionParameter(collection: Collection<Genre>) {
 
             }
         }
 
         val expected = MethodView(
-                name = "inputCompositeCollectionParameter",
-                description = "",
-                summary = "Метод с параметром композитной коллекцией",
-                responseBody = false,
-                parameters = listOf(
-                        InputParameter(
-                                name = "collection",
-                                /*????? java.util.Collection<com.example.javafilmoratekotlin.model.Genre>*/
-                                type = Collections::class.java,
-                                required = true,
-                                classView = ClassView(
-                                        simpleName = "Genre",
-                                        pkg = "com.example.javafilmoratekotlin.model",
-                                        description = "Информация о фильме",
-                                        fields = emptyList()
-                                )
-                        )
-                ),
-                result = null
+             name = "inputCompositeCollectionParameter",
+             description = "",
+             summary = "Метод с параметром композитной коллекцией",
+             parameters = listOf(
+                  InputParameter(
+                       name = "collection",
+                       /*????? java.util.Collection<com.example.javafilmoratekotlin.model.Genre>*/
+                       type = Collections::class.java,
+                       required = true,
+                       classView = ClassView(
+                            simpleName = "Genre",
+                            pkg = "com.example.javafilmoratekotlin.model",
+                            description = "Информация о фильме",
+                            fields = emptyList()
+                       )
+                  )
+             ),
+             result = null
         )
 
         val test = Test::class.java.methods[0]
@@ -293,11 +283,11 @@ class MethodParserTest {
     }
 
     @Test
-    fun `метод_для_проверки_аннотации_description`(){
-        class Test{
+    fun `метод_для_проверки_аннотации_description`() {
+        class Test {
             @GetMapping("/v10")
             @Operation(description = "Метод для проверки аннотации с описанием")
-            fun methodWithDescription(){
+            fun methodWithDescription() {
             }
         }
 
@@ -307,19 +297,4 @@ class MethodParserTest {
 
     }
 
-    @Test
-    fun `тест_проверки_аннотации_ResponseBody`(){
-        class Test{
-            @PutMapping("/v11")
-            @Operation(description = "Метод для проверки аннотации ResponseBody")
-            @ResponseBody
-            fun methodWithResponseBody(){
-
-            }
-        }
-        val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test).responseBody
-        AssertionErrors.assertEquals("Pass", true, actual)
-
-    }
 }

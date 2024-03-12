@@ -13,7 +13,7 @@ class DocumentationService(
 ) {
 
     fun buildDocumentation(): Map<DocumentViewType, String> {
-        val endpoints = endpointsFinder.findAllEndpoints("TODO:")
+        val endpoints = endpointsFinder.findAllEndpoints()
         val documentedEndpoints = endpoints.map { DocumentationEndpoint(it, it.method) }
 
         return generators.associate { it.type to it.generate(DocumentationSources(documentedEndpoints)) }
