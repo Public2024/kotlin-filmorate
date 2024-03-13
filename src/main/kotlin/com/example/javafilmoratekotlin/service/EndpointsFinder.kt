@@ -1,14 +1,9 @@
 package com.example.javafilmoratekotlin.service
 
-import com.example.javafilmoratekotlin.FilmorateKotlinApplication
-import com.example.javafilmoratekotlin.parsing.ClassParser
+
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.parsing.MethodView
 import com.example.javafilmoratekotlin.util.ApplicationContextProviders
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.SpringApplication
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo

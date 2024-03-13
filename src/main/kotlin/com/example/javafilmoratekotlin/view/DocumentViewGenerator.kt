@@ -14,10 +14,14 @@ enum class DocumentViewType {
 }
 data class DocumentationSources(
     val endpoints: List<DocumentationEndpoint>,
-
     )
 
 data class DocumentationEndpoint(
-        val endpoint: ApplicationEndpoint,
+        val endpoint: EndpointType,
         val view: MethodView?,
+)
+
+data class EndpointType(
+    val type: String,
+    val path: String,
 )

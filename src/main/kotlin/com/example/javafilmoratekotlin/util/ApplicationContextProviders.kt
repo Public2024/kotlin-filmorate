@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 @Component
 class ApplicationContextProviders() : ApplicationContextAware {
 
-
     companion object {
 
         private lateinit var applicationContext: ApplicationContext
@@ -20,11 +19,11 @@ class ApplicationContextProviders() : ApplicationContextAware {
             return applicationContext
         }
 
-        /*регулярка для удаления лишних скобок*/
+        /*СЂРµРіСѓР»СЏСЂРєР° РґР»СЏ СѓРґР°Р»РµРЅРёСЏ Р»РёС€РЅРёС… СЃРєРѕР±РѕРє*/
         val deleteBrackets = """[{}\]\[]""".toRegex()
 
         /*
-        * регулярка для удаления лишних эндпоинтов*/
+        * СЂРµРіСѓР»СЏСЂРєР° РґР»СЏ СѓРґР°Р»РµРЅРёСЏ Р»РёС€РЅРёС… СЌРЅРґРїРѕРёРЅС‚РѕРІ*/
         val deleteExtraEndpoints = Regex("(/swagger-ui.html)|(/error)|(/v3/)")
     }
 
