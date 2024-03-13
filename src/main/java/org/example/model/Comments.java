@@ -1,24 +1,30 @@
 package org.example.model;
 
 import com.example.javafilmoratekotlin.model.Film;
+import com.example.javafilmoratekotlin.model.Genre;
 import com.example.javafilmoratekotlin.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 
-@Data
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+
 @Schema(description = "Комментарии к фильму")
 public class Comments {
 
     @Schema(description = "Идентификатор")
-    Long id;
+    Integer id;
 
     @Schema(description = "Комментарий")
-    String text;
+    List<String> text;
 
-    @Schema(description = "Пользователь который оставил комментарий")
-    User user;
+    Genre genre;
 
-    @Schema(description = "Фильм к которому оставлен комментарий")
-    Film film;
+    @Schema(description = "Комментарий к жанрам")
+    Collection<Genre> genres;
 
+    public Comments(@Schema(description = "Тест жанр") Genre genre) {
+        this.genre = genre;
+    }
 }

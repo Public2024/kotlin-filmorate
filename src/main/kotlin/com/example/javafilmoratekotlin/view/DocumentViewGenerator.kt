@@ -1,7 +1,7 @@
 package com.example.javafilmoratekotlin.view
 
-import com.example.javafilmoratekotlin.service.ApplicationEndpoint
 import com.example.javafilmoratekotlin.parsing.MethodView
+import com.example.javafilmoratekotlin.service.ApplicationEndpoint
 
 interface DocumentViewGenerator {
     val type: DocumentViewType
@@ -18,6 +18,6 @@ data class DocumentationSources(
     )
 
 data class DocumentationEndpoint(
-    val endpoint: ApplicationEndpoint,
-    val view: List<MethodView>?,
+        val endpoint: ApplicationEndpoint,
+        val view: MethodView?,
 )
