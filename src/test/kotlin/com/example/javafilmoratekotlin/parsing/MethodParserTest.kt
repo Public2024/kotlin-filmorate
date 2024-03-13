@@ -2,13 +2,110 @@ package com.example.javafilmoratekotlin.parsing
 
 import com.example.javafilmoratekotlin.model.Genre
 import io.swagger.v3.oas.annotations.Operation
+import org.example.controllers.JavaController
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.*
+import kotlin.reflect.javaType
+import kotlin.reflect.typeOf
 
 class MethodParserTest {
+
+    @OptIn(ExperimentalStdlibApi::class)
+    @Test
+    fun `тест_java_get_возврат_примтивной_коллекции`() {
+        val getMethod = JavaController()::class.java.methods.find { it.name == "returnList" }
+        val actualGetMethod = getMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val expectedGetMethod = MethodView(
+            name = "returnList",
+            description = "",
+            summary = "Возврат коллекции",
+            parameters = emptyList(),
+            result = OutputResult(
+                type = typeOf<List<String>>().javaType,
+                uniqueParameter = null
+            )
+        )
+        AssertionErrors.assertEquals("Pass", expectedGetMethod, actualGetMethod)
+    }
+
+    @Test
+    fun `тест_java_post_добавление_композитного_класса`() {
+        val postMethod = JavaController()::class.java.methods.find { it.name == "addCompositeObj" }
+        val actualPostMethod = postMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val expectedPostMethod = MethodView(
+            name = "addCompositeObj",
+            description = "",
+            summary = "Добавление CompositeClass",
+            parameters = listOf(
+                InputParameter(
+                    name = "genre",
+                    type = Genre::class.java,
+                    required = true,
+                    classView = ClassView(
+                        simpleName = "Genre",
+                        pkg = "package com.example.javafilmoratekotlin.model",
+                        description = "Информация о фильме",
+                        fields = emptyList()
+                    )
+                )
+            ),
+            result = null
+        )
+        AssertionErrors.assertEquals("Pass", expectedPostMethod, actualPostMethod)
+    }
+
+    @Test
+    fun `тест_java_delete_метод_void`() {
+        val deleteMethod = JavaController()::class.java.methods.find { it.name == "deleteById" }
+        val actualPostMethod = deleteMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val expectedDeleteMethod = MethodView(
+            name = "deleteById",
+            description = "Удаление по id",
+            summary = "",
+            parameters = listOf(
+                InputParameter(
+                    name = "id",
+                    type = Integer::class.java,
+                    required = false,
+                    classView = null
+                )
+            ),
+            result = null
+        )
+        AssertionErrors.assertEquals("Pass", expectedDeleteMethod, actualPostMethod)
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    @Test
+    fun `тест_java_put_метод_параметр_CompositeCollection`() {
+        val putMethod = JavaController()::class.java.methods.find { it.name == "updateCollection" }
+        val actualPutMethod = putMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val expectedPutMethod = MethodView(
+            name = "updateCollection",
+            description = "Обновление Composite Collection",
+            summary = "",
+            parameters = listOf(
+                InputParameter(
+                    name = "collection",
+                    type = typeOf<Collection<Genre>>().javaType,
+                    required = false,
+                    classView = ClassView(
+                        simpleName = "Genre",
+                        pkg = "package com.example.javafilmoratekotlin.model",
+                        description = "Информация о фильме",
+                        fields = emptyList()
+                    )
+                )
+            ),
+            result = null
+        )
+        AssertionErrors.assertEquals("Pass", expectedPutMethod, actualPutMethod)
+
+
+    }
 
     @Test
     fun `тест_метода_который_ничего_не_возвращает `() {
@@ -20,11 +117,11 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "method",
-             description = "",
-             summary = "Метод, который ничего не возвращает",
-             parameters = emptyList(),
-             result = null
+            name = "method",
+            description = "",
+            summary = "Метод, который ничего не возвращает",
+            parameters = emptyList(),
+            result = null
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
@@ -45,14 +142,14 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "method",
-             description = "",
-             summary = "Метод, который возвращает примитивный объект",
-             parameters = emptyList(),
-             result = OutputResult(
-                  type = Int::class.java,
-                  uniqueParameter = null
-             )
+            name = "method",
+            description = "",
+            summary = "Метод, который возвращает примитивный объект",
+            parameters = emptyList(),
+            result = OutputResult(
+                type = Int::class.java,
+                uniqueParameter = null
+            )
         )
 
         val test = Test::class.java.methods[0]
@@ -72,25 +169,26 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "method",
-             description = "",
-             summary = "Метод, который возвращает сложный объект",
-             parameters = emptyList(),
-             result = OutputResult(
-                  type = Genre::class.java,
-                  uniqueParameter = ClassView(
-                       simpleName = "Genre",
-                       pkg = "com.example.javafilmoratekotlin.model",
-                       description = "Информация о фильме",
-                       fields = emptyList()
-                  )
-             )
+            name = "method",
+            description = "",
+            summary = "Метод, который возвращает сложный объект",
+            parameters = emptyList(),
+            result = OutputResult(
+                type = Genre::class.java,
+                uniqueParameter = ClassView(
+                    simpleName = "Genre",
+                    pkg = "package com.example.javafilmoratekotlin.model",
+                    description = "Информация о фильме",
+                    fields = emptyList()
+                )
+            )
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_метода_который_возвращает_коллекцию_с_примитивом`() {
         class Test {
@@ -102,23 +200,23 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "returnCollectionPrimitive",
-             description = "",
-             summary = "Метод, который возвращает коллекцию с примитивом",
-             parameters = emptyList(),
-             result = OutputResult(
-                  /*??????? java.util.List<java.lang.String> */
-                  type = List::class.java,
-                  uniqueParameter = null
-             )
+            name = "returnCollectionPrimitive",
+            description = "",
+            summary = "Метод, который возвращает коллекцию с примитивом",
+            parameters = emptyList(),
+            result = OutputResult(
+                type = typeOf<List<String>>().javaType,
+                uniqueParameter = null
+            )
         )
 
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
-        println(actual)
-        /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
+
+        AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_метода_который_возвращает_коллекцию_со_сложным_объектом`() {
         class Test {
@@ -130,20 +228,19 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "returnCollectionComposite",
-             description = "",
-             summary = "Метод, который возвращает коллекцию со сложным объектом",
-             parameters = emptyList(),
-             result = OutputResult(
-                  /*??????? java.util.List<com.example.javafilmoratekotlin.model.Genre> */
-                  type = List::class.java,
-                  uniqueParameter = ClassView(
-                       simpleName = "Genre",
-                       pkg = "com.example.javafilmoratekotlin.model",
-                       description = "Информация о фильме",
-                       fields = emptyList()
-                  )
-             )
+            name = "returnCollectionComposite",
+            description = "",
+            summary = "Метод, который возвращает коллекцию со сложным объектом",
+            parameters = emptyList(),
+            result = OutputResult(
+                type = typeOf<List<Genre>>().javaType,
+                uniqueParameter = ClassView(
+                    simpleName = "Genre",
+                    pkg = "com.example.javafilmoratekotlin.model",
+                    description = "Информация о фильме",
+                    fields = emptyList()
+                )
+            )
         )
 
         val test = Test::class.java.methods[0]
@@ -161,18 +258,18 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "inputPrimitiveParameter",
-             description = "",
-             summary = "Метод с примитивным входящим параметром",
-             parameters = listOf(
-                  InputParameter(
-                       name = "double",
-                       type = Double::class.java,
-                       required = true,
-                       classView = null
-                  )
-             ),
-             result = null
+            name = "inputPrimitiveParameter",
+            description = "",
+            summary = "Метод с примитивным входящим параметром",
+            parameters = listOf(
+                InputParameter(
+                    name = "double",
+                    type = Double::class.java,
+                    required = false,
+                    classView = null
+                )
+            ),
+            result = null
         )
 
         val test = Test::class.java.methods[0]
@@ -190,23 +287,23 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "inputCompositeParameter",
-             description = "",
-             summary = "Метод с композитным входящим параметром",
-             parameters = listOf(
-                  InputParameter(
-                       name = "genre",
-                       type = Genre::class.java,
-                       required = true,
-                       classView = ClassView(
-                            simpleName = "Genre",
-                            pkg = "com.example.javafilmoratekotlin.model",
-                            description = "Информация о фильме",
-                            fields = emptyList()
-                       )
-                  )
-             ),
-             result = null
+            name = "inputCompositeParameter",
+            description = "",
+            summary = "Метод с композитным входящим параметром",
+            parameters = listOf(
+                InputParameter(
+                    name = "genre",
+                    type = Genre::class.java,
+                    required = false,
+                    classView = ClassView(
+                        simpleName = "Genre",
+                        pkg = "package com.example.javafilmoratekotlin.model",
+                        description = "Информация о фильме",
+                        fields = emptyList()
+                    )
+                )
+            ),
+            result = null
         )
 
         val test = Test::class.java.methods[0]
@@ -214,6 +311,7 @@ class MethodParserTest {
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_метода_с_входящим_параметром_примитивной_коллекцией`() {
         class Test {
@@ -224,27 +322,26 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "inputPrimitiveCollectionParameter",
-             description = "",
-             summary = "Метод с параметром примитивной коллекцией",
-             parameters = listOf(
-                  InputParameter(
-                       name = "list",
-                       /*????? java.util.List<java.lang.Float>*/
-                       type = List::class.java,
-                       required = true,
-                       classView = null
-                  )
-             ),
-             result = null
+            name = "inputPrimitiveCollectionParameter",
+            description = "",
+            summary = "Метод с параметром примитивной коллекцией",
+            parameters = listOf(
+                InputParameter(
+                    name = "list",
+                    type = typeOf<List<Float>>().javaType,
+                    required = false,
+                    classView = null
+                )
+            ),
+            result = null
         )
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
 
-        print(actual)
-        /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
+        AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_метода_с_входящим_параметром_композитной_коллекцией`() {
         class Test {
@@ -256,29 +353,28 @@ class MethodParserTest {
         }
 
         val expected = MethodView(
-             name = "inputCompositeCollectionParameter",
-             description = "",
-             summary = "Метод с параметром композитной коллекцией",
-             parameters = listOf(
-                  InputParameter(
-                       name = "collection",
-                       /*????? java.util.Collection<com.example.javafilmoratekotlin.model.Genre>*/
-                       type = Collections::class.java,
-                       required = true,
-                       classView = ClassView(
-                            simpleName = "Genre",
-                            pkg = "com.example.javafilmoratekotlin.model",
-                            description = "Информация о фильме",
-                            fields = emptyList()
-                       )
-                  )
-             ),
-             result = null
+            name = "inputCompositeCollectionParameter",
+            description = "",
+            summary = "Метод с параметром композитной коллекцией",
+            parameters = listOf(
+                InputParameter(
+                    name = "collection",
+                    type = typeOf<Collection<Genre>>().javaType,
+                    required = false,
+                    classView = ClassView(
+                        simpleName = "Genre",
+                        pkg = "package com.example.javafilmoratekotlin.model",
+                        description = "Информация о фильме",
+                        fields = emptyList()
+                    )
+                )
+            ),
+            result = null
         )
 
         val test = Test::class.java.methods[0]
         val actual = MethodParser(ClassParser()).extractMethodInfo(test)
-        /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
+        AssertionErrors.assertEquals("Pass", expected, actual)
 
     }
 

@@ -5,7 +5,7 @@ import com.example.javafilmoratekotlin.model.Genre
 import com.example.javafilmoratekotlin.parsing.ClassParser
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
+
 
 class FilmorateKotlinApplicationTests {
 

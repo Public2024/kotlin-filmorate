@@ -40,8 +40,8 @@ class ClassParser() {
 
         val typeField = getTypeField(fieldWithAnnotation.field)
 
-        /*drop last для удаления из коллеции enum элементов по типу VALUE*/
-        if (typeField == TypeField.ENUM) classOfEnum = extractClassEnum(fieldWithAnnotation.field.type).dropLast(2)
+        /*drop last для удаления из коллеции enum элемента по типу VALUE*/
+        if (typeField == TypeField.ENUM) classOfEnum = extractClassEnum(fieldWithAnnotation.field.type).dropLast(1)
         if (typeField == TypeField.COMPOSITE) classOfComposite = extractClassInfo(fieldWithAnnotation.field.type)
         if (typeField == TypeField.COLLECTION_COMPOSITE) classOfComposite =
              extractClassCompositeCollection(fieldWithAnnotation.field)

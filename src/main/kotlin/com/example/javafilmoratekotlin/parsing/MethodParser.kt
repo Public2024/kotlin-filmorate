@@ -2,6 +2,7 @@ package com.example.javafilmoratekotlin.parsing
 
 import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestParam
 import java.lang.reflect.Method
@@ -48,10 +49,10 @@ class MethodParser(
     fun getAllParameters(
          parameters: List<KParameter>?
     ): List<InputParameter>? {
-        var required = true
+        var required = false
         return parameters?.map { it ->
-            if (it.annotations.filterIsInstance<RequestParam>() != emptyList<Annotation>()) {
-                required = (it.annotations.find { it is RequestParam } as RequestParam).required
+            if (it.annotations.filterIsInstance<Parameter>() != emptyList<Annotation>()) {
+                required = (it.annotations.find { it is Parameter } as Parameter).required
             }
             InputParameter(
                  name = it.name,
