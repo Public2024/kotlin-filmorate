@@ -6,7 +6,6 @@ import com.example.javafilmoratekotlin.service.ApplicationEndpoint
 interface DocumentViewGenerator {
     val type: DocumentViewType
     fun generate(request: DocumentationSources): String
-
 }
 
 enum class DocumentViewType {

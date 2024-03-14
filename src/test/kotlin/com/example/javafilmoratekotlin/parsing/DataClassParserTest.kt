@@ -9,7 +9,6 @@ import org.example.model.Comments
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import java.time.LocalDate
-import java.util.*
 import javax.validation.constraints.Email
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
@@ -334,4 +333,60 @@ class DataClassParserTest {
         AssertionErrors.assertEquals("Pass", null, actualParseEnumTragedyDesc)
     }
 
+    @Test
+    fun `тест_если_поле_класса_тот_же_тип_что_и_сам_класс_(error_stack_overflow)`(){
+        data class ActualFilm(
+            @field:Schema(description = "Фильм", required = true)
+            val actualFilm: ActualFilm?
+        )
+
+        val expectedFilm =
+            ClassView(
+                    simpleName = "ActualFilm",
+                    pkg = "package com.example.javafilmoratekotlin.parsing",
+                    description = null,
+                    fields = listOf(FieldView(
+                        name = "actualFilm",
+                        type = ActualFilm::class.java,
+                        description = "Фильм",
+                        example = "",
+                        required = true,
+                        classOfEnum = null,
+                        classOfComposite = null
+                    )
+                )
+            )
+
+        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)
+        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    @Test
+    fun `тест_если_поле_класса_коллекция_с_тем_же_типом_что_и_сам_класс_(error_stack_overflow)`(){
+        data class ActualFilm(
+            @field:Schema(description = "Фильм", required = true)
+            val actualFilm: List<ActualFilm>?
+        )
+
+       val expectedFilm = ClassView(
+            simpleName = "ActualFilm",
+            pkg = "package com.example.javafilmoratekotlin.parsing",
+            description = null,
+            fields = listOf(FieldView(
+                name = "actualFilm",
+                type = typeOf<List<ActualFilm>>().javaType,
+                description = "Фильм",
+                example = "",
+                required = true,
+                classOfEnum = null,
+                classOfComposite = null
+            )
+            )
+        )
+
+        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)
+        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
+
+    }
 }

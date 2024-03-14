@@ -9,92 +9,98 @@ import java.lang.reflect.Type
 
 @Component
 class ClassParser() {
-
     /*Парсинг data класса*/
     fun extractClassInfo(clazz: Class<*>): ClassView {
-        val schemaAnnotation = extractScheme(clazz.annotations)
-
-        /*поля с аннотацией field*/
-        val fields = clazz.declaredFields
-             .map { FieldWithAnnotation(field = it, annotation = extractAnnotationsScheme(it)) }
-             .filter { it.annotation != null }
-
         return ClassView(
-             simpleName = clazz.simpleName.toString(),
-             pkg = clazz.`package`.toString(),
-             description = schemaAnnotation?.description,
-             fields = getAllFields(fields),
+            simpleName = clazz.simpleName.toString(),
+            pkg = clazz.`package`.toString(),
+            description = extractScheme(clazz.annotations)?.description,
+            fields = extractField(returnAllFieldsWithSchema(clazz)),
         )
-    }
-
-    /*Получение полей data класса*/
-    private fun getAllFields(fields: List<FieldWithAnnotation>): List<FieldView> {
-        return fields.map { extractField(it) }
     }
 
     /*Парсинг полей*/
-    private fun extractField(fieldWithAnnotation: FieldWithAnnotation): FieldView {
-
-        var classOfEnum: List<ClassEnumView>? = null
-        var classOfComposite: ClassView? = null
-
-        val typeField = getTypeField(fieldWithAnnotation.field)
-
-        /*drop last для удаления из коллеции enum элемента по типу VALUE*/
-        if (typeField == TypeField.ENUM) classOfEnum = extractClassEnum(fieldWithAnnotation.field.type).dropLast(1)
-        if (typeField == TypeField.COMPOSITE) classOfComposite = extractClassInfo(fieldWithAnnotation.field.type)
-        if (typeField == TypeField.COLLECTION_COMPOSITE) classOfComposite =
-             extractClassCompositeCollection(fieldWithAnnotation.field)
-
-        return FieldView(
-             name = fieldWithAnnotation.field.name,
-             type = fieldWithAnnotation.field.annotatedType.type,
-             description = fieldWithAnnotation.annotation?.description,
-             example = fieldWithAnnotation.annotation?.example,
-             required = fieldWithAnnotation.annotation?.required,
-             classOfEnum = classOfEnum,
-             classOfComposite = classOfComposite
-        )
-    }
-
-    /*Получение типа поля*/
-    private fun getTypeField(field: Field): TypeField {
-        return when {
-            TypeSeparator.getPrimitiveTypes(field) -> TypeField.PRIMITIVE
-            field.type.isEnum -> TypeField.ENUM
-            TypeSeparator.getCollectionTypes(field) -> {
-                if (TypeSeparator.checkingOnPrimitiveCollection(field)) TypeField.COLLECTION_PRIMITIVE
-                else TypeField.COLLECTION_COMPOSITE
-            }
-
-            else -> TypeField.COMPOSITE
+    private fun extractField(fields: List<FieldWithAnnotation>): List<FieldView> {
+        return fields.map { fieldWithAnnotation ->
+            FieldView(
+                name = fieldWithAnnotation.field.name,
+                type = fieldWithAnnotation.field.annotatedType.type,
+                description = fieldWithAnnotation.annotation?.description,
+                example = fieldWithAnnotation.annotation?.example,
+                required = fieldWithAnnotation.annotation?.required,
+                classOfEnum = extractClassEnum(fieldWithAnnotation),
+                classOfComposite = extractOfCompositeClass(fieldWithAnnotation.field)
+            )
         }
     }
 
-    /*Получение объекта уникального класса коллекции*/
-    private fun extractClassCompositeCollection(field: Field): ClassView {
-        return extractClassInfo((field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>)
+    private fun extractOfCompositeClass(field: Field): ClassView? {
+        return when {
+            field.annotatedType.type == field.declaringClass -> null
+            field.type.isEnum -> null
+            TypeSeparator.isPrimitiveTypes(field) -> null
+            TypeSeparator.isCollectionTypes(field) -> extractObjOfCollection(field)
+            else -> {
+                extractClassInfo(field.type)
+            }
+        }
     }
 
+    /*Получение объекта класса коллекции*/
+    private fun extractObjOfCollection(field: Field): ClassView? {
+        val objCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        return when {
+            TypeSeparator.isPrimitive(objCollection) -> null
+            objCollection == field.declaringClass -> null
+            else -> {
+                extractClassInfo(objCollection)
+            }
+        }
+    }
 
-    private fun extractAnnotationsScheme(field: Field?): Schema? {
-        /*
-        * Поиск Schema в полях*/
-        var annotationSchema = extractScheme(field?.annotations)
+    /*
+    *Получение всех полей с аннотацией Schema*/
+    private fun returnAllFieldsWithSchema(clazz: Class<*>): List<FieldWithAnnotation> {
+        val fields = clazz.declaredFields.toList()
+        val allFieldsWithAnnotation = extractSchemeIntoFields(fields).plus(extractSchemeIntoConstructors(clazz))
+        return allFieldsWithAnnotation.map { f ->
+            fields.find { it.name == f.name }
+                ?.let { FieldWithAnnotation(field = it, annotation = f.annotation) }!!
+        }
+    }
 
-        /*
-        *Поиск Schema в конструкторах*/
-        if (annotationSchema == null) {
-            val constructors = field?.declaringClass?.constructors
-            constructors?.forEach { value ->
-                val parameter = value.parameters.find { it.name.equals(field.name) }
-                val schema = extractScheme(parameter?.annotations)
+    /*
+    * Поиск полей cо Schema в полях*/
+    private fun extractSchemeIntoFields(fields: List<Field>): List<NameWithAnnotation> {
+        return fields.map {
+            NameWithAnnotation(
+                name = it.name,
+                annotation = extractScheme(it.annotations)
+            )
+        }
+            .filter { it.annotation != null }
+    }
+
+    /*
+    * Поиск полей cо Schema в конструкторах*/
+    private fun extractSchemeIntoConstructors(clazz: Class<*>): List<NameWithAnnotation> {
+        val constructors = clazz.constructors
+        val fields = mutableListOf<NameWithAnnotation>()
+        constructors.forEach { value ->
+            val parameter = value.parameters
+            for (p in parameter) {
+                val schema = extractScheme(p?.annotations)
                 if (schema != null) {
-                    annotationSchema = schema
+                    fields.add(
+                        NameWithAnnotation(
+                            name = p.name,
+                            annotation = schema
+                        )
+                    )
                 }
             }
         }
-        return annotationSchema
+        return fields
     }
 
     /*
@@ -103,50 +109,50 @@ class ClassParser() {
         return annotations?.find { it is Schema } as? Schema
     }
 
-
     /*
     *Парсинг enum класса*/
-    private fun extractClassEnum(clazz: Class<*>): List<ClassEnumView> {
-        return clazz.declaredFields.map { field ->
-            ClassEnumView(
-                 value = field.name,
-                 description = (field.annotations.find { it is Schema } as? Schema)?.description)
-        }
+    private fun extractClassEnum(fieldWithAnnotation: FieldWithAnnotation): List<ClassEnumView>? {
+        val typeOfClass = fieldWithAnnotation.field.type
+        return if (typeOfClass.isEnum)
+            typeOfClass.declaredFields.map { field ->
+                ClassEnumView(
+                    value = field.name,
+                    description = (field.annotations.find { it is Schema } as? Schema)?.description)
+            }.dropLast(1) /*для удаления из коллеции enum элемента по типу VALUE*/
+        else null
     }
 }
 
-data class FieldWithAnnotation(
-     val field: Field,
-     val annotation: Schema?
+data class NameWithAnnotation(
+    val name: String,
+    val annotation: Schema?
 )
 
+data class FieldWithAnnotation(
+    val field: Field,
+    val annotation: Schema?
+)
 
 data class ClassEnumView(
-     val value: String,
-     val description: String?
+    val value: String,
+    val description: String?
 )
 
 data class ClassView(
-     val simpleName: String,
-     val pkg: String,
-     val description: String?,
-     val fields: List<FieldView>,
+    val simpleName: String,
+    val pkg: String,
+    val description: String?,
+    val fields: List<FieldView>,
 )
 
 data class FieldView(
-     val name: String,
-     //TODO: возможно java класс Type не нужен и досточноно схрать имя-пакейт класса, чтобы значть что это такое
-     val type: Type,
-     val description: String?,
-     val example: String?,
-     val required: Boolean?,
-     // сложный объект чтобы знать какой енам каким бывает
-     val classOfEnum: List<ClassEnumView>? = null,
-     // если объект составной, то тут лежит его описание
-     val classOfComposite: ClassView? = null
+    val name: String,
+    val type: Type,
+    val description: String?,
+    val example: String?,
+    val required: Boolean?,
+    // сложный объект чтобы знать какой енам каким бывает
+    val classOfEnum: List<ClassEnumView>? = null,
+    // если объект составной, то тут лежит его описание
+    val classOfComposite: ClassView? = null
 )
-
-enum class TypeField {
-    PRIMITIVE, ENUM, COMPOSITE, COLLECTION_PRIMITIVE, COLLECTION_COMPOSITE
-}
-

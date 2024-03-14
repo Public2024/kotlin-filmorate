@@ -20,11 +20,8 @@ class MethodParser(
 ) {
 
     /*Парсинг метода в MethodView*/
-    //TODO: с джавовыми методами
     fun extractMethodInfo(method: Method): MethodView {
-
         val description = extractDescription(method)
-
         return MethodView(
              name = method.name,
              description = description?.description,

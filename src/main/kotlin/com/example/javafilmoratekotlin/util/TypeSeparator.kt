@@ -1,7 +1,6 @@
 package com.example.javafilmoratekotlin.util
 
 import java.lang.reflect.Field
-import java.lang.reflect.ParameterizedType
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -12,7 +11,7 @@ import java.util.*
 
 class TypeSeparator {
     companion object {
-        private val primitivesJava = listOf<Class<*>>(
+        private val primitivesObj = listOf<Class<*>>(
              Int::class.javaObjectType,
              Boolean::class.javaObjectType,
              Double::class.javaObjectType,
@@ -69,30 +68,20 @@ class TypeSeparator {
 
         )
 
-        private fun getPrimitiveTypesClass(clazz: Class<*>): Boolean {
-            return primitivesJava.contains(clazz)
+        fun isPrimitiveTypes(field: Field): Boolean {
+            return primitivesObj.contains(field.type)
         }
 
-        fun getPrimitiveTypes(field: Field): Boolean {
-            return primitivesJava.contains(field.type)
-        }
-
-        fun getCollectionTypes(field: Field): Boolean {
+        fun isCollectionTypes(field: Field): Boolean {
             return collections.contains(field.type)
         }
 
         fun isCollection(clazz: Class<*>): Boolean {
-            return collections.contains(clazz) ?: collections.contains(clazz.superclass) ?: false
+            return collections.contains(clazz)
         }
 
         fun isPrimitive(clazz: Class<*>): Boolean {
-            return primitivesJava.contains(clazz) ?: primitivesJava.contains(clazz.superclass)
-            ?: false
-        }
-
-        fun checkingOnPrimitiveCollection(field: Field): Boolean {
-            val getObjectCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
-            return getPrimitiveTypesClass(getObjectCollection)
+            return primitivesObj.contains(clazz)
         }
     }
 }
