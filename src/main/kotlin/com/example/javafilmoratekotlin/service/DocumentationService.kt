@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class DocumentationService(
     private val endpointsFinder: ApplicationEndpointsFinder,
-    private val generators: List<DocumentViewGenerator>,
+    private val generators: List<DocumentViewGenerator>
 ) {
 
     fun buildDocumentation(): Map<DocumentViewType, String> {

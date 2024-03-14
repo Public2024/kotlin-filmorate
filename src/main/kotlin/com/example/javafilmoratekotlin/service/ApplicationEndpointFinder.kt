@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Component
 class ApplicationEndpointsFinder(private val methodParser : MethodParser) {
 
-
     /*Поиск всех энедпоинтов приложения*/
     fun findAllEndpoints(): List<ApplicationEndpoint> {
         val requestMappingHandlerMapping = ApplicationContextProviders.getApplicationContext()

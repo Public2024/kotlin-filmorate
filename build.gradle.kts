@@ -8,6 +8,8 @@ plugins {
 	kotlin("plugin.spring") version "1.8.22"
 }
 
+extra["jackson-bom.version"] = "2.13.4"
+
 group = "ru.devmark"
 version = "0.0.1-SNAPSHOT"
 

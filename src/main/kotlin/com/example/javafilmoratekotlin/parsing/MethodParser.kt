@@ -4,7 +4,6 @@ import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.RequestParam
 import java.lang.reflect.Method
 import java.lang.reflect.Type
 import kotlin.reflect.KParameter

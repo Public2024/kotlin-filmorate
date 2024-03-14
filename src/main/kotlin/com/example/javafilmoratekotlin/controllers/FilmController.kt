@@ -24,38 +24,38 @@ class FilmController {
     /**
      * Функция получения всех фильмов
      */
-    @GetMapping("/all")
-    @Operation(summary = "Показать все фильмы")
-    fun returnAllFilms(): ArrayList<Film> {
-        return ArrayList(films.values)
-    }
-
-    /**
-     * Функция создания нового фильма
-     */
-    @PostMapping
-    @Operation(summary = "Добавить фильм", description = "Добавление фильма в коллекцию")
-    @ResponseBody
-    fun createFilm(@RequestParam(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
-        validateFilm(film)
-        film.id = generateId()
-        films[film.id] = film
-        return film
-    }
-
-    /**
-     * Функция изменения фильма
-     */
-    @PutMapping
-    @Operation(summary = "Изменить фильм")
-    fun changeFilm(@RequestParam(required = true) @Valid @RequestBody film: Film): Film {
-        validateFilm(film)
-        if (films.containsKey(film.id))
-            films.replace(film.id, film)
-        else
-            throw Exception("Неверный ID")
-        return film
-    }
+//    @GetMapping("/all")
+//    @Operation(summary = "Показать все фильмы")
+//    fun returnAllFilms(): ArrayList<Film> {
+//        return ArrayList(films.values)
+//    }
+//
+//    /**
+//     * Функция создания нового фильма
+//     */
+//    @PostMapping
+//    @Operation(summary = "Добавить фильм", description = "Добавление фильма в коллекцию")
+//    @ResponseBody
+//    fun createFilm(@RequestParam(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {
+//        validateFilm(film)
+//        film.id = generateId()
+//        films[film.id] = film
+//        return film
+//    }
+//
+//    /**
+//     * Функция изменения фильма
+//     */
+//    @PutMapping
+//    @Operation(summary = "Изменить фильм")
+//    fun changeFilm(@RequestParam(required = true) @Valid @RequestBody film: Film): Film {
+//        validateFilm(film)
+//        if (films.containsKey(film.id))
+//            films.replace(film.id, film)
+//        else
+//            throw Exception("Неверный ID")
+//        return film
+//    }
 
     /**
      * @suppress
