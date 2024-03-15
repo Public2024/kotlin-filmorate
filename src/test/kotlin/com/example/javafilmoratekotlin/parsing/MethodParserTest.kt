@@ -24,7 +24,7 @@ class MethodParserTest {
             summary = "Возврат коллекции",
             parameters = emptyList(),
             result = OutputResult(
-                type = typeOf<List<String>>().javaType,
+                type = typeOf<List<String>>().javaType.toString(),
                 uniqueParameter = null
             )
         )
@@ -42,7 +42,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "genre",
-                    type = Genre::class.java,
+                    type = Genre::class.java.toString(),
                     required = true,
                     classView = ClassView(
                         simpleName = "Genre",
@@ -68,7 +68,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "id",
-                    type = Integer::class.java,
+                    type = Integer::class.java.toString(),
                     required = false,
                     classView = null
                 )
@@ -90,7 +90,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "collection",
-                    type = typeOf<Collection<Genre>>().javaType,
+                    type = typeOf<Collection<Genre>>().javaType.toString(),
                     required = false,
                     classView = ClassView(
                         simpleName = "Genre",
@@ -147,7 +147,7 @@ class MethodParserTest {
             summary = "Метод, который возвращает примитивный объект",
             parameters = emptyList(),
             result = OutputResult(
-                type = Int::class.java,
+                type = Int::class.java.toString(),
                 uniqueParameter = null
             )
         )
@@ -174,7 +174,7 @@ class MethodParserTest {
             summary = "Метод, который возвращает сложный объект",
             parameters = emptyList(),
             result = OutputResult(
-                type = Genre::class.java,
+                type = Genre::class.java.toString(),
                 uniqueParameter = ClassView(
                     simpleName = "Genre",
                     pkg = "package com.example.javafilmoratekotlin.model",
@@ -205,7 +205,7 @@ class MethodParserTest {
             summary = "Метод, который возвращает коллекцию с примитивом",
             parameters = emptyList(),
             result = OutputResult(
-                type = typeOf<List<String>>().javaType,
+                type = typeOf<List<String>>().javaType.toString(),
                 uniqueParameter = null
             )
         )
@@ -233,7 +233,7 @@ class MethodParserTest {
             summary = "Метод, который возвращает коллекцию со сложным объектом",
             parameters = emptyList(),
             result = OutputResult(
-                type = typeOf<List<Genre>>().javaType,
+                type = typeOf<List<Genre>>().javaType.toString(),
                 uniqueParameter = ClassView(
                     simpleName = "Genre",
                     pkg = "com.example.javafilmoratekotlin.model",
@@ -264,7 +264,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "double",
-                    type = Double::class.java,
+                    type = Double::class.java.toString(),
                     required = false,
                     classView = null
                 )
@@ -293,7 +293,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "genre",
-                    type = Genre::class.java,
+                    type = Genre::class.java.toString(),
                     required = false,
                     classView = ClassView(
                         simpleName = "Genre",
@@ -328,7 +328,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "list",
-                    type = typeOf<List<Float>>().javaType,
+                    type = typeOf<List<Float>>().javaType.toString(),
                     required = false,
                     classView = null
                 )
@@ -359,7 +359,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "collection",
-                    type = typeOf<Collection<Genre>>().javaType,
+                    type = typeOf<Collection<Genre>>().javaType.toString(),
                     required = false,
                     classView = ClassView(
                         simpleName = "Genre",

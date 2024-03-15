@@ -27,7 +27,7 @@ class DataClassParserTest {
         /*Примитивный тип поля*/
         val expectedIdParse = FieldView(
             name = "id",
-            type = Integer::class.java,
+            type = Integer::class.java.toString(),
             description = "Идентификатор",
             example = "",
             required = false,
@@ -41,7 +41,7 @@ class DataClassParserTest {
         /*Коллекция с примитвным типом*/
         val expectedTextParse = FieldView(
             name = "text",
-            type = typeOf<List<String>>().javaType,
+            type = typeOf<List<String>>().javaType.toString(),
             description = "Комментарий",
             example = "",
             required = false,
@@ -63,7 +63,7 @@ class DataClassParserTest {
         /*Тест парсинг composite type*/
         val expectedGenreParse = FieldView(
             name = "genre",
-            type = Genre::class.java,
+            type = Genre::class.java.toString(),
             description = "Тест жанр",
             example = "",
             required = false,
@@ -81,7 +81,7 @@ class DataClassParserTest {
 
         val expectedCollectionGenreParse = FieldView(
             name = "genres",
-            type = typeOf<Collection<Genre>>().javaType,
+            type = typeOf<Collection<Genre>>().javaType.toString(),
             description = "Комментарий к жанрам",
             example = "",
             required = false,
@@ -111,7 +111,7 @@ class DataClassParserTest {
 
         val expectedFilmId = FieldView(
             name = "id",
-            type = Int::class.java,
+            type = Int::class.java.toString(),
             description = "Идентификатор фильма",
             example = "",
             required = false,
@@ -132,7 +132,7 @@ class DataClassParserTest {
 
         val expectedFilmEnum = FieldView(
             name = "tags",
-            type = FilmTag::class.java,
+            type = FilmTag::class.java.toString(),
             description = "Тэги",
             example = "",
             required = true,
@@ -166,7 +166,7 @@ class DataClassParserTest {
         val expectedFilm =
             FieldView(
                 name = "genre",
-                type = Genre::class.java,
+                type = Genre::class.java.toString(),
                 description = "Жанр",
                 example = "",
                 required = false,
@@ -202,7 +202,7 @@ class DataClassParserTest {
         val expectedFilm =
             FieldView(
                 name = "users",
-                type = typeOf<Collection<ActualUser>>().javaType,
+                type = typeOf<Collection<ActualUser>>().javaType.toString(),
                 description = "Пользователи",
                 example = "",
                 required = false,
@@ -214,7 +214,7 @@ class DataClassParserTest {
                     fields = listOf(
                         FieldView(
                             name = "email",
-                            type = String::class.java,
+                            type = String::class.java.toString(),
                             description = "Почта пользователя",
                             example = "",
                             required = false,
@@ -347,7 +347,7 @@ class DataClassParserTest {
                     description = null,
                     fields = listOf(FieldView(
                         name = "actualFilm",
-                        type = ActualFilm::class.java,
+                        type = ActualFilm::class.java.toString(),
                         description = "Фильм",
                         example = "",
                         required = true,
@@ -375,7 +375,7 @@ class DataClassParserTest {
             description = null,
             fields = listOf(FieldView(
                 name = "actualFilm",
-                type = typeOf<List<ActualFilm>>().javaType,
+                type = typeOf<List<ActualFilm>>().javaType.toString(),
                 description = "Фильм",
                 example = "",
                 required = true,

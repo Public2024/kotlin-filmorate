@@ -1,11 +1,11 @@
 package com.example.javafilmoratekotlin.parsing
 
 import com.example.javafilmoratekotlin.util.TypeSeparator
+import com.fasterxml.jackson.annotation.JsonView
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 @Component
 class ClassParser() {
@@ -24,7 +24,7 @@ class ClassParser() {
         return fields.map { fieldWithAnnotation ->
             FieldView(
                 name = fieldWithAnnotation.field.name,
-                type = fieldWithAnnotation.field.annotatedType.type,
+                type = fieldWithAnnotation.field.annotatedType.type.toString(),
                 description = fieldWithAnnotation.annotation?.description,
                 example = fieldWithAnnotation.annotation?.example,
                 required = fieldWithAnnotation.annotation?.required,
@@ -33,7 +33,7 @@ class ClassParser() {
             )
         }
     }
-
+    /*Парсинг composite класс*/
     private fun extractOfCompositeClass(field: Field): ClassView? {
         return when {
             field.annotatedType.type == field.declaringClass -> null
@@ -147,7 +147,7 @@ data class ClassView(
 
 data class FieldView(
     val name: String,
-    val type: Type,
+    val type: String,
     val description: String?,
     val example: String?,
     val required: Boolean?,

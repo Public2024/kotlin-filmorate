@@ -52,7 +52,7 @@ class MethodParser(
             }
             InputParameter(
                  name = it.name,
-                 type = it.type.javaType,
+                 type = it.type.javaType.toString(),
                  required = required,
                  classView = checkOnCompositeParameter(it.type)
             )
@@ -82,19 +82,19 @@ class MethodParser(
         val returnType = method.kotlinFunction?.returnType ?: return null
         if (returnType.toString() == "kotlin.Unit") return null
         return OutputResult(
-             type = returnType.javaType, uniqueParameter = checkOnCompositeParameter(returnType)
+             type = returnType.javaType.toString(), uniqueParameter = checkOnCompositeParameter(returnType)
         )
     }
 }
 
 data class OutputResult(
-     val type: Type?,
+     val type: String?,
      val uniqueParameter: ClassView?
 )
 
 data class InputParameter(
      val name: String?,
-     val type: Type,
+     val type: String,
      val required: Boolean,
      val classView: ClassView?
 )
