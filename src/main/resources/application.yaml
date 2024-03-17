@@ -4,10 +4,13 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
     operations-sorter: method
-spring:
+#spring:
+#  mvc:
+#    view:
+#      suffix: .html
   thymeleaf:
+#    prefix: classpath:/templates/
     cache: false
-    prefix: resources/templates/index.html
   banner:
     location: classpath:/banner.txt
 server:

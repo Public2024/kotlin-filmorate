@@ -46,9 +46,13 @@ class ClassParser() {
         }
     }
 
+    fun forSerializedIntoJSON(field: Field): Class<*>{
+        return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+    }
+
     /*Получение объекта класса коллекции*/
     private fun extractObjOfCollection(field: Field): ClassView? {
-        val objCollection = (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        val objCollection = forSerializedIntoJSON(field)
         return when {
             TypeSeparator.isPrimitive(objCollection) -> null
             objCollection == field.declaringClass -> null

@@ -30,8 +30,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-kotlin:1.6.9")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
-	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2")
-	// https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.reflections:reflections:0.10.2")
 
