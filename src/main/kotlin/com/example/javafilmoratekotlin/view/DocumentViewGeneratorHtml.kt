@@ -13,7 +13,7 @@ class DocumentViewGeneratorHtml : DocumentViewGenerator {
 
     /*Возврат таблицы HTML*/
     override fun generate(request: List<DocumentationEndpoint>, model: Model): String {
-        model.addAttribute("EndPoint", request)
+        model.addAttribute("DocumentationEndpoint", request)
         return "index"
     }
 }

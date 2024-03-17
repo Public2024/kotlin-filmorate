@@ -2,6 +2,10 @@ package com.example.javafilmoratekotlin.controllers
 
 import com.example.javafilmoratekotlin.model.Film
 import com.example.javafilmoratekotlin.model.User
+import com.example.javafilmoratekotlin.parsing.ClassParser
+import com.example.javafilmoratekotlin.parsing.MethodParser
+import com.example.javafilmoratekotlin.service.ApplicationEndpoint
+import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
@@ -13,9 +17,16 @@ import javax.validation.Valid
  * @property FilmController - контроллер фильмов
  */
 @RestController
-@RequestMapping("/films")
+@RequestMapping()
 @Tag(name = "Контроллер фильмов", description = "API для CRUD фильмов")
 class FilmController {
+
+    @GetMapping("/endpoints")
+    fun getEndPoints(): List<ApplicationEndpoint>{
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        return endPointFinder
+    }
+
 
     private val films = HashMap<Int, Film>(4)
 

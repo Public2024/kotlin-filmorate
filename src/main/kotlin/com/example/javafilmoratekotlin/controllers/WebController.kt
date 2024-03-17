@@ -3,10 +3,9 @@ package com.example.javafilmoratekotlin.controllers
 
 import com.example.javafilmoratekotlin.parsing.ClassParser
 import com.example.javafilmoratekotlin.parsing.MethodParser
+import com.example.javafilmoratekotlin.service.ApplicationEndpoint
 import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
 import com.example.javafilmoratekotlin.service.DocumentationService
-import com.example.javafilmoratekotlin.view.DocumentViewGenerator
-import com.example.javafilmoratekotlin.view.DocumentViewGeneratorHtml
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping

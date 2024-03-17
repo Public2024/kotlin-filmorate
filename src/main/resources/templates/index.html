@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
     <head>
-        <title>Greeting</title>
+        <title>DocHTML</title>
     </head>
         <body>
         <table>
             <thead>
             <tr>
-                <th> Title </th>
-                <th> Author </th>
+                <th> EndpointType </th>
+                <th> MethodView </th>
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${books.empty}">
-                <td colspan="2"> No Books Available </td>
+            <tr th:if="${view}">
+                <td colspan="2"> No Method Available </td>
             </tr>
-            <tr th:each="book : ${books}">
-                <td><span th:text="${book.title}"> Title </span></td>
-                <td><span th:text="${book.author}"> Author </span></td>
+            <tr th:each="DocumentationEndpoint : ${DocumentationEndpoint}">
+                <td><span th:text="${DocumentationEndpoint.endpoint}"> Title </span></td>
+                <td><span th:text="${DocumentationEndpoint.view}"> Author </span></td>
             </tr>
             </tbody>
         </table>
