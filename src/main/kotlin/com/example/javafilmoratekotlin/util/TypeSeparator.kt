@@ -65,7 +65,6 @@ class TypeSeparator {
              Map::class.java,
              HashMap::class.java
 
-
         )
 
         fun isPrimitiveTypes(field: Field): Boolean {
@@ -83,5 +82,7 @@ class TypeSeparator {
         fun isPrimitive(clazz: Class<*>): Boolean {
             return primitivesObj.contains(clazz)
         }
+
+
     }
 }

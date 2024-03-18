@@ -1,25 +1,112 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
-    <head>
-        <title>DocHTML</title>
-    </head>
-        <body>
-        <table>
-            <thead>
-            <tr>
-                <th> EndpointType </th>
-                <th> MethodView </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${view}">
-                <td colspan="2"> No Method Available </td>
-            </tr>
-            <tr th:each="DocumentationEndpoint : ${DocumentationEndpoint}">
-                <td><span th:text="${DocumentationEndpoint.endpoint}"> Title </span></td>
-                <td><span th:text="${DocumentationEndpoint.view}"> Author </span></td>
-            </tr>
-            </tbody>
-        </table>
-        </body>
+<head>
+    <title>DocHTML</title>
+</head>
+<body>
+<table>
+    <thead>
+    <style type="text/css">
+        table {
+         border-collapse: collapse; /* Отображать двойные линии как одинарные */
+        }
+        th {
+         background: #ccc; /* Цвет фона */
+         text-align: center; /* Выравнивание по левому краю */
+        }
+        td, th {
+         border: 1px solid #800; /* Параметры границы */
+         padding: 6px; /* Поля в ячейках */
+        }
+    </style>
+    <tr>
+        <th rowspan="2">  Type</th>
+        <th rowspan="2"> Path</th>
+        <th rowspan="2"> Name</th>
+        <th rowspan="2"> Description</th>
+        <th rowspan="2"> Summary</th>
+        <th colspan="4" > Parameters</th>>
+        <th rowspan="2"> Result</th>
+    </tr>
+    <tr>
+        <th> Number</th>
+        <th> Name</th>
+        <th> Type</th>
+        <th> Required</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${view}">
+        <td colspan="4"> No Method Available</td>
+    </tr>
+    <tr th:each="Doc : ${DocumentationEndpoint}">
+        <td width="100"><span th:text="${Doc.endpoint.type}"> Type </span></td>
+        <td width="100"><span th:text="${Doc.endpoint.path}"> Path </span></td>
+        <td width="100"><span th:text="${Doc.view.name}"> Name </span></td>
+        <td width="100" th:switch="${Doc.view.description}">
+            <span th:case="null"> - </span>
+            <span th:case="${Doc.view.description}" th:text="${Doc.view.description}"> </span>
+        </td>
+        <td th:switch="${Doc.view.summary}">
+            <span th:case="null"> - </span>
+            <span th:case="${Doc.view.summary}" th:text="${Doc.view.summary}">  </span>
+        </td>
+        <td th:switch="${Doc.view.parameters}">
+            <span th:case="empty"> - </span>
+            <table>
+                <tbody>
+                <tr th:each="Parameter : ${Doc.view.parameters}">
+                    <td>
+                        <ol>
+                            <li>Первый пункт</li>
+                        </ol>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td th:switch="${Doc.view.parameters}">
+            <span th:case="empty"> - </span>
+            <table>
+                <tbody>
+                <tr th:each="Parameter : ${Doc.view.parameters}">
+                    <td><span th:text="${Parameter.name}"> Parameter name </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td width="100"  th:switch="${Doc.view.parameters}" >
+            <span th:case="empty"> - </span>
+            <table>
+                <tbody>
+                <tr th:each="Parameter : ${Doc.view.parameters}">
+                    <td><span th:text="${Parameter.type}"> Parameter type </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td th:switch="${Doc.view.parameters}">
+            <span th:case="empty"> - </span>
+            <table>
+                <tbody>
+                <tr th:each="Parameter : ${Doc.view.parameters}">
+                    <td><span th:text="${Parameter.required}"> Parameter required </span></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </td>
+        <td>
+            <table>
+                <tbody>
+                <tr>
+                    <td width="100"><span th:text="${Doc.view.result?.type}"> type result </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
 </html>

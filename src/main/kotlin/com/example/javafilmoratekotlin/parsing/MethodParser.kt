@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
-import java.lang.reflect.Type
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
 import kotlin.reflect.full.valueParameters
@@ -88,7 +87,7 @@ class MethodParser(
 }
 
 data class OutputResult(
-     val type: String?,
+     val type: String,
      val uniqueParameter: ClassView?
 )
 

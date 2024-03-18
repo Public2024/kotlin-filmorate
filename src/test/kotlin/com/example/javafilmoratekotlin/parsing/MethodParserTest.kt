@@ -248,6 +248,7 @@ class MethodParserTest {
         /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
     }
 
+
     @Test
     fun `тест_метода_с_примитивным_входящим_параметром`() {
         class Test() {
