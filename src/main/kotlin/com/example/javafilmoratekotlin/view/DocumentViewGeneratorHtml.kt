@@ -4,7 +4,6 @@ import com.example.javafilmoratekotlin.parsing.ClassView
 import org.springframework.stereotype.Component
 import org.springframework.ui.Model
 
-
 @Component
 class DocumentViewGeneratorHtml : DocumentViewGenerator {
 /*
@@ -15,5 +14,10 @@ class DocumentViewGeneratorHtml : DocumentViewGenerator {
         model.addAttribute("DocumentationEndpoint", endpoints)
         model.addAttribute("DataClasses", classes)
         return "index"
+    }
+
+    override fun generateNew(endpoint: List<DocumentationEndpointNew>, model: Model): String {
+        model.addAttribute("Endpoints", endpoint)
+        return "index2"
     }
 }

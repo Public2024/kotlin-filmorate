@@ -5,12 +5,15 @@ import com.example.javafilmoratekotlin.model.Genre
 import com.example.javafilmoratekotlin.parsing.ClassParser
 import com.example.javafilmoratekotlin.parsing.ClassView
 import com.example.javafilmoratekotlin.parsing.MethodParser
+import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
+import com.example.javafilmoratekotlin.service.DocumentationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.web.bind.annotation.GetMapping
 
-
+@SpringBootTest
 class FilmorateKotlinApplicationTests {
 
     @Test
@@ -63,19 +66,27 @@ class FilmorateKotlinApplicationTests {
 
         val list = mutableListOf<ClassView>()
 
-        test?.let { list.add(it) }
+        class GetClassesRelatedToParameter(){
 
-        fun findClassView(classView: ClassView?){
-            classView?.fields?.forEach{ field -> if(field.classOfComposite!=null)
-                list.add(field.classOfComposite!!)
-                findClassView(field.classOfComposite)
+            private val listOfClasses = mutableListOf<ClassView>()
+
+            private fun findClassView(classView: ClassView?){
+                classView?.fields?.forEach{ field -> if(field.classOfComposite!=null)
+                    listOfClasses.add(field.classOfComposite!!)
+                    findClassView(field.classOfComposite)
+                }
+            }
+
+            fun getAllClasses(classView: ClassView?): List<ClassView>{
+                if (classView != null) {
+                    listOfClasses.add(classView)
+                }
+                findClassView(classView)
+                return listOfClasses
             }
         }
 
-        findClassView(test)
-        list.forEach { println(it) }
-
-
+        GetClassesRelatedToParameter().getAllClasses(test).forEach{ println(it) }
 
     }
 

@@ -19,6 +19,17 @@ class WebController {
         val generateDoc = DocumentationService(endPointFinder).buildDocumentation(model)
         return generateDoc
     }
+
+    @GetMapping("/doc_new")
+    fun getDocumentationNew(model: Model): String {
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser())
+        val generateDoc = DocumentationService(endPointFinder).buildDocumentationNew(model)
+        return generateDoc
+    }
+
+
+
+
 }
 
 /* @GetMapping("/HTML")

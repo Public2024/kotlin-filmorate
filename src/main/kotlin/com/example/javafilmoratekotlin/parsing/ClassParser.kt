@@ -9,7 +9,7 @@ import java.lang.reflect.ParameterizedType
 @Component
 class ClassParser() {
     /*
-    * Запись классов для выявления уже разпарсенных объектов*/
+    * Коллекция классов для выявления уже распарсенных (вложенных) объектов*/
     private var classViewRecorder = mutableListOf<Class<*>>()
 
     /*Парсинг data класса*/
@@ -26,7 +26,7 @@ class ClassParser() {
         }
     }
 
-    /*Парсинг полей*/
+    /*Парсинг полей data  класса*/
     private fun extractField(fields: List<FieldWithAnnotation>): List<FieldView> {
         return fields.map { fieldWithAnnotation ->
             FieldView(
@@ -69,7 +69,7 @@ class ClassParser() {
     }
 
     /*
-    *Получение всех полей с аннотацией Schema*/
+    *Собрать все поля с аннотацией Schema*/
     private fun returnAllFieldsWithSchema(clazz: Class<*>): List<FieldWithAnnotation> {
         val fields = clazz.declaredFields.toList()
         val allFieldsWithAnnotation = extractSchemeIntoFields(fields).plus(extractSchemeIntoConstructors(clazz))
