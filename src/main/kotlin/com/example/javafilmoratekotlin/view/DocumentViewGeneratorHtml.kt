@@ -1,9 +1,8 @@
 package com.example.javafilmoratekotlin.view
 
+import com.example.javafilmoratekotlin.parsing.ClassView
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.RequestMapping
 
 
 @Component
@@ -12,8 +11,9 @@ class DocumentViewGeneratorHtml : DocumentViewGenerator {
     override val type = DocumentViewType.HTML*/
 
     /*Возврат таблицы HTML*/
-    override fun generate(request: List<DocumentationEndpoint>, model: Model): String {
-        model.addAttribute("DocumentationEndpoint", request)
+    override fun generate(endpoints: List<DocumentationEndpoint>, classes: List<ClassView>, model: Model): String {
+        model.addAttribute("DocumentationEndpoint", endpoints)
+        model.addAttribute("DataClasses", classes)
         return "index"
     }
 }

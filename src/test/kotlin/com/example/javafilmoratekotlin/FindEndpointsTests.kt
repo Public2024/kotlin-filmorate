@@ -1,6 +1,5 @@
 package com.example.javafilmoratekotlin
 
-import com.example.javafilmoratekotlin.parsing.ClassParser
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.parsing.MethodView
 import com.example.javafilmoratekotlin.service.ApplicationEndpoint
@@ -32,7 +31,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/post_test" }
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -56,7 +55,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/get_test" }
         AssertionErrors.assertEquals("Pass", expected, actual)
 
@@ -81,7 +80,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/put_test" }
         AssertionErrors.assertEquals("Pass", expected, actual)
 
@@ -106,7 +105,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/delete_test" }
         AssertionErrors.assertEquals("Pass", expected, actual)
 
@@ -131,7 +130,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/request_post" }
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -155,7 +154,7 @@ class FindEndpointsTests() {
              )
         )
 
-        val actual =ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val actual =ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
              .find { it.path == "/test/request_get" }
         AssertionErrors.assertEquals("Pass", expected, actual)
 

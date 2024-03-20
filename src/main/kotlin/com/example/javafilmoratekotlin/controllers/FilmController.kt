@@ -23,10 +23,9 @@ class FilmController {
 
     @GetMapping("/endpoints")
     fun getEndPoints(): List<ApplicationEndpoint>{
-        val endPointFinder = ApplicationEndpointsFinder(MethodParser(ClassParser())).findAllEndpoints()
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
         return endPointFinder
     }
-
 
     private val films = HashMap<Int, Film>(4)
 

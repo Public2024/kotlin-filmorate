@@ -1,6 +1,6 @@
 package com.example.javafilmoratekotlin.parsing
 
-import com.example.javafilmoratekotlin.model.Film
+
 import com.example.javafilmoratekotlin.model.FilmTag
 import com.example.javafilmoratekotlin.model.Genre
 import io.swagger.v3.oas.annotations.media.Schema
@@ -35,7 +35,7 @@ class DataClassParserTest {
             classOfComposite = null,
         )
 
-        val actualIdParse = actualFilm.fields.find { it.name == "id" }
+        val actualIdParse = actualFilm!!.fields.find { it.name == "id" }
 
         AssertionErrors.assertEquals("Pass", expectedIdParse, actualIdParse)
         /*Коллекция с примитвным типом*/
@@ -107,7 +107,7 @@ class DataClassParserTest {
             var id: Int
         )
 
-        val actualFilmId = parser.extractClassInfo(ActualFilm::class.java).fields.find { it.name == "id" }
+        val actualFilmId = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "id" }
 
         val expectedFilmId = FieldView(
             name = "id",
@@ -128,7 +128,7 @@ class DataClassParserTest {
             val tags: FilmTag
         )
 
-        val actualFilmEnum = parser.extractClassInfo(ActualFilm::class.java).fields.find { it.name == "tags" }
+        val actualFilmEnum = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "tags" }
 
         val expectedFilmEnum = FieldView(
             name = "tags",
@@ -161,7 +161,7 @@ class DataClassParserTest {
             val genre: Genre
         )
 
-        val actualFilm = parser.extractClassInfo(ActualFilm::class.java).fields.find { it.name == "genre" }
+        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "genre" }
 
         val expectedFilm =
             FieldView(
@@ -197,7 +197,7 @@ class DataClassParserTest {
             val users: Collection<ActualUser>
         )
 
-        val actualFilm = parser.extractClassInfo(ActualFilm::class.java).fields.find { it.name == "users" }
+        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "users" }
 
         val expectedFilm =
             FieldView(
@@ -237,7 +237,7 @@ class DataClassParserTest {
 
         val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java)
 
-        val actualDescriptionReleaseDate = actualFilmParsing.fields[0].description
+        val actualDescriptionReleaseDate = actualFilmParsing!!.fields[0].description
         val actualExampleReleaseDate = actualFilmParsing.fields[0].example
         val actualRequiredReleaseDate = actualFilmParsing.fields[0].required
 
@@ -255,7 +255,7 @@ class DataClassParserTest {
 
         val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java)
 
-        val actualDescriptionReleaseDate = actualFilmParsing.fields[0].description
+        val actualDescriptionReleaseDate = actualFilmParsing!!.fields[0].description
         val actualExampleReleaseDate = actualFilmParsing.fields[0].example
         val actualRequiredReleaseDate = actualFilmParsing.fields[0].required
 
@@ -278,7 +278,7 @@ class DataClassParserTest {
         )
 
         val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java)
-        val actualSizeFields = actualFilmParsing.fields.size
+        val actualSizeFields = actualFilmParsing!!.fields.size
 
         AssertionErrors.assertEquals("Pass", 2, actualSizeFields)
     }
@@ -292,7 +292,7 @@ class DataClassParserTest {
             var email: String,
         )
 
-        val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java).description
+        val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java)!!.description
         AssertionErrors.assertEquals("Pass", "Фильм", actualFilmParsing)
     }
 
@@ -314,7 +314,7 @@ class DataClassParserTest {
 
         val actualFilmParsing = parser.extractClassInfo(ActualFilm::class.java)
 
-        val actualParseEnumGoreVal = actualFilmParsing.fields[0].classOfEnum?.get(0)?.value
+        val actualParseEnumGoreVal = actualFilmParsing!!.fields[0].classOfEnum?.get(0)?.value
         val actualParseEnumGoreDesc = actualFilmParsing.fields[0].classOfEnum?.get(0)?.description
 
         val actualParseEnumComedyVal = actualFilmParsing.fields[0].classOfEnum?.get(1)?.value

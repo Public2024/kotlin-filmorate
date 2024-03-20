@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import java.util.*
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
@@ -17,7 +16,7 @@ class MethodParserTest {
     @Test
     fun `тест_java_get_возврат_примтивной_коллекции`() {
         val getMethod = JavaController()::class.java.methods.find { it.name == "returnList" }
-        val actualGetMethod = getMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val actualGetMethod = getMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedGetMethod = MethodView(
             name = "returnList",
             description = "",
@@ -25,7 +24,7 @@ class MethodParserTest {
             parameters = emptyList(),
             result = OutputResult(
                 type = typeOf<List<String>>().javaType.toString(),
-                uniqueParameter = null
+                composite = null
             )
         )
         AssertionErrors.assertEquals("Pass", expectedGetMethod, actualGetMethod)
@@ -34,7 +33,7 @@ class MethodParserTest {
     @Test
     fun `тест_java_post_добавление_композитного_класса`() {
         val postMethod = JavaController()::class.java.methods.find { it.name == "addCompositeObj" }
-        val actualPostMethod = postMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val actualPostMethod = postMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedPostMethod = MethodView(
             name = "addCompositeObj",
             description = "",
@@ -60,7 +59,7 @@ class MethodParserTest {
     @Test
     fun `тест_java_delete_метод_void`() {
         val deleteMethod = JavaController()::class.java.methods.find { it.name == "deleteById" }
-        val actualPostMethod = deleteMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val actualPostMethod = deleteMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedDeleteMethod = MethodView(
             name = "deleteById",
             description = "Удаление по id",
@@ -82,7 +81,7 @@ class MethodParserTest {
     @Test
     fun `тест_java_put_метод_параметр_CompositeCollection`() {
         val putMethod = JavaController()::class.java.methods.find { it.name == "updateCollection" }
-        val actualPutMethod = putMethod?.let { MethodParser(ClassParser()).extractMethodInfo(it) }
+        val actualPutMethod = putMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedPutMethod = MethodView(
             name = "updateCollection",
             description = "Обновление Composite Collection",
@@ -124,7 +123,7 @@ class MethodParserTest {
             result = null
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
 
@@ -148,12 +147,12 @@ class MethodParserTest {
             parameters = emptyList(),
             result = OutputResult(
                 type = Int::class.java.toString(),
-                uniqueParameter = null
+                composite = null
             )
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
 
     }
@@ -175,7 +174,7 @@ class MethodParserTest {
             parameters = emptyList(),
             result = OutputResult(
                 type = Genre::class.java.toString(),
-                uniqueParameter = ClassView(
+                composite = ClassView(
                     simpleName = "Genre",
                     pkg = "package com.example.javafilmoratekotlin.model",
                     description = "Информация о фильме",
@@ -184,7 +183,7 @@ class MethodParserTest {
             )
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -206,12 +205,12 @@ class MethodParserTest {
             parameters = emptyList(),
             result = OutputResult(
                 type = typeOf<List<String>>().javaType.toString(),
-                uniqueParameter = null
+                composite = null
             )
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -234,7 +233,7 @@ class MethodParserTest {
             parameters = emptyList(),
             result = OutputResult(
                 type = typeOf<List<Genre>>().javaType.toString(),
-                uniqueParameter = ClassView(
+                composite = ClassView(
                     simpleName = "Genre",
                     pkg = "com.example.javafilmoratekotlin.model",
                     description = "Информация о фильме",
@@ -244,7 +243,7 @@ class MethodParserTest {
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
     }
 
@@ -274,7 +273,7 @@ class MethodParserTest {
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -308,7 +307,7 @@ class MethodParserTest {
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -337,7 +336,7 @@ class MethodParserTest {
             result = null
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -374,7 +373,7 @@ class MethodParserTest {
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test)
+        val actual = MethodParser().extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
 
     }
@@ -389,7 +388,7 @@ class MethodParserTest {
         }
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser(ClassParser()).extractMethodInfo(test).description
+        val actual = MethodParser().extractMethodInfo(test).description
         AssertionErrors.assertEquals("Pass", "Метод для проверки аннотации с описанием", actual)
 
     }

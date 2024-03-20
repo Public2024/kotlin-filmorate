@@ -1,7 +1,6 @@
 package com.example.javafilmoratekotlin.parsing
 
 import com.example.javafilmoratekotlin.util.TypeSeparator
-import com.fasterxml.jackson.annotation.JsonView
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
@@ -9,14 +8,22 @@ import java.lang.reflect.ParameterizedType
 
 @Component
 class ClassParser() {
+    /*
+    * Запись классов для выявления уже разпарсенных объектов*/
+    private var classViewRecorder = mutableListOf<Class<*>>()
+
     /*Парсинг data класса*/
-    fun extractClassInfo(clazz: Class<*>): ClassView {
-        return ClassView(
-            simpleName = clazz.simpleName.toString(),
-            pkg = clazz.`package`.toString(),
-            description = extractScheme(clazz.annotations)?.description,
-            fields = extractField(returnAllFieldsWithSchema(clazz)),
-        )
+    fun extractClassInfo(clazz: Class<*>): ClassView? {
+        if (classViewRecorder.contains(clazz)) return null
+        else {
+            classViewRecorder.add(clazz)
+            return ClassView(
+                simpleName = clazz.simpleName,
+                pkg = clazz.`package`.toString(),
+                description = extractScheme(clazz.annotations)?.description,
+                fields = extractField(returnAllFieldsWithSchema(clazz))
+            )
+        }
     }
 
     /*Парсинг полей*/
@@ -33,10 +40,10 @@ class ClassParser() {
             )
         }
     }
+
     /*Парсинг composite класс*/
     private fun extractOfCompositeClass(field: Field): ClassView? {
         return when {
-            field.annotatedType.type == field.declaringClass -> null
             field.type.isEnum -> null
             TypeSeparator.isPrimitiveTypes(field) -> null
             TypeSeparator.isCollectionTypes(field) -> extractObjOfCollection(field)
@@ -46,16 +53,15 @@ class ClassParser() {
         }
     }
 
-    fun forSerializedIntoJSON(field: Field): Class<*>{
+    fun getObjCollection(field: Field): Class<*> {
         return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
     }
 
     /*Получение объекта класса коллекции*/
     private fun extractObjOfCollection(field: Field): ClassView? {
-        val objCollection = forSerializedIntoJSON(field)
+        val objCollection = getObjCollection(field)
         return when {
             TypeSeparator.isPrimitive(objCollection) -> null
-            objCollection == field.declaringClass -> null
             else -> {
                 extractClassInfo(objCollection)
             }

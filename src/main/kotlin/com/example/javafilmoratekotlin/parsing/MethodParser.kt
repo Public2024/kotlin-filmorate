@@ -13,9 +13,7 @@ import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction
 
 @Component
-class MethodParser(
-     private val classParser: ClassParser
-) {
+class MethodParser {
 
     /*Парсинг метода в MethodView*/
     fun extractMethodInfo(method: Method): MethodView {
@@ -51,7 +49,7 @@ class MethodParser(
             }
             InputParameter(
                  name = it.name,
-                 type = it.type.javaType.toString(),
+                 type = it.type.javaType.typeName,
                  required = required,
                  classView = checkOnCompositeParameter(it.type)
             )
@@ -60,7 +58,7 @@ class MethodParser(
 
     /*Проверка если параметр(или возвращаемый тип) композитный класс*/
     private fun checkOnCompositeParameter(type: KType): ClassView? {
-
+        val classParser = ClassParser()
         var aClass =
              if (TypeSeparator.isPrimitive(type.jvmErasure.java)) null
              else classParser.extractClassInfo(type.jvmErasure.java)
@@ -81,14 +79,14 @@ class MethodParser(
         val returnType = method.kotlinFunction?.returnType ?: return null
         if (returnType.toString() == "kotlin.Unit") return null
         return OutputResult(
-             type = returnType.javaType.toString(), uniqueParameter = checkOnCompositeParameter(returnType)
+             type = returnType.javaType.typeName, composite = checkOnCompositeParameter(returnType)
         )
     }
 }
 
 data class OutputResult(
      val type: String,
-     val uniqueParameter: ClassView?
+     val composite: ClassView?
 )
 
 data class InputParameter(
