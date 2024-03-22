@@ -25,22 +25,12 @@ data class MethodToDoc(
     val name: String,
     val description: String?,
     val summary: String?,
-    val parameters: List<ParameterOfMethod>?,
-    val result: ResultOfMethod?
-)
-
-/*П*/
-data class ParameterOfMethod(
-    val parameter: InputParameter?,
-    /*поле если параметр композитный класс (с вложенными классами в него)*/
-    val classes: List<ClassView>?
-)
-
-data class ResultOfMethod(
+    val parameters: List<InputParameter>?,
     val result: OutputResult?,
-    /*поле если результат метода композитный класс(с вложенными классами в него)*/
+    /*все классы относящиеся к endpoint*/
     val classes: List<ClassView>?
 )
+
 
 data class DocumentationEndpointNew(
     val endpoint: EndpointType,

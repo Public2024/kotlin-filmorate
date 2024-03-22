@@ -16,8 +16,8 @@ class DocumentViewGeneratorHtml : DocumentViewGenerator {
         return "index"
     }
 
-    override fun generateNew(endpoint: List<DocumentationEndpointNew>, model: Model): String {
-        model.addAttribute("Endpoints", endpoint)
+    override fun generateNew(endpoints: List<DocumentationEndpointNew>, model: Model): String {
+        model.addAttribute("DocumentationEndpoint", endpoints)
         return "index2"
     }
 }

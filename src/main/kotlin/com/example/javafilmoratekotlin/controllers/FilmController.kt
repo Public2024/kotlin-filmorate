@@ -21,12 +21,12 @@ import javax.validation.Valid
 @Tag(name = "Контроллер фильмов", description = "API для CRUD фильмов")
 class FilmController {
 
-    @GetMapping("/endpoints")
+ /*   @GetMapping("/endpoints")
     fun getEndPoints(): List<ApplicationEndpoint>{
         val endPointFinder = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
         return endPointFinder
     }
-
+*/
     private val films = HashMap<Int, Film>(4)
 
     private val id: Int = 0
@@ -34,16 +34,16 @@ class FilmController {
     /**
      * Функция получения всех фильмов
      */
-    @GetMapping("/all")
+/*    @GetMapping("/all")
     @Operation(summary = "Показать все фильмы", description = "Показать все фильмы")
     fun returnAllFilms(): ArrayList<Film> {
         return ArrayList(films.values)
-    }
+    }*/
 
     /**
      * Функция создания нового фильма
      */
-    @PostMapping
+    @PostMapping("/post_film")
     @Operation(summary = "Добавить фильм", description = "Добавление фильма в коллекцию")
     @ResponseBody
     fun createFilm(@RequestParam(required = true) @Valid  @RequestBody film: Film, id: Int, users: Collection<User>, values: List<Int>): Film {

@@ -41,7 +41,7 @@
     <tr th:if="${view}">
         <td colspan="4"> No Method Available</td>
     </tr>
-    <tr th:each="Doc : ${DocumentationEndpoint}">
+        <tr th:each="Doc : ${DocumentationEndpoint}">
         <td><span th:text="${Doc.endpoint.type}"> Type </span></td>
         <td><span th:text="${Doc.endpoint.path}"> Path </span></td>
         <td><span th:text="${Doc.view.name}"> Name </span></td>

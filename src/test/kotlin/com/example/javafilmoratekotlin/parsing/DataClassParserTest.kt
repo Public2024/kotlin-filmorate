@@ -69,7 +69,7 @@ class DataClassParserTest {
             required = false,
             classOfEnum = null,
             classOfComposite = ClassView(
-                simpleName = "Genre",
+                name = "Genre",
                 pkg = "package com.example.javafilmoratekotlin.model",
                 description = "Информация о фильме",
                 fields = emptyList()
@@ -87,7 +87,7 @@ class DataClassParserTest {
             required = false,
             classOfEnum = null,
             classOfComposite = ClassView(
-                simpleName = "Genre",
+                name = "Genre",
                 pkg = "package com.example.javafilmoratekotlin.model",
                 description = "Информация о фильме",
                 fields = emptyList()
@@ -172,7 +172,7 @@ class DataClassParserTest {
                 required = false,
                 classOfEnum = null,
                 classOfComposite = ClassView(
-                    simpleName = "Genre",
+                    name = "Genre",
                     pkg = "package com.example.javafilmoratekotlin.model",
                     description = "Информация о фильме",
                     fields = emptyList()
@@ -208,7 +208,7 @@ class DataClassParserTest {
                 required = false,
                 classOfEnum = null,
                 classOfComposite = ClassView(
-                    simpleName = "ActualUser",
+                    name = "ActualUser",
                     pkg = "package com.example.javafilmoratekotlin.parsing",
                     description = "Информация о пользователе",
                     fields = listOf(
@@ -342,7 +342,7 @@ class DataClassParserTest {
 
         val expectedFilm =
             ClassView(
-                    simpleName = "ActualFilm",
+                    name = "ActualFilm",
                     pkg = "package com.example.javafilmoratekotlin.parsing",
                     description = null,
                     fields = listOf(FieldView(
@@ -370,7 +370,7 @@ class DataClassParserTest {
         )
 
        val expectedFilm = ClassView(
-            simpleName = "ActualFilm",
+            name = "ActualFilm",
             pkg = "package com.example.javafilmoratekotlin.parsing",
             description = null,
             fields = listOf(FieldView(

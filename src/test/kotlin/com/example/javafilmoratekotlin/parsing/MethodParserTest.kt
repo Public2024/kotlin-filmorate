@@ -44,7 +44,7 @@ class MethodParserTest {
                     type = Genre::class.java.toString(),
                     required = true,
                     classView = ClassView(
-                        simpleName = "Genre",
+                        name = "Genre",
                         pkg = "package com.example.javafilmoratekotlin.model",
                         description = "Информация о фильме",
                         fields = emptyList()
@@ -92,7 +92,7 @@ class MethodParserTest {
                     type = typeOf<Collection<Genre>>().javaType.toString(),
                     required = false,
                     classView = ClassView(
-                        simpleName = "Genre",
+                        name = "Genre",
                         pkg = "package com.example.javafilmoratekotlin.model",
                         description = "Информация о фильме",
                         fields = emptyList()
@@ -175,7 +175,7 @@ class MethodParserTest {
             result = OutputResult(
                 type = Genre::class.java.toString(),
                 composite = ClassView(
-                    simpleName = "Genre",
+                    name = "Genre",
                     pkg = "package com.example.javafilmoratekotlin.model",
                     description = "Информация о фильме",
                     fields = emptyList()
@@ -234,7 +234,7 @@ class MethodParserTest {
             result = OutputResult(
                 type = typeOf<List<Genre>>().javaType.toString(),
                 composite = ClassView(
-                    simpleName = "Genre",
+                    name = "Genre",
                     pkg = "com.example.javafilmoratekotlin.model",
                     description = "Информация о фильме",
                     fields = emptyList()
@@ -296,7 +296,7 @@ class MethodParserTest {
                     type = Genre::class.java.toString(),
                     required = false,
                     classView = ClassView(
-                        simpleName = "Genre",
+                        name = "Genre",
                         pkg = "package com.example.javafilmoratekotlin.model",
                         description = "Информация о фильме",
                         fields = emptyList()
@@ -362,7 +362,7 @@ class MethodParserTest {
                     type = typeOf<Collection<Genre>>().javaType.toString(),
                     required = false,
                     classView = ClassView(
-                        simpleName = "Genre",
+                        name = "Genre",
                         pkg = "package com.example.javafilmoratekotlin.model",
                         description = "Информация о фильме",
                         fields = emptyList()

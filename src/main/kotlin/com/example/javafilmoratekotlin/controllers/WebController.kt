@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping
 @Controller
 class WebController {
 
-    @GetMapping("/doc")
+/*    @GetMapping("/doc")
     fun getDocumentation(model: Model): String {
         val endPointFinder = ApplicationEndpointsFinder(MethodParser())
         val generateDoc = DocumentationService(endPointFinder).buildDocumentation(model)
         return generateDoc
-    }
+    }*/
 
     @GetMapping("/doc_new")
     fun getDocumentationNew(model: Model): String {

@@ -13,7 +13,7 @@ object ClassViewRecorder {
     }
 
     fun checkClassRecorder(name: String): Boolean {
-        val names = classViewRecorder.map { it.simpleName }
+        val names = classViewRecorder.map { it.name }
         return names.contains(name)
     }
 

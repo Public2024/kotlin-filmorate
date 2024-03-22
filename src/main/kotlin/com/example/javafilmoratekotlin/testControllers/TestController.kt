@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 class TestController {
 
 
-    @PostMapping("/post_test")
+/*    @PostMapping("/post_test")
     fun postMethod() {
     }
 
@@ -39,5 +39,5 @@ class TestController {
 
     @RequestMapping(method = [RequestMethod.PUT], path = ["/request_put"])
     fun requestPut() {
-    }
+    }*/
 }

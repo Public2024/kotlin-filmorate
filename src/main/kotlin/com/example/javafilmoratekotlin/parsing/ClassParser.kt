@@ -18,7 +18,7 @@ class ClassParser() {
         else {
             classViewRecorder.add(clazz)
             return ClassView(
-                simpleName = clazz.simpleName,
+                name = clazz.simpleName,
                 pkg = clazz.`package`.toString(),
                 description = extractScheme(clazz.annotations)?.description,
                 fields = extractField(returnAllFieldsWithSchema(clazz))
@@ -149,7 +149,7 @@ data class ClassEnumView(
 )
 
 data class ClassView(
-    val simpleName: String,
+    val name: String,
     val pkg: String,
     val description: String?,
     val fields: List<FieldView>,

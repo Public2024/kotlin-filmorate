@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @SpringBootTest
@@ -88,6 +89,24 @@ class FilmorateKotlinApplicationTests {
 
         GetClassesRelatedToParameter().getAllClasses(test).forEach{ println(it) }
 
+    }
+
+    @Test
+    fun `тест_передачи_эндпоинтов_в_документацию`(){
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser())
+        val generateDoc = DocumentationService(endPointFinder).testBuild().find { it.view?.name == "createFilm"}
+        println(generateDoc)
+/*        generateDoc.forEach{ println(it) }*/
+    }
+
+    @Test
+    fun `тест_реализации_получения_всех_ClassView_endpoint`(){
+        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
+            .find { it.path == "/post_film"}!!.method
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser())
+        val generateDoc = DocumentationService(endPointFinder).getAllClassesRelatedToEndpoint(actual)
+
+        generateDoc?.forEach { println(it) }
     }
 
 }

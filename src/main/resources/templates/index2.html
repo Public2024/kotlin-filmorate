@@ -1,23 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
+
 <head>
     <title>DocHTML</title>
 </head>
-<table>
-    <tr>
-        <th>Company</th>
-        <th>Contact</th>
-        <th>Country</th>
+
+<body>
+
+<table style="margin-top: 50px; " th:each="Doc : ${DocumentationEndpoint}">
+    <style>
+        table {
+          border-collapse: collapse;
+          width: 1300px;
+        }
+        td,
+        th {
+          padding: 1px;
+          /* Поля вокруг содержимого таблицы */
+          border: 1px solid black;
+          /* Параметры рамки */
+          word-break: break-word
+        }
+        th {
+          background: #ccc;
+          /* Цвет фона */
+          text-align: center;
+          /* Выравнивание по левому краю */
+        }
+    </style>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px; background: #5F9EA0"><span> <b>Наименование endpoint</b> </span></td>
+        <td colspan="2" style="width: 700px; background: #5F9EA0"> <b><span th:text="${Doc.view.name}"> Name </span></b> </td>
+    </tr>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Описание </span></td>
+        <td colspan="2"><span th:text="${Doc.view.description} ?: 'no description' "> Description </span></td>
+    </tr>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Дополнительная информация </span></td>
+        <td colspan="2"><span th:text="${Doc.view.summary} ?: 'no summary' "> Summary </span></td>
+    </tr>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Расположение endpoint  </span></td>
+        <td><span th:text="${Doc.endpoint.type}"> Type </span></td>
+        <td><span th:text="${Doc.endpoint.path} ?: 'default' "> Path </span></td>
+    </tr>
+    <tr th:object="${Doc.view}">
+        <td><span> Возвращаемый тип </span></td>
+        <td colspan="2"><span th:text="${Doc.view.result?.type} ?: 'void' "> Type </span></td>
     </tr>
     <tr>
-        <td>Alfreds Futterkiste</td>
-        <td>Maria Anders</td>
-        <td>Germany</td>
+        <table style="margin-top: 15px">
+            <thead>
+            <tr style="background: #ccc; text-align: center;">
+                <th style="width: 200px;"> Имя параметра</th>
+                <th style="width: 650px;"> Тип параметра</th>
+                <th style="width: 450px;"> Required</th>
+            </tr>
+            </thead>
+            <tr th:each="parameter: ${Doc.view.parameters}">
+                <td ><span th:text="${parameter.name}"> Type </span></td>
+                <td><span th:text="${parameter.type}"> Type </span></td>
+                <td><span th:text="${parameter.required}"> Type </span></td>
+            </tr>
+        </table>
+    </tr>
+    <tr >
+        <span style="margin-top: 5px"> Классы в endpoint </span>
     </tr>
     <tr>
-        <td>Centro comercial Moctezuma</td>
-        <td>Francisco Chang</td>
-        <td>Mexico</td>
+        <table style="border-collapse: collapse; margin-top: 15px" th:each="Class : ${Doc.view.classes}">
+            <tr>
+                <td style="width: 500px;"><span> Наименование класса </span></td>
+                <td style="width: 500px;"><span th:text="${Class.name}"> Name </span></td>
+            </tr>
+            <tr>
+                <td style="width: 500px;"><span> Описание </span></td>
+                <td style="width: 500px;"><span th:text="${Class.description}"> Name </span></td>
+            </tr>
+            <tr>
+                <span th:if="${not #lists.isEmpty(Class.fields)}">
+                   <table style="border-collapse: collapse; margin-top: 15px">
+                    <thead>
+                    <tr>
+                        <th> Имя</th>
+                        <th> Тип</th>
+                        <th> Описание</th>
+                        <th> Пример</th>
+                        <th> Required</th>
+                        <th style="width: 350px;"> Enum класс</th>
+                    </tr>
+                    <tr th:each="field : ${Class.fields}">
+                        <td><span th:text="${field.name}"> Type </span></td>
+                        <td><span th:text="${field.type}"> Type </span></td>
+                        <td><span th:text="${field.description}"> Type </span></td>
+                        <td><span th:text="${field.example}"> Type </span></td>
+                        <td><span th:text="${field.required}"> Type </span></td>
+                        <td style="width: 350px;">
+                            <span th:if="${not #lists.isEmpty(field.classOfEnum)}">
+                                <table style="width: 350px;">
+                                <thead>
+                                <tr>
+                                    <th> Значение </th>
+                                    <th> Описание </th>
+                                </tr>
+                                <tr th:each="enum : ${field.classOfEnum}">
+                                    <td style="width: 150px;"><span th:text="${enum.value}"> Значение </span></td>
+                                    <td style="width: 200px;"><span th:text="${enum.description}"> Значение </span></td>
+                                </tr>
+                            </table>
+                            </span>
+                            <span th:else>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                </span>
+            </tr>
+        </table>
     </tr>
+
 </table>
+</body>
 </html>
