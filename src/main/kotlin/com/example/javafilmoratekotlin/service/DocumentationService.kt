@@ -4,7 +4,6 @@ import com.example.javafilmoratekotlin.parsing.ClassView
 import com.example.javafilmoratekotlin.parsing.InputParameter
 import com.example.javafilmoratekotlin.parsing.MethodView
 import com.example.javafilmoratekotlin.parsing.OutputResult
-import com.example.javafilmoratekotlin.util.ClassViewRecorder
 import com.example.javafilmoratekotlin.view.*
 import org.springframework.stereotype.Service
 import org.springframework.ui.Model
@@ -13,18 +12,12 @@ import org.springframework.ui.Model
 class DocumentationService(
     private val endpointsFinder: ApplicationEndpointsFinder
 ) {
+
+    /*Метод вывода документации*/
     fun buildDocumentation(model: Model): String {
         val endpoints = endpointsFinder.findAllEndpoints()
-        val documentedEndpoints = endpoints.map { DocumentationEndpoint(EndpointType(it.type, it.path), it.method) }
-        val dataClasses = ClassViewRecorder.getRecorder()
-        return DocumentViewGeneratorHtml().generate(documentedEndpoints, dataClasses, model)
-    }
-
-    /*Метод для документации*/
-    fun buildDocumentationNew(model: Model): String {
-        val endpoints = endpointsFinder.findAllEndpoints()
         val documentationEndpoint = endpoints.map { point ->
-            DocumentationEndpointNew(
+            DocumentationEndpoint(
                 EndpointType(
                     type = point.type,
                     path = point.path
@@ -39,31 +32,54 @@ class DocumentationService(
                 )
             )
         }
-        return DocumentViewGeneratorHtml().generateNew(documentationEndpoint, model)
+        return DocumentViewGeneratorHtml().generate(documentationEndpoint, model)
+    }
+
+    fun buildDocumentationNew(): String {
+        val endpoints = endpointsFinder.findAllEndpoints()
+        val documentationEndpoint = endpoints.map { point ->
+            DocumentationEndpoint(
+                 EndpointType(
+                      type = point.type,
+                      path = point.path
+                 ),
+                 MethodToDoc(
+                      name = point.method.name,
+                      description = point.method.description,
+                      summary = point.method.summary,
+                      parameters = point.method.parameters,
+                      result = point.method.result,
+                      classes = getAllClassesRelatedToEndpoint(point.method)
+                 )
+            )
+        }
+        return DocumentViewGeneratorHtml().generateNew(documentationEndpoint)
     }
 
     /*
     * Для тестов (потом надо DELETE)*/
-    fun testBuild(): List<DocumentationEndpointNew> {
+    fun testBuild(): List<DocumentationEndpoint> {
         val endpoints = endpointsFinder.findAllEndpoints()
         val documentationEndpoint = endpoints.map { point ->
-            DocumentationEndpointNew(
-                EndpointType(
-                    type = point.type,
-                    path = point.path
-                ),
-                MethodToDoc(
-                    name = point.method.name,
-                    description = point.method.description,
-                    summary = point.method.summary,
-                    parameters = point.method.parameters,
-                    result = point.method.result,
-                    classes = getAllClassesRelatedToEndpoint(point.method)
-                )
+            DocumentationEndpoint(
+                 EndpointType(
+                      type = point.type,
+                      path = point.path
+                 ),
+                 MethodToDoc(
+                      name = point.method.name,
+                      description = point.method.description,
+                      summary = point.method.summary,
+                      parameters = point.method.parameters,
+                      result = point.method.result,
+                      classes = getAllClassesRelatedToEndpoint(point.method)
+                 )
             )
         }
         return documentationEndpoint
     }
+
+
 
     /*
     * Получение всех уникальных классов относящихся к endpoint */

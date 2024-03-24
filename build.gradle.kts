@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.regex.Pattern.compile
 
 plugins {
 	id("org.springframework.boot") version "2.7.2"
@@ -21,6 +22,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -32,8 +34,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	implementation("org.reflections:reflections:0.10.2")
 
+
+	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+	implementation("org.jetbrains.kotlin:kotlin-stdlib")
+
+	// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-html-jvm
+	implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
 
 
 }
@@ -55,6 +62,7 @@ tasks.dokkaHtml.configure{
 	}
 
 }
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()

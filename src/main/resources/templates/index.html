@@ -1,221 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
+
 <head>
     <title>DocHTML</title>
 </head>
+
 <body>
-<table>
+
+<table style="margin-top: 50px; " th:each="Doc : ${DocumentationEndpoint}">
     <style>
         table {
-         border-collapse: collapse; /* Отображать двойные линии как одинарные */
-         width: 85%; /* Ширина таблицы */
+          border-collapse: collapse;
+          width: 1300px;
+        }
+        td,
+        th {
+          padding: 1px;
+          /* Поля вокруг содержимого таблицы */
+          border: 1px solid black;
+          /* Параметры рамки */
+          word-break: break-word
         }
         th {
-         background: #ccc; /* Цвет фона */
-         text-align: center; /* Выравнивание по левому краю */
-        }
-        td, th {
-         border: 1px solid #800; /* Параметры границы */
-         padding: 6px; /* Поля в ячейках */
-         word-wrap: break-word;
-         overflow: hidden;
+          background: #ccc;
+          /* Цвет фона */
+          text-align: center;
+          /* Выравнивание по левому краю */
         }
     </style>
-    <thead>
-    <tr>
-        <th rowspan="2"> Type</th>
-        <th rowspan="2"> Path</th>
-        <th rowspan="2"> Name</th>
-        <th rowspan="2"> Description</th>
-        <th rowspan="2"> Summary</th>
-        <th colspan="3" > Parameters</th>>
-        <th rowspan="2"> Result</th>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px; background: #5F9EA0"><span> <b>Наименование endpoint</b> </span></td>
+        <td colspan="2" style="width: 700px; background: #5F9EA0"> <b><span th:text="${Doc.view.name}"> Name </span></b> </td>
     </tr>
-    <tr>
-        <th> Name</th>
-        <th> Type</th>
-        <th> Required</th>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Описание </span></td>
+        <td colspan="2"><span th:text="${Doc.view.description} ?: 'no description' "> Description </span></td>
     </tr>
-    </thead>
-    <tbody>
-    <tr th:if="${view}">
-        <td colspan="4"> No Method Available</td>
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Дополнительная информация </span></td>
+        <td colspan="2"><span th:text="${Doc.view.summary} ?: 'no summary' "> Summary </span></td>
     </tr>
-        <tr th:each="Doc : ${DocumentationEndpoint}">
+    <tr th:object="${Doc.endpoint}">
+        <td style="width: 500px"><span> Расположение endpoint  </span></td>
         <td><span th:text="${Doc.endpoint.type}"> Type </span></td>
-        <td><span th:text="${Doc.endpoint.path}"> Path </span></td>
-        <td><span th:text="${Doc.view.name}"> Name </span></td>
-        <td th:switch="${Doc.view.description}">
-            <span th:case="null"> - </span>
-            <span th:case="${Doc.view.description}" th:text="${Doc.view.description}"> </span>
-        </td>
-        <td th:switch="${Doc.view.summary}">
-            <span th:case="null"> - </span>
-            <span th:case="${Doc.view.summary}" th:text="${Doc.view.summary}">  </span>
-        </td>
-        <td th:switch="${Doc.view.parameters}">
-            <style>
-                 {
-                background: #f0f0f0; /* Цвет фона */
-                width: 230px; /* Ширина блока */
-                padding: 10px; /* Поля */
-                font-size: 1.5em; /* Размер шрифта */
-                word-wrap: break-word; /* Перенос слов */
-                }
-            </style>
-            <span th:case="empty"> - </span>
-            <table>
-                <tbody>
-                <tr th:each="Parameter : ${Doc.view.parameters}">
-                    <td><span th:text="${Parameter.name}"> Parameter name </span></td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-        <td width="100"  th:switch="${Doc.view.parameters}" >
-            <span th:case="empty"> - </span>
-            <table>
-                <tbody>
-                <tr th:each="Parameter : ${Doc.view.parameters}">
-                    <td><span th:text="${Parameter.type}"> Parameter type </span></td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-        <td th:switch="${Doc.view.parameters}">
-            <span th:case="empty"> - </span>
-            <table>
-                <tbody>
-                <tr th:each="Parameter : ${Doc.view.parameters}">
-                    <td><span th:text="${Parameter.required}"> Parameter required </span></td>
-                </tr>
-                </tbody>
-            </table>
-
-        </td>
-        <td>
-            <table>
-                <tbody>
-                <tr>
-                    <td width="100"><span th:text="${Doc.view.result?.type}"> type result </span></td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
+        <td><span th:text="${Doc.endpoint.path} ?: 'default' "> Path </span></td>
     </tr>
-    </tbody>
-</table>
-<table>
-    <style>
-        table {
-
-         border-collapse: collapse; /* Отображать двойные линии как одинарные */
-         width: 85%; /* Ширина таблицы */
-        }
-        th {
-         background: #ccc; /* Цвет фона */
-         text-align: left; /* Выравнивание по левому краю */
-        }
-    </style>
-    <thead>
-    <tr>
-        <th rowspan="2"> ClassName</th>
-        <th rowspan="2"> Description</th>
-        <th colspan="7"> Fields</th>>
+    <tr th:object="${Doc.view}">
+        <td><span> Возвращаемый тип </span></td>
+        <td colspan="2"><span th:text="${Doc.view.result?.type} ?: 'void' "> Type </span></td>
     </tr>
     <tr>
-        <th> Name </th>
-        <th> Type </th>
-        <th> Description </th>
-        <th> Example </th>
-        <th> Required </th>
-        <th> Enum </th>
-        <th> Composite </th>
+        <table style="margin-top: 15px">
+            <thead>
+            <tr style="background: #ccc; text-align: center;">
+                <th style="width: 200px;"> Имя параметра</th>
+                <th style="width: 650px;"> Тип параметра</th>
+                <th style="width: 450px;"> Required</th>
+            </tr>
+            </thead>
+            <tr th:each="parameter: ${Doc.view.parameters}">
+                <td ><span th:text="${parameter.name}"> Type </span></td>
+                <td><span th:text="${parameter.type}"> Type </span></td>
+                <td><span th:text="${parameter.required}"> Type </span></td>
+            </tr>
+        </table>
     </tr>
-    </thead>
-    <tbody>
-        <tr th:each="Clazz : ${DataClasses}">
-            <td ><span th:text="${Clazz.simpleName}"> SimpleName </span></td>
-            <td ><span th:text="${Clazz.description}"> Description </span></td>
-            <td th:switch="${Clazz.fields}">
-                <span th:case="empty"> - </span>
-                <table border="1">
-                    <style>
-                        {
-                       width: auto; /* Ширина блока */
-                       word-wrap: break-word; /* Перенос слов */
-                       }
-                    </style>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.name}"> Parameter name </span></td>
+    <tr >
+        <span style="margin-top: 5px"> Классы в endpoint </span>
+    </tr>
+    <tr>
+        <table style="border-collapse: collapse; margin-top: 15px" th:each="Class : ${Doc.view.classes}">
+            <tr>
+                <td style="width: 500px;"><span> Наименование класса </span></td>
+                <td style="width: 500px;"><span th:text="${Class.name}"> Name </span></td>
+            </tr>
+            <tr>
+                <td style="width: 500px;"><span> Описание </span></td>
+                <td style="width: 500px;"><span th:text="${Class.description}"> Name </span></td>
+            </tr>
+            <tr>
+                <span th:if="${not #lists.isEmpty(Class.fields)}">
+                   <table style="border-collapse: collapse; margin-top: 15px">
+                    <thead>
+                    <tr>
+                        <th> Имя</th>
+                        <th> Тип</th>
+                        <th> Описание</th>
+                        <th> Пример</th>
+                        <th> Required</th>
+                        <th style="width: 350px;"> Enum класс</th>
                     </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td th:switch="${Clazz.fields}">
-                <span th:case="empty"> - </span>
-                <table>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.type}"> Parameter name </span></td>
+                    <tr th:each="field : ${Class.fields}">
+                        <td><span th:text="${field.name}"> Type </span></td>
+                        <td><span th:text="${field.type}"> Type </span></td>
+                        <td><span th:text="${field.description}"> Type </span></td>
+                        <td><span th:text="${field.example}"> Type </span></td>
+                        <td><span th:text="${field.required}"> Type </span></td>
+                        <td style="width: 350px;">
+                            <span th:if="${not #lists.isEmpty(field.classOfEnum)}">
+                                <table style="width: 350px;">
+                                <thead>
+                                <tr>
+                                    <th> Значение </th>
+                                    <th> Описание </th>
+                                </tr>
+                                <tr th:each="enum : ${field.classOfEnum}">
+                                    <td style="width: 150px;"><span th:text="${enum.value}"> Значение </span></td>
+                                    <td style="width: 200px;"><span th:text="${enum.description}"> Значение </span></td>
+                                </tr>
+                            </table>
+                            </span>
+                            <span th:else>
+                            </span>
+                        </td>
                     </tr>
-                    </tbody>
                 </table>
-            </td>
-            <td>
-                <table>
-                    <style>
-                        {
-                       width: 10px; /* Ширина блока */
-                       word-wrap: break-word; /* Перенос слов */
-                       }
-                    </style>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.description}"> Parameter name </span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.example}"> Parameter name </span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.required}"> Parameter name </span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.classOfEnum}"> Parameter name </span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tbody>
-                    <tr th:each="Field : ${Clazz.fields}">
-                        <td><span th:text="${Field.classOfComposite?.simpleName}"> Parameter name </span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
+                </span>
+            </tr>
+        </table>
+    </tr>
+
 </table>
 </body>
 </html>

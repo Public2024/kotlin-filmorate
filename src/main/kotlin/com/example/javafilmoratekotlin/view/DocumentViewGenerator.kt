@@ -2,14 +2,14 @@ package com.example.javafilmoratekotlin.view
 
 import com.example.javafilmoratekotlin.parsing.ClassView
 import com.example.javafilmoratekotlin.parsing.InputParameter
-import com.example.javafilmoratekotlin.parsing.MethodView
 import com.example.javafilmoratekotlin.parsing.OutputResult
 import org.springframework.ui.Model
 
 interface DocumentViewGenerator {
     /*    val type: DocumentViewType*/
-    fun generate(endpoints: List<DocumentationEndpoint>, classes: List<ClassView>, model: Model): String
-    fun generateNew(endpoint: List<DocumentationEndpointNew>, model: Model): String
+    fun generate(endpoint: List<DocumentationEndpoint>, model: Model): String
+
+    fun generateNew(endpoint: List<DocumentationEndpoint>): String
 }
 
 /*enum class DocumentViewType {
@@ -32,17 +32,13 @@ data class MethodToDoc(
 )
 
 
-data class DocumentationEndpointNew(
+data class DocumentationEndpoint(
     val endpoint: EndpointType,
     val view: MethodToDoc?,
 )
 
-data class DocumentationEndpoint(
-     val endpoint: EndpointType,
-     val view: MethodView?,
-)
 
-/*для EndPoint*/
+/*data class для path*/
 data class EndpointType(
      val type: String,
      val path: String,
