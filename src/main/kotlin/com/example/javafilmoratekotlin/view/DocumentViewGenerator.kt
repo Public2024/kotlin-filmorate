@@ -9,16 +9,7 @@ interface DocumentViewGenerator {
     /*    val type: DocumentViewType*/
     fun generate(endpoint: List<DocumentationEndpoint>, model: Model): String
 
-    fun generateNew(endpoint: List<DocumentationEndpoint>): String
 }
-
-/*enum class DocumentViewType {
-    HTML, MARKDOWN
-}*/
-/*data class DocumentationSources(
-     val endpoints: List<DocumentationEndpoint>,
-)*/
-
 
 /*Представление метода в HTML*/
 data class MethodToDoc(
@@ -36,7 +27,6 @@ data class DocumentationEndpoint(
     val endpoint: EndpointType,
     val view: MethodToDoc?,
 )
-
 
 /*data class для path*/
 data class EndpointType(

@@ -3,9 +3,10 @@ package com.example.javafilmoratekotlin.controllers
 import com.example.javafilmoratekotlin.model.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
+
 /**
  * @property UserController - контроллер пользователей
  *
@@ -22,36 +23,36 @@ class UserController {
     /**
      * Функция получения всех пользователей
      */
-//    @GetMapping
-//    @Operation(description = "Показать всех пользователей")
-//    fun returnAllUsers(): ArrayList<User> {
-//        return ArrayList(users.values)
-//    }
-//
-//    /**
-//     * Функция добавление нового пользователя
-//     */
-//    @PostMapping
-//    @Operation(summary = "Добавить пользователя")
-//    fun createUser(@Parameter(required = true) @Valid @RequestBody user: User, number: Int): User {
-//        validateUser(user)
-//        user.id
-//        users.put(user.id, user)
-//        return user
-//    }
-//
-//    /**
-//     * Функция изменения пользователя
-//     */
-//    @PutMapping
-//    @Operation(summary = "Обноваить пользователя")
-//    fun changeUser(@Parameter(required = true) @Valid @RequestBody user: User): User {
-//        if (users.containsKey(user.id))
-//            users.replace(user.id, user)
-//        else
-//            throw Exception("Неверный ID")
-//        return user;
-//    }
+    @GetMapping
+    @Operation(description = "Показать всех пользователей")
+    fun returnAllUsers(): ArrayList<User> {
+        return ArrayList(users.values)
+    }
+
+    /**
+     * Функция добавление нового пользователя
+     */
+    @PostMapping
+    @Operation(summary = "Добавить пользователя")
+    fun createUser(@Parameter(required = true) @RequestBody user: User, number: Int): User {
+        validateUser(user)
+        user.id
+        users.put(user.id, user)
+        return user
+    }
+
+    /**
+     * Функция изменения пользователя
+     */
+    @PutMapping
+    @Operation(summary = "Обноваить пользователя")
+    fun changeUser(@Parameter(required = true) @RequestBody user: User): User {
+        if (users.containsKey(user.id))
+            users.replace(user.id, user)
+        else
+            throw Exception("Неверный ID")
+        return user;
+    }
 
     /**
      * @suppress

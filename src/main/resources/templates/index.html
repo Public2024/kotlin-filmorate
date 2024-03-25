@@ -88,14 +88,11 @@
                         <th> Описание</th>
                         <th> Пример</th>
                         <th> Required</th>
-                        <th style="width: 350px;"> Enum класс</th>
                     </tr>
                     <tr th:each="field : ${Class.fields}">
                         <td><span th:text="${field.name}"> Type </span></td>
                         <td><span th:text="${field.type}"> Type </span></td>
                         <td><span th:text="${field.description}"> Type </span></td>
-                        <td><span th:text="${field.example}"> Type </span></td>
-                        <td><span th:text="${field.required}"> Type </span></td>
                         <td style="width: 350px;">
                             <span th:if="${not #lists.isEmpty(field.classOfEnum)}">
                                 <table style="width: 350px;">
@@ -110,9 +107,10 @@
                                 </tr>
                             </table>
                             </span>
-                            <span th:else>
+                            <span th:else th:text = "${field.example}">
                             </span>
                         </td>
+                        <td><span th:text="${field.required}"> Type </span></td>
                     </tr>
                 </table>
                 </span>

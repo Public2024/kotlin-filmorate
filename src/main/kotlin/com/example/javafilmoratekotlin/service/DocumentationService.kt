@@ -35,52 +35,6 @@ class DocumentationService(
         return DocumentViewGeneratorHtml().generate(documentationEndpoint, model)
     }
 
-    fun buildDocumentationNew(): String {
-        val endpoints = endpointsFinder.findAllEndpoints()
-        val documentationEndpoint = endpoints.map { point ->
-            DocumentationEndpoint(
-                 EndpointType(
-                      type = point.type,
-                      path = point.path
-                 ),
-                 MethodToDoc(
-                      name = point.method.name,
-                      description = point.method.description,
-                      summary = point.method.summary,
-                      parameters = point.method.parameters,
-                      result = point.method.result,
-                      classes = getAllClassesRelatedToEndpoint(point.method)
-                 )
-            )
-        }
-        return DocumentViewGeneratorHtml().generateNew(documentationEndpoint)
-    }
-
-    /*
-    * Для тестов (потом надо DELETE)*/
-    fun testBuild(): List<DocumentationEndpoint> {
-        val endpoints = endpointsFinder.findAllEndpoints()
-        val documentationEndpoint = endpoints.map { point ->
-            DocumentationEndpoint(
-                 EndpointType(
-                      type = point.type,
-                      path = point.path
-                 ),
-                 MethodToDoc(
-                      name = point.method.name,
-                      description = point.method.description,
-                      summary = point.method.summary,
-                      parameters = point.method.parameters,
-                      result = point.method.result,
-                      classes = getAllClassesRelatedToEndpoint(point.method)
-                 )
-            )
-        }
-        return documentationEndpoint
-    }
-
-
-
     /*
     * Получение всех уникальных классов относящихся к endpoint */
     fun getAllClassesRelatedToEndpoint(method: MethodView): List<ClassView>? {
@@ -103,7 +57,6 @@ class DocumentationService(
     private fun getClassesOfResult(result: OutputResult?): List<ClassView> {
         return GetClassesRelatedToParameter().getAllClasses(result?.composite)
     }
-
 
     /*Получение вложенные ClassView относящихся к параметру или результату endpoint*/
     private class GetClassesRelatedToParameter() {

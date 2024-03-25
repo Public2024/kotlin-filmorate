@@ -7,12 +7,17 @@ import com.example.javafilmoratekotlin.parsing.ClassView
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
 import com.example.javafilmoratekotlin.service.DocumentationService
+import com.example.javafilmoratekotlin.util.TypeSeparator
+import com.jayway.jsonpath.internal.CharacterIndex
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import java.lang.reflect.Field
+import java.util.ArrayList
+import java.util.HashMap
 
 @SpringBootTest
 class FilmorateKotlinApplicationTests {
@@ -40,7 +45,7 @@ class FilmorateKotlinApplicationTests {
     }
 
     @Test
-    fun `тест_поиска_вложенных_объектов_в_ClassView`(){
+    fun `тест_поиска_вложенных_объектов_в_ClassView`() {
         data class Obj4(
             @field:Schema(description = "number", required = false)
             var number: Int
@@ -67,18 +72,19 @@ class FilmorateKotlinApplicationTests {
 
         val list = mutableListOf<ClassView>()
 
-        class GetClassesRelatedToParameter(){
+        class GetClassesRelatedToParameter() {
 
             private val listOfClasses = mutableListOf<ClassView>()
 
-            private fun findClassView(classView: ClassView?){
-                classView?.fields?.forEach{ field -> if(field.classOfComposite!=null)
-                    listOfClasses.add(field.classOfComposite!!)
+            private fun findClassView(classView: ClassView?) {
+                classView?.fields?.forEach { field ->
+                    if (field.classOfComposite != null)
+                        listOfClasses.add(field.classOfComposite!!)
                     findClassView(field.classOfComposite)
                 }
             }
 
-            fun getAllClasses(classView: ClassView?): List<ClassView>{
+            fun getAllClasses(classView: ClassView?): List<ClassView> {
                 if (classView != null) {
                     listOfClasses.add(classView)
                 }
@@ -87,22 +93,15 @@ class FilmorateKotlinApplicationTests {
             }
         }
 
-        GetClassesRelatedToParameter().getAllClasses(test).forEach{ println(it) }
+        GetClassesRelatedToParameter().getAllClasses(test).forEach { println(it) }
 
     }
 
-    @Test
-    fun `тест_передачи_эндпоинтов_в_документацию`(){
-        val endPointFinder = ApplicationEndpointsFinder(MethodParser())
-        val generateDoc = DocumentationService(endPointFinder).testBuild().find { it.view?.name == "createFilm"}
-        println(generateDoc)
-/*        generateDoc.forEach{ println(it) }*/
-    }
 
     @Test
-    fun `тест_реализации_получения_всех_ClassView_endpoint`(){
+    fun `тест_реализации_получения_всех_ClassView_endpoint`() {
         val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
-            .find { it.path == "/post_film"}!!.method
+            .find { it.path == "/post_film" }!!.method
         val endPointFinder = ApplicationEndpointsFinder(MethodParser())
         val generateDoc = DocumentationService(endPointFinder).getAllClassesRelatedToEndpoint(actual)
 

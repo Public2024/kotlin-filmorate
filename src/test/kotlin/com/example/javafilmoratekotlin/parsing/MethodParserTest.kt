@@ -341,14 +341,12 @@ class MethodParserTest {
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_метода_с_входящим_параметром_композитной_коллекцией`() {
         class Test {
             @PostMapping("/v9")
             @Operation(summary = "Метод с параметром композитной коллекцией")
             fun inputCompositeCollectionParameter(collection: Collection<Genre>) {
-
             }
         }
 
@@ -359,7 +357,7 @@ class MethodParserTest {
             parameters = listOf(
                 InputParameter(
                     name = "collection",
-                    type = typeOf<Collection<Genre>>().javaType.toString(),
+                    type = "Коллекция<Genre>",
                     required = false,
                     classView = ClassView(
                         name = "Genre",

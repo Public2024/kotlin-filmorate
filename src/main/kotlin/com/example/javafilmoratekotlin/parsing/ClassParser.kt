@@ -4,7 +4,6 @@ import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field
-import java.lang.reflect.ParameterizedType
 
 @Component
 class ClassParser() {
@@ -31,7 +30,7 @@ class ClassParser() {
         return fields.map { fieldWithAnnotation ->
             FieldView(
                 name = fieldWithAnnotation.field.name,
-                type = fieldWithAnnotation.field.annotatedType.type.toString(),
+                type = TypeSeparator.parseFieldTypeName(fieldWithAnnotation.field),
                 description = fieldWithAnnotation.annotation?.description,
                 example = fieldWithAnnotation.annotation?.example,
                 required = fieldWithAnnotation.annotation?.required,
@@ -53,13 +52,10 @@ class ClassParser() {
         }
     }
 
-    fun getObjCollection(field: Field): Class<*> {
-        return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
-    }
 
     /*Получение объекта класса коллекции*/
     private fun extractObjOfCollection(field: Field): ClassView? {
-        val objCollection = getObjCollection(field)
+        val objCollection = TypeSeparator.getObjCollection(field)
         return when {
             TypeSeparator.isPrimitive(objCollection) -> null
             else -> {

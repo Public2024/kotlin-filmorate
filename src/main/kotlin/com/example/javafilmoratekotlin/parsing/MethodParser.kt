@@ -39,7 +39,7 @@ class MethodParser {
     )
 
     /*Парсинг входящих параметров метода*/
-    fun getAllParameters(
+    private fun getAllParameters(
          parameters: List<KParameter>?
     ): List<InputParameter>? {
         var required = false
@@ -49,7 +49,7 @@ class MethodParser {
             }
             InputParameter(
                  name = it.name,
-                 type = it.type.javaType.typeName,
+                 type = TypeSeparator.parseParameterTypeName(it.type),
                  required = required,
                  classView = checkOnCompositeParameter(it.type)
             )
@@ -79,7 +79,7 @@ class MethodParser {
         val returnType = method.kotlinFunction?.returnType ?: return null
         if (returnType.toString() == "kotlin.Unit") return null
         return OutputResult(
-             type = returnType.javaType.typeName, composite = checkOnCompositeParameter(returnType)
+             type = TypeSeparator.parseParameterTypeName(returnType), composite = checkOnCompositeParameter(returnType)
         )
     }
 }

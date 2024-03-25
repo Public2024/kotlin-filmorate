@@ -1,15 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.regex.Pattern.compile
 
 plugins {
-	id("org.springframework.boot") version "2.7.2"
+	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
-	id("org.jetbrains.dokka") version "1.6.21"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 }
 
-extra["jackson-bom.version"] = "2.13.4"
 
 group = "ru.devmark"
 version = "0.0.1-SNAPSHOT"
@@ -35,14 +32,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-
-	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-	implementation("org.jetbrains.kotlin:kotlin-stdlib")
-
-	// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-html-jvm
-	implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
-
-
 }
 
 tasks.withType<KotlinCompile> {
@@ -51,18 +40,6 @@ tasks.withType<KotlinCompile> {
 		jvmTarget = "17"
 	}
 }
-
-tasks.dokkaHtml.configure{
-	outputDirectory.set(file("src/Documentation"))
-	moduleName.set("kotlin-filmorate application")
-
-	dokkaSourceSets.configureEach{
-		includeNonPublic.set(true)
-		includes.from("module.md")
-	}
-
-}
-
 
 tasks.withType<Test> {
 	useJUnitPlatform()

@@ -14,7 +14,7 @@ class ThymeleafConfig: WebMvcConfigurer {
         val templateResolver = ClassLoaderTemplateResolver()
         templateResolver.prefix = "templates/"
         templateResolver.suffix = ".html"
-        templateResolver.templateMode = TemplateMode.HTML5
+        templateResolver.templateMode = TemplateMode.HTML
         templateResolver.characterEncoding = "UTF-8"
         templateResolver.order = 1
         templateResolver.isCacheable = false

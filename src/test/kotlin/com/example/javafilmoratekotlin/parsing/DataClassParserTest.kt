@@ -9,7 +9,6 @@ import org.example.model.Comments
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import java.time.LocalDate
-import javax.validation.constraints.Email
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
@@ -18,7 +17,6 @@ class DataClassParserTest {
 
     private val parser = ClassParser()
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_парсинга_java_класса`() {
 
@@ -27,7 +25,7 @@ class DataClassParserTest {
         /*Примитивный тип поля*/
         val expectedIdParse = FieldView(
             name = "id",
-            type = Integer::class.java.toString(),
+            type = "Integer",
             description = "Идентификатор",
             example = "",
             required = false,
@@ -41,7 +39,7 @@ class DataClassParserTest {
         /*Коллекция с примитвным типом*/
         val expectedTextParse = FieldView(
             name = "text",
-            type = typeOf<List<String>>().javaType.toString(),
+            type = "Коллекция<String>",
             description = "Комментарий",
             example = "",
             required = false,
@@ -63,17 +61,12 @@ class DataClassParserTest {
         /*Тест парсинг composite type*/
         val expectedGenreParse = FieldView(
             name = "genre",
-            type = Genre::class.java.toString(),
+            type = "Genre",
             description = "Тест жанр",
             example = "",
             required = false,
             classOfEnum = null,
-            classOfComposite = ClassView(
-                name = "Genre",
-                pkg = "package com.example.javafilmoratekotlin.model",
-                description = "Информация о фильме",
-                fields = emptyList()
-            )
+            classOfComposite = null
         )
         val actualUserParse = actualFilm.fields.find { it.name == "genre" }
 
@@ -81,7 +74,7 @@ class DataClassParserTest {
 
         val expectedCollectionGenreParse = FieldView(
             name = "genres",
-            type = typeOf<Collection<Genre>>().javaType.toString(),
+            type = "Коллекция<Genre>",
             description = "Комментарий к жанрам",
             example = "",
             required = false,
@@ -269,7 +262,6 @@ class DataClassParserTest {
         data class ActualFilm(
             @Id
             var id: Int,
-            @Email
             @Schema(description = "Почта пользователя")
             var email: String,
             @field:Schema(description = "Дата релиза фильма", example = "12-01-94", required = false)
@@ -287,7 +279,6 @@ class DataClassParserTest {
     fun `тест_на_парсинг_аннотации_Schema_над_классом`() {
         @Schema(description = "Фильм")
         data class ActualFilm(
-            @Email
             @Schema(description = "Почта пользователя")
             var email: String,
         )
@@ -375,7 +366,7 @@ class DataClassParserTest {
             description = null,
             fields = listOf(FieldView(
                 name = "actualFilm",
-                type = typeOf<List<ActualFilm>>().javaType.toString(),
+                type = "typeOf<List<ActualFilm>>().javaType.toString()",
                 description = "Фильм",
                 example = "",
                 required = true,

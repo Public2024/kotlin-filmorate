@@ -13,13 +13,14 @@ class ApplicationContextProviders() : ApplicationContextAware {
 
     companion object {
 
+        /*Инциализация контекста приложения*/
         private lateinit var applicationContext: ApplicationContext
 
         fun getApplicationContext(): ApplicationContext {
             return applicationContext
         }
 
-        /*регулярка для удаления лишних скобок*/
+        /*регулярка для удаления лишних скобок в выводе endpointa*/
         val deleteBrackets = """[{}\]\[]""".toRegex()
 
         /*

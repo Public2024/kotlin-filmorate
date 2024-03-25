@@ -1,70 +1,71 @@
 package com.example.javafilmoratekotlin.util
 
 import java.lang.reflect.Field
+import java.lang.reflect.ParameterizedType
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-
-
+import kotlin.reflect.KType
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.jvmErasure
 
 class TypeSeparator {
     companion object {
         private val primitivesObj = listOf<Class<*>>(
-             Int::class.javaObjectType,
-             Boolean::class.javaObjectType,
-             Double::class.javaObjectType,
-             Float::class.javaObjectType,
-             Integer::class.javaObjectType,
-             Long::class.javaObjectType,
-             BigDecimal::class.javaObjectType,
+            Int::class.javaObjectType,
+            Boolean::class.javaObjectType,
+            Double::class.javaObjectType,
+            Float::class.javaObjectType,
+            Integer::class.javaObjectType,
+            Long::class.javaObjectType,
+            BigDecimal::class.javaObjectType,
 
-             String::class.javaObjectType,
-             LocalDateTime::class.javaObjectType,
-             LocalDate::class.javaObjectType,
-             Instant::class.javaObjectType,
+            String::class.javaObjectType,
+            LocalDateTime::class.javaObjectType,
+            LocalDate::class.javaObjectType,
+            Instant::class.javaObjectType,
 
-             UUID::class.javaObjectType,
-             Unit::class.javaObjectType,
+            UUID::class.javaObjectType,
+            Unit::class.javaObjectType,
 
-             Int::class.java,
-             Boolean::class.java,
-             Double::class.java,
-             Float::class.java,
-             Integer::class.java,
-             Long::class.java,
-             BigDecimal::class.java,
+            Int::class.java,
+            Boolean::class.java,
+            Double::class.java,
+            Float::class.java,
+            Integer::class.java,
+            Long::class.java,
+            BigDecimal::class.java,
 
-             String::class.java,
-             LocalDateTime::class.java,
-             LocalDate::class.java,
-             Instant::class.java,
+            String::class.java,
+            LocalDateTime::class.java,
+            LocalDate::class.java,
+            Instant::class.java,
 
-             UUID::class.java,
-             Unit::class.java
+            UUID::class.java,
+            Unit::class.java
 
         )
 
         private val collections = listOf<Class<*>>(
-             Collection::class.javaObjectType,
-             List::class.javaObjectType,
-             Array::class.javaObjectType,
-             Set::class.javaObjectType,
-             ArrayList::class.java,
+            Collection::class.javaObjectType,
+            List::class.javaObjectType,
+            Array::class.javaObjectType,
+            Set::class.javaObjectType,
+            ArrayList::class.java,
 
-             Map::class.javaObjectType,
-             HashMap::class.javaObjectType,
+            Map::class.javaObjectType,
+            HashMap::class.javaObjectType,
 
-             Collection::class.java,
-             List::class.java,
-             Array::class.java,
-             ArrayList::class.java,
-             Set::class.java,
+            Collection::class.java,
+            List::class.java,
+            Array::class.java,
+            ArrayList::class.java,
+            Set::class.java,
 
-             Map::class.java,
-             HashMap::class.java
-
+            Map::class.java,
+            HashMap::class.java
         )
 
         fun isPrimitiveTypes(field: Field): Boolean {
@@ -83,6 +84,32 @@ class TypeSeparator {
             return primitivesObj.contains(clazz)
         }
 
+        /*Для получения объекта коллекции*/
+        fun getObjCollection(field: Field): Class<*> {
+            return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
+        }
+
+        /*
+        Для вывода типа объекта полей класса для документации*/
+        fun parseFieldTypeName(field: Field): String {
+            if (!TypeSeparator.isCollectionTypes(field)) return field.type.simpleName
+            val findCollectionWords = Regex("(Collection)|(List)|(ArrayList)|(Set)|(HashMap)|(Map)")
+            val str = field.genericType.typeName.split(".", "<", " ")
+            return str.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
+                .toString().replace(findCollectionWords, "Коллекция<")
+                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+        }
+
+        /*
+        Для вывода типа объекта параметров и результата метода(endpointa) для документации*/
+        fun parseParameterTypeName(type: KType): String {
+            if (!TypeSeparator.isCollection(type.jvmErasure.java)) return type.javaType.typeName.substringAfterLast(".")
+            val findCollectionWords = Regex("(Collection)|(List)|(ArrayList)|(Set)|(HashMap)|(Map)")
+            val str = type.javaType.typeName.split(".", "<", " ")
+            return str.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
+                .toString().replace(findCollectionWords, "Коллекция<")
+                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+        }
 
     }
 }
