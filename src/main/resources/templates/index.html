@@ -50,7 +50,8 @@
         <td colspan="2"><span th:text="${Doc.view.result?.type} ?: 'void' "> Type </span></td>
     </tr>
     <tr>
-        <table style="margin-top: 15px">
+        <span th:if="${not #lists.isEmpty(Doc.view.parameters)}">
+            <table style="margin-top: 15px">
             <thead>
             <tr style="background: #ccc; text-align: center;">
                 <th style="width: 200px;"> Имя параметра</th>
@@ -64,9 +65,8 @@
                 <td><span th:text="${parameter.required}"> Type </span></td>
             </tr>
         </table>
-    </tr>
-    <tr >
-        <span style="margin-top: 5px"> Классы в endpoint </span>
+        </span>
+        <span th:else></span>
     </tr>
     <tr>
         <table style="border-collapse: collapse; margin-top: 15px" th:each="Class : ${Doc.view.classes}">
