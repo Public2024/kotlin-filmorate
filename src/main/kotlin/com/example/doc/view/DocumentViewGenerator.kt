@@ -19,7 +19,10 @@ data class MethodToDoc(
     val parameters: List<InputParameter>?,
     val result: OutputResult?,
     /*все классы относящиеся к endpoint*/
-    val classes: List<ClassView>?
+    val classes: List<ClassView>?,
+    /*Примеры JSON*/
+    val body: String?,
+    val response: String?
 )
 
 

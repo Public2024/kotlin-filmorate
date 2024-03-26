@@ -30,7 +30,7 @@ object EasyRandomUtil {
             .randomizationDepth(10)
             .charset(Charset.forName("UTF-8"))
             .dateRange(LocalDate.now(ZoneOffset.UTC), LocalDate.now(ZoneOffset.UTC).plusDays(2))
-            .stringLengthRange(5, 20)
+            .stringLengthRange(5, 15)
             .collectionSizeRange(1, 3)
             .scanClasspathForConcreteTypes(true)
             .overrideDefaultInitialization(false)

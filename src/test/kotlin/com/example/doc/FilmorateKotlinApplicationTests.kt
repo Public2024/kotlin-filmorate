@@ -6,8 +6,7 @@ import com.example.doc.model.example.User
 import com.example.doc.parsing.ClassParser
 import com.example.doc.parsing.ClassView
 import com.example.doc.parsing.MethodParser
-import com.example.doc.service.ApplicationEndpointsFinder
-import com.example.doc.service.DocumentationService
+import com.example.doc.service.GenerationJsonExamplesEndpoint
 import com.example.doc.util.EasyRandomUtil
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
@@ -101,17 +100,6 @@ class FilmorateKotlinApplicationTests {
 
     }
 
-
-    @Test
-    fun `тест_реализации_получения_всех_ClassView_endpoint`() {
-        val actual = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
-            .find { it.path == "/post_film" }!!.method
-        val endPointFinder = ApplicationEndpointsFinder(MethodParser())
-        val generateDoc = DocumentationService(endPointFinder).getAllClassesRelatedToEndpoint(actual)
-
-        generateDoc?.forEach { println(it) }
-    }
-
     @Test
     fun `тест_генерации_объекта_easyrandom`() {
 
@@ -166,6 +154,26 @@ class FilmorateKotlinApplicationTests {
         }
 
         println(getObjCollection(ObjWithMaps::class.java.declaredFields[1]))
+    }
+
+    @Test
+    fun `сериализация_в_Json_параметров_endpoint`(){
+
+        class Test {
+            @GetMapping("/v5")
+            @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
+            fun returnCollectionComposite(user: User, word: String): Map<String, Genre> {
+                return emptyMap()
+            }
+        }
+
+        val test = Test::class.java.declaredMethods[0].parameters
+
+
+
+        println(GenerationJsonExamplesEndpoint().getJsonOfParameters(test))
+
+
     }
 
 }

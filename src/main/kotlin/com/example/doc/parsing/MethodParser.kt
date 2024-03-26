@@ -86,6 +86,7 @@ class MethodParser {
 data class OutputResult(
      val type: String,
      val composite: ClassView?
+
 )
 
 data class InputParameter(

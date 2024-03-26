@@ -35,7 +35,6 @@ class UserControllerExample {
     @PostMapping
     @Operation(summary = "Добавить пользователя")
     fun createUser(@Parameter(required = true) @RequestBody user: User, number: Int): User {
-        validateUser(user)
         user.id
         users.put(user.id, user)
         return user
