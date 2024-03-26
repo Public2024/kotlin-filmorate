@@ -1,6 +1,6 @@
-package com.example.javafilmoratekotlin.parsing
+package com.example.doc.parsing
 
-import com.example.javafilmoratekotlin.util.TypeSeparator
+import com.example.doc.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
 import java.lang.reflect.Field

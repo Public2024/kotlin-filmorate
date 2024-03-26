@@ -30,7 +30,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.jeasy:easy-random-core:5.0.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
 
 }
 

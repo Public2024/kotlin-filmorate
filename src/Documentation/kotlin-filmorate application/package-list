@@ -1,35 +1,35 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example////PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/index.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/FilmController///PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-film-controller/index.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/FilmController/FilmController/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-film-controller/-film-controller.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/FilmController/changeFilm/#com.example.javafilmoratekotlin.model_example.Film/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-film-controller/change-film.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/FilmController/createFilm/#com.example.javafilmoratekotlin.model_example.Film/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-film-controller/create-film.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/FilmController/returnAllFilms/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-film-controller/return-all-films.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/UserController///PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-user-controller/index.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/UserController/UserController/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-user-controller/-user-controller.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/UserController/changeUser/#com.example.javafilmoratekotlin.model_example.User/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-user-controller/change-user.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/UserController/createUser/#com.example.javafilmoratekotlin.model_example.User/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-user-controller/create-user.html
-$dokka.location:com.example.javafilmoratekotlin.controllers_example/UserController/returnAllUsers/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.controllers_example/-user-controller/return-all-users.html
-$dokka.location:com.example.javafilmoratekotlin.model_example////PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/index.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film///PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/index.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/Film/#kotlin.Int#kotlin.String#kotlin.String#java.time.LocalDate#kotlin.Int/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/-film.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/description/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/description.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/duration/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/duration.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/id/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/id.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/name/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/name.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/Film/releaseDate/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-film/release-date.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User///PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/index.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/User/#kotlin.Int#kotlin.String#kotlin.String#kotlin.String?#java.time.LocalDate/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/-user.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/birthday/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/birthday.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/email/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/email.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/id/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/id.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/login/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/login.html
-$dokka.location:com.example.javafilmoratekotlin.model_example/User/name/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin.model_example/-user/name.html
-$dokka.location:com.example.javafilmoratekotlin////PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin/index.html
-$dokka.location:com.example.javafilmoratekotlin/FilmorateKotlinApplication///PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin/-filmorate-kotlin-application/index.html
-$dokka.location:com.example.javafilmoratekotlin/FilmorateKotlinApplication/FilmorateKotlinApplication/#/PointingToDeclaration/kotlin-filmorate application/com.example.javafilmoratekotlin/-filmorate-kotlin-application/-filmorate-kotlin-application.html
-com.example.javafilmoratekotlin
-com.example.javafilmoratekotlin.controllers_example
-com.example.javafilmoratekotlin.model_example
+$dokka.location:com.example.doc.controllers_example////PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/index.html
+$dokka.location:com.example.doc.controllers_example/FilmController///PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-film-controller/index.html
+$dokka.location:com.example.doc.controllers_example/FilmController/FilmController/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-film-controller/-film-controller.html
+$dokka.location:com.example.doc.controllers_example/FilmController/changeFilm/#com.example.doc.model.Film/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-film-controller/change-film.html
+$dokka.location:com.example.doc.controllers_example/FilmController/createFilm/#com.example.doc.model.Film/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-film-controller/create-film.html
+$dokka.location:com.example.doc.controllers_example/FilmController/returnAllFilms/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-film-controller/return-all-films.html
+$dokka.location:com.example.doc.controllers_example/UserController///PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-user-controller/index.html
+$dokka.location:com.example.doc.controllers_example/UserController/UserController/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-user-controller/-user-controller.html
+$dokka.location:com.example.doc.controllers_example/UserController/changeUser/#com.example.doc.model.User/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-user-controller/change-user.html
+$dokka.location:com.example.doc.controllers_example/UserController/createUser/#com.example.doc.model.User/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-user-controller/create-user.html
+$dokka.location:com.example.doc.controllers_example/UserController/returnAllUsers/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.controllers_example/-user-controller/return-all-users.html
+$dokka.location:com.example.doc.model////PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/index.html
+$dokka.location:com.example.doc.model/Film///PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/index.html
+$dokka.location:com.example.doc.model/Film/Film/#kotlin.Int#kotlin.String#kotlin.String#java.time.LocalDate#kotlin.Int/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/-film.html
+$dokka.location:com.example.doc.model/Film/description/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/description.html
+$dokka.location:com.example.doc.model/Film/duration/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/duration.html
+$dokka.location:com.example.doc.model/Film/id/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/id.html
+$dokka.location:com.example.doc.model/Film/name/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/name.html
+$dokka.location:com.example.doc.model/Film/releaseDate/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-film/release-date.html
+$dokka.location:com.example.doc.model/User///PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/index.html
+$dokka.location:com.example.doc.model/User/User/#kotlin.Int#kotlin.String#kotlin.String#kotlin.String?#java.time.LocalDate/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/-user.html
+$dokka.location:com.example.doc.model/User/birthday/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/birthday.html
+$dokka.location:com.example.doc.model/User/email/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/email.html
+$dokka.location:com.example.doc.model/User/id/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/id.html
+$dokka.location:com.example.doc.model/User/login/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/login.html
+$dokka.location:com.example.doc.model/User/name/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc.model/-user/name.html
+$dokka.location:com.example.doc////PointingToDeclaration/kotlin-filmorate application/com.example.doc/index.html
+$dokka.location:com.example.doc/FilmorateKotlinApplication///PointingToDeclaration/kotlin-filmorate application/com.example.doc/-filmorate-kotlin-application/index.html
+$dokka.location:com.example.doc/FilmorateKotlinApplication/FilmorateKotlinApplication/#/PointingToDeclaration/kotlin-filmorate application/com.example.doc/-filmorate-kotlin-application/-filmorate-kotlin-application.html
+com.example.doc
+com.example.doc.controllers_example
+com.example.doc.model
 

@@ -1,6 +1,6 @@
 package org.example.model;
 
-import com.example.javafilmoratekotlin.model_example.Genre;
+import com.example.doc.model.example.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Collection;

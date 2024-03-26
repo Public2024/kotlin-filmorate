@@ -1,6 +1,6 @@
 package org.example.controllers;
 
-import com.example.javafilmoratekotlin.model_example.Genre;
+import com.example.doc.model.example.Genre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.*;
