@@ -1,6 +1,6 @@
 package com.example.javafilmoratekotlin.parsing
 
-import com.example.javafilmoratekotlin.model.Genre
+import com.example.javafilmoratekotlin.model_example.Genre
 import com.example.javafilmoratekotlin.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test

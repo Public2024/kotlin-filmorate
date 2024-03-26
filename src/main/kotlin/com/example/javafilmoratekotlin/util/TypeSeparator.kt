@@ -89,26 +89,29 @@ class TypeSeparator {
             return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
         }
 
+        private val findCollectionWords = Regex("(Collection)|(List)|(ArrayList)|(Set)|(HashMap)|(Map)")
+
+        private fun correctTypeName(type: List<String>): String{
+            return type.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
+                .toString().replace(findCollectionWords, "Коллекция<")
+                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+        }
+
         /*
         Для вывода типа объекта полей класса для документации*/
         fun parseFieldTypeName(field: Field): String {
             if (!TypeSeparator.isCollectionTypes(field)) return field.type.simpleName
-            val findCollectionWords = Regex("(Collection)|(List)|(ArrayList)|(Set)|(HashMap)|(Map)")
-            val str = field.genericType.typeName.split(".", "<", " ")
-            return str.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
-                .toString().replace(findCollectionWords, "Коллекция<")
-                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+            val type = field.genericType.typeName.split(".", "<", " ")
+            return correctTypeName(type)
         }
 
         /*
         Для вывода типа объекта параметров и результата метода(endpointa) для документации*/
         fun parseParameterTypeName(type: KType): String {
             if (!TypeSeparator.isCollection(type.jvmErasure.java)) return type.javaType.typeName.substringAfterLast(".")
-            val findCollectionWords = Regex("(Collection)|(List)|(ArrayList)|(Set)|(HashMap)|(Map)")
-            val str = type.javaType.typeName.split(".", "<", " ")
-            return str.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
-                .toString().replace(findCollectionWords, "Коллекция<")
-                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+            val type = type.javaType.typeName.split(".", "<", " ")
+            return correctTypeName(type)
+
         }
 
     }

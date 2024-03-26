@@ -1,4 +1,4 @@
-package com.example.javafilmoratekotlin.testControllers
+package com.example.javafilmoratekotlin.controllers.test
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*

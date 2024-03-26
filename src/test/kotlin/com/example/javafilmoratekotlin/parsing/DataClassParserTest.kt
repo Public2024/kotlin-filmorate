@@ -1,11 +1,11 @@
 package com.example.javafilmoratekotlin.parsing
 
 
-import com.example.javafilmoratekotlin.model.FilmTag
-import com.example.javafilmoratekotlin.model.Genre
+import com.example.javafilmoratekotlin.model_example.FilmTag
+import com.example.javafilmoratekotlin.model_example.Genre
 import io.swagger.v3.oas.annotations.media.Schema
 import nonapi.io.github.classgraph.json.Id
-import org.example.model.Comments
+import org.example.model.JavaDataModelTest
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import java.time.LocalDate
@@ -20,7 +20,7 @@ class DataClassParserTest {
     @Test
     fun `тест_парсинга_java_класса`() {
 
-        val actualFilm = parser.extractClassInfo(Comments::class.java)
+        val actualFilm = parser.extractClassInfo(JavaDataModelTest::class.java)
 
         /*Примитивный тип поля*/
         val expectedIdParse = FieldView(

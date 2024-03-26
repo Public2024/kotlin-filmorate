@@ -1,17 +1,14 @@
 package org.example.model;
 
-import com.example.javafilmoratekotlin.model.Film;
-import com.example.javafilmoratekotlin.model.Genre;
-import com.example.javafilmoratekotlin.model.User;
+import com.example.javafilmoratekotlin.model_example.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 
 @Schema(description = "Комментарии к фильму")
-public class Comments {
+public class JavaDataModelTest {
 
     @Schema(description = "Идентификатор")
     Integer id;
@@ -24,7 +21,7 @@ public class Comments {
     @Schema(description = "Комментарий к жанрам")
     Collection<Genre> genres;
 
-    public Comments(@Schema(description = "Тест жанр") Genre genre) {
+    public JavaDataModelTest(@Schema(description = "Тест жанр") Genre genre) {
         this.genre = genre;
     }
 }

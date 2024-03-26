@@ -60,9 +60,9 @@
             </tr>
             </thead>
             <tr th:each="parameter: ${Doc.view.parameters}">
-                <td ><span th:text="${parameter.name}"> Type </span></td>
-                <td><span th:text="${parameter.type}"> Type </span></td>
-                <td><span th:text="${parameter.required}"> Type </span></td>
+                <td ><span th:text="${parameter.name}"> Имя </span></td>
+                <td><span th:text="${parameter.type}"> Тип </span></td>
+                <td><span th:text="${parameter.required}"> Required </span></td>
             </tr>
         </table>
         </span>
@@ -72,11 +72,11 @@
         <table style="border-collapse: collapse; margin-top: 15px" th:each="Class : ${Doc.view.classes}">
             <tr>
                 <td style="width: 500px;"><span> Наименование класса </span></td>
-                <td style="width: 500px;"><span th:text="${Class.name}"> Name </span></td>
+                <td style="width: 500px;"><span th:text="${Class.name}"> Наименование класса </span></td>
             </tr>
             <tr>
                 <td style="width: 500px;"><span> Описание </span></td>
-                <td style="width: 500px;"><span th:text="${Class.description}"> Name </span></td>
+                <td style="width: 500px;"><span th:text="${Class.description}"> Описание </span></td>
             </tr>
             <tr>
                 <span th:if="${not #lists.isEmpty(Class.fields)}">
@@ -90,9 +90,9 @@
                         <th> Required</th>
                     </tr>
                     <tr th:each="field : ${Class.fields}">
-                        <td><span th:text="${field.name}"> Type </span></td>
-                        <td><span th:text="${field.type}"> Type </span></td>
-                        <td><span th:text="${field.description}"> Type </span></td>
+                        <td><span th:text="${field.name}"> Наименование </span></td>
+                        <td><span th:text="${field.type}"> Тип </span></td>
+                        <td><span th:text="${field.description}"> Описание </span></td>
                         <td style="width: 350px;">
                             <span th:if="${not #lists.isEmpty(field.classOfEnum)}">
                                 <table style="width: 350px;">
@@ -103,14 +103,14 @@
                                 </tr>
                                 <tr th:each="enum : ${field.classOfEnum}">
                                     <td style="width: 150px;"><span th:text="${enum.value}"> Значение </span></td>
-                                    <td style="width: 200px;"><span th:text="${enum.description}"> Значение </span></td>
+                                    <td style="width: 200px;"><span th:text="${enum.description}"> Описание </span></td>
                                 </tr>
                             </table>
                             </span>
                             <span th:else th:text = "${field.example}">
                             </span>
                         </td>
-                        <td><span th:text="${field.required}"> Type </span></td>
+                        <td><span th:text="${field.required}"> Required </span></td>
                     </tr>
                 </table>
                 </span>

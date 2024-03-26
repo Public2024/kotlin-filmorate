@@ -1,6 +1,6 @@
-package com.example.javafilmoratekotlin.controllers
+package com.example.javafilmoratekotlin.controllers.example
 
-import com.example.javafilmoratekotlin.model.User
+import com.example.javafilmoratekotlin.model_example.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 
@@ -8,13 +8,13 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
 /**
- * @property UserController - контроллер пользователей
+ * @property UserControllerExample - контроллер пользователей
  *
  */
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Контроллер полтьзователей", description = "API для CRUD пользователей")
-class UserController {
+class UserControllerExample {
 
     private final val users = HashMap<Int, User>(4)
 

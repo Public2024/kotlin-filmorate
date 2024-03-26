@@ -1,7 +1,7 @@
-package com.example.javafilmoratekotlin.controllers
+package com.example.javafilmoratekotlin.controllers.example
 
-import com.example.javafilmoratekotlin.model.Film
-import com.example.javafilmoratekotlin.model.User
+import com.example.javafilmoratekotlin.model_example.Film
+import com.example.javafilmoratekotlin.model_example.User
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.service.ApplicationEndpoint
 import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 /**
- * @property FilmController - контроллер фильмов
+ * @property FilmControllerExample - контроллер фильмов
  */
 @RestController
 @RequestMapping()
 @Tag(name = "Контроллер фильмов", description = "API для CRUD фильмов")
-class FilmController {
+class FilmControllerExample {
 
     @GetMapping("/endpoints")
     fun getEndPoints(): List<ApplicationEndpoint> {

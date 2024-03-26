@@ -1,4 +1,4 @@
-package com.example.javafilmoratekotlin.model
+package com.example.javafilmoratekotlin.model_example
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate

@@ -1,8 +1,8 @@
 package com.example.javafilmoratekotlin.parsing
 
-import com.example.javafilmoratekotlin.model.Genre
+import com.example.javafilmoratekotlin.model_example.Genre
 import io.swagger.v3.oas.annotations.Operation
-import org.example.controllers.JavaController
+import org.example.controllers.JavaControllerTest
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +15,7 @@ class MethodParserTest {
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_java_get_возврат_примтивной_коллекции`() {
-        val getMethod = JavaController()::class.java.methods.find { it.name == "returnList" }
+        val getMethod = JavaControllerTest()::class.java.methods.find { it.name == "returnList" }
         val actualGetMethod = getMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedGetMethod = MethodView(
             name = "returnList",
@@ -32,7 +32,7 @@ class MethodParserTest {
 
     @Test
     fun `тест_java_post_добавление_композитного_класса`() {
-        val postMethod = JavaController()::class.java.methods.find { it.name == "addCompositeObj" }
+        val postMethod = JavaControllerTest()::class.java.methods.find { it.name == "addCompositeObj" }
         val actualPostMethod = postMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedPostMethod = MethodView(
             name = "addCompositeObj",
@@ -58,7 +58,7 @@ class MethodParserTest {
 
     @Test
     fun `тест_java_delete_метод_void`() {
-        val deleteMethod = JavaController()::class.java.methods.find { it.name == "deleteById" }
+        val deleteMethod = JavaControllerTest()::class.java.methods.find { it.name == "deleteById" }
         val actualPostMethod = deleteMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedDeleteMethod = MethodView(
             name = "deleteById",
@@ -80,7 +80,7 @@ class MethodParserTest {
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_java_put_метод_параметр_CompositeCollection`() {
-        val putMethod = JavaController()::class.java.methods.find { it.name == "updateCollection" }
+        val putMethod = JavaControllerTest()::class.java.methods.find { it.name == "updateCollection" }
         val actualPutMethod = putMethod?.let { MethodParser().extractMethodInfo(it) }
         val expectedPutMethod = MethodView(
             name = "updateCollection",

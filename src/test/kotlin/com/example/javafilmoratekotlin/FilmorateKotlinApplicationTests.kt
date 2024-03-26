@@ -1,23 +1,17 @@
 package com.example.javafilmoratekotlin
 
-import com.example.javafilmoratekotlin.model.Film
-import com.example.javafilmoratekotlin.model.Genre
+import com.example.javafilmoratekotlin.model_example.Film
+import com.example.javafilmoratekotlin.model_example.Genre
 import com.example.javafilmoratekotlin.parsing.ClassParser
 import com.example.javafilmoratekotlin.parsing.ClassView
 import com.example.javafilmoratekotlin.parsing.MethodParser
 import com.example.javafilmoratekotlin.service.ApplicationEndpointsFinder
 import com.example.javafilmoratekotlin.service.DocumentationService
-import com.example.javafilmoratekotlin.util.TypeSeparator
-import com.jayway.jsonpath.internal.CharacterIndex
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import java.lang.reflect.Field
-import java.util.ArrayList
-import java.util.HashMap
 
 @SpringBootTest
 class FilmorateKotlinApplicationTests {

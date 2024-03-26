@@ -1,7 +1,6 @@
 package org.example.controllers;
 
-import com.example.javafilmoratekotlin.model.Genre;
-import com.example.javafilmoratekotlin.model.User;
+import com.example.javafilmoratekotlin.model_example.Genre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/test")
-public class JavaController {
+public class JavaControllerTest {
 
     @GetMapping("/get")
     @Operation(summary = "Возврат коллекции")
