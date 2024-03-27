@@ -6,21 +6,26 @@ import com.example.doc.model.example.User
 import com.example.doc.parsing.ClassParser
 import com.example.doc.parsing.ClassView
 import com.example.doc.parsing.MethodParser
-import com.example.doc.service.GenerationJsonExamplesEndpoint
 import com.example.doc.util.EasyRandomUtil
+import com.example.doc.util.SerializationUtil.globalJsonMapper
+import com.fasterxml.jackson.core.type.TypeReference
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
+import org.jeasy.random.EasyRandom
+import org.jeasy.random.randomizers.collection.MapRandomizer
+import org.jeasy.random.*
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.web.bind.annotation.GetMapping
 import java.lang.reflect.Field
+import java.lang.reflect.Parameter
 import java.lang.reflect.ParameterizedType
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.HashMap
+
 
 @SpringBootTest
 class FilmorateKotlinApplicationTests {
@@ -130,7 +135,7 @@ class FilmorateKotlinApplicationTests {
     }
 
     @Test
-    fun `тест_класса_с_map`(){
+    fun `тест_класса_с_map`() {
         data class ObjWithMaps(
             @Schema(description = "field1")
             val one: Map<String, Film>,
@@ -157,23 +162,109 @@ class FilmorateKotlinApplicationTests {
     }
 
     @Test
-    fun `сериализация_в_Json_параметров_endpoint`(){
+    fun `сериализация_в_Json_параметров_endpoint`() {
 
         class Test {
             @GetMapping("/v5")
             @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
-            fun returnCollectionComposite(user: User, word: String): Map<String, Genre> {
+            fun returnCollectionComposite(film: Film, word: HashMap<User, Film>): Map<String, Genre> {
                 return emptyMap()
             }
         }
 
         val test = Test::class.java.declaredMethods[0].parameters
 
+        fun createExampleClass(clazz: Class<*>): Any {
+            val exampleObject = EasyRandomUtil.easyRandom.objects(clazz, 1).toList().first()
+            return exampleObject
+        }
+
+        fun <T> fromJson(json: String, typeReference: TypeReference<T>): T {
+            return globalJsonMapper.readValue(json, typeReference)
+        }
 
 
-        println(GenerationJsonExamplesEndpoint().getJsonOfParameters(test))
+        fun createObj(parameter: Parameter): Class<*> {
+            val clazz = parameter.type
+            return clazz
+        }
 
+        println(createExampleClass(createObj(test[0])))
 
     }
 
+    @Test
+    fun `тест_создания_примера_объекта_Map`() {
+        data class ObjWithMaps(
+            @Schema(description = "field1")
+            val one: Map<String, Film>,
+            @Schema(description = "field2")
+            val two: HashMap<String, User>,
+            @Schema(description = "field3")
+            val three: Map<Int, String>
+        )
+
+        val collectionMaps = listOf<Class<*>>(
+            Map::class.javaObjectType,
+            HashMap::class.javaObjectType,
+            Map::class.java,
+            HashMap::class.java
+        )
+
+        val collections = listOf<Class<*>>(
+            Collection::class.javaObjectType,
+            List::class.javaObjectType,
+            Array::class.javaObjectType,
+            Set::class.javaObjectType,
+            ArrayList::class.java,
+
+
+            Collection::class.java,
+            List::class.java,
+            Array::class.java,
+            ArrayList::class.java,
+            Set::class.java,
+        )
+
+        class Test {
+            @GetMapping("/v5")
+            @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
+            fun returnCollectionComposite(film: Film, word: HashMap<User, Film>): Map<String, Genre> {
+                return emptyMap()
+            }
+        }
+
+        data class ForMap(
+            val key: Any,
+            val value: Any
+        )
+
+        class Expect<K, V>(k: K, v: V) {
+            var key = k
+            var value = v
+        }
+
+        fun createExampleObjFromMap(parameter: Parameter): Any {
+            val obj = mutableMapOf<Any, Any>()
+            val key = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[0] as Class<*>
+            val value = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[1] as Class<*>
+            val exampleKey = EasyRandomUtil.easyRandom.nextObject(key)
+
+            obj.put(key, value)
+/*            if(collections.contains(value)){
+                val exampleKey = EasyRandomUtil.easyRandom.objects(key::class.java, 1).toList().first()
+                val exampleValue = EasyRandomUtil.easyRandom.nextObject(value::class.java)
+                obj.put(exampleKey, exampleValue)
+            }*/
+
+            return exampleKey
+        }
+
+
+        val test = Test::class.java.declaredMethods[0].parameters
+
+        println(createExampleObjFromMap(test[1]))
+
+
+    }
 }

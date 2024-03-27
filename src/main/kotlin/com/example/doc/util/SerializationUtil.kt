@@ -19,6 +19,4 @@ object SerializationUtil {
         .setSerializationInclusion(JsonInclude.Include.NON_NULL)
         .registerModule(KotlinModule.Builder().build())
         .registerModule(JavaTimeModule())!!
-
-
 }

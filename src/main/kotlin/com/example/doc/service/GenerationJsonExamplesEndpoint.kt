@@ -6,10 +6,16 @@ import java.lang.reflect.Parameter
 
 class GenerationJsonExamplesEndpoint {
 
-    fun getJsonOfParameters(parameters: Array<Parameter>): String {
-        val obj = mutableMapOf<String, String>()
-        parameters.forEach { obj[it.name] = toJson(createExampleClass(it.type))}
+    /*Json представления параметров endpoint (body)*/
+    fun getJsonOfBody(parameters: Array<Parameter>): String {
+        val obj = mutableMapOf<String, Any>()
+        parameters.forEach { obj[it.name] = createExampleClass(it.type)}
         return  toJson(obj)
+    }
+
+    /*Json представление объекта результата запроса к endpoint (response)*/
+    fun getJsonOfResponse(response: Class<*>): String{
+        return ""
     }
 
     /*Получение примера объекта*/
