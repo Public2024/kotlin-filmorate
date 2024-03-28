@@ -55,7 +55,7 @@ class ClassParser() {
 
     /*Получение объекта класса коллекции*/
     private fun extractObjOfCollection(field: Field): ClassView? {
-        val objCollection = TypeSeparator.getObjCollection(field)
+        val objCollection = TypeSeparator.getObjCollectionSingleForField(field)
         return when {
             TypeSeparator.isPrimitive(objCollection) -> null
             else -> {

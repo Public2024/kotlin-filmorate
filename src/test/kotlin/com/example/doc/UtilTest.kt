@@ -1,4 +1,4 @@
-package com.example.doc.parsing
+package com.example.doc
 
 import com.example.doc.model.example.Genre
 import com.example.doc.util.TypeSeparator

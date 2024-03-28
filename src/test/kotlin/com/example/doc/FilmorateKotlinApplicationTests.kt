@@ -11,9 +11,6 @@ import com.example.doc.util.SerializationUtil.globalJsonMapper
 import com.fasterxml.jackson.core.type.TypeReference
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.randomizers.collection.MapRandomizer
-import org.jeasy.random.*
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,6 +22,9 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.reflect.KType
+import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.jvm.kotlinFunction
 
 
 @SpringBootTest
@@ -167,8 +167,8 @@ class FilmorateKotlinApplicationTests {
         class Test {
             @GetMapping("/v5")
             @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
-            fun returnCollectionComposite(film: Film, word: HashMap<User, Film>): Map<String, Genre> {
-                return emptyMap()
+            fun returnCollectionComposite(film: Film, word: HashMap<User, List<Film>>): String {
+                return ""
             }
         }
 
@@ -229,42 +229,29 @@ class FilmorateKotlinApplicationTests {
         class Test {
             @GetMapping("/v5")
             @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
-            fun returnCollectionComposite(film: Film, word: HashMap<User, Film>): Map<String, Genre> {
+            fun returnCollectionComposite(film: List<Film>, word: HashMap<User, List<Film>>): Map<User, Film> {
                 return emptyMap()
             }
         }
 
-        data class ForMap(
-            val key: Any,
-            val value: Any
-        )
-
-        class Expect<K, V>(k: K, v: V) {
-            var key = k
-            var value = v
-        }
+        class FactoryMap<K, V>(val field1: K, val field2: List<V>)
 
         fun createExampleObjFromMap(parameter: Parameter): Any {
             val obj = mutableMapOf<Any, Any>()
             val key = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[0] as Class<*>
-            val value = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[1] as Class<*>
-            val exampleKey = EasyRandomUtil.easyRandom.nextObject(key)
-
-            obj.put(key, value)
-/*            if(collections.contains(value)){
-                val exampleKey = EasyRandomUtil.easyRandom.objects(key::class.java, 1).toList().first()
-                val exampleValue = EasyRandomUtil.easyRandom.nextObject(value::class.java)
-                obj.put(exampleKey, exampleValue)
-            }*/
-
-            return exampleKey
+            val value = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[1]
+            return value
         }
 
+        val test = Test::class.java.declaredMethods[0].kotlinFunction?.returnType
 
-        val test = Test::class.java.declaredMethods[0].parameters
 
-        println(createExampleObjFromMap(test[1]))
+        fun getObjMapForResult(type: KType?){
+            val types = type?.arguments
 
+        }
+
+        getObjMapForResult(test)
 
     }
 }

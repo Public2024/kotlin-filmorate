@@ -31,6 +31,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.jeasy:easy-random-core:5.0.0")
+	// https://mvnrepository.com/artifact/org.genthz/genthz-core
+	implementation("org.genthz:genthz-core:3.1.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 
