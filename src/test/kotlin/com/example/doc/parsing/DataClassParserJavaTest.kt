@@ -13,7 +13,7 @@ import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
 
-class DataClassParserTest {
+class DataClassParserJavaTest {
 
     private val parser = ClassParser()
 

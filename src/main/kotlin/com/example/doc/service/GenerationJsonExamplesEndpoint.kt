@@ -4,35 +4,41 @@ import com.example.doc.util.EasyRandomUtil
 import com.example.doc.util.SerializationUtil
 import com.example.doc.util.TypeSeparator
 import com.example.doc.util.TypeSeparator.Companion.findCollectionWords
-import io.micrometer.core.ipc.http.HttpSender.Response
 import org.genthz.dasha.DashaObjectFactory
 import java.lang.reflect.Parameter
-import java.lang.reflect.Type
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
 class GenerationJsonExamplesEndpoint {
 
     /*Json представления параметров (body) endpoint */
-    fun getJsonOfBody(parameters: Array<Parameter>): String {
+    fun getJsonOfBody(parameters: Array<Parameter?>): String {
         val obj = mutableMapOf<String, Any>()
-        parameters.forEach { val pair = getExampleParameter(it); obj[pair.first] = pair.second }
-        return toJson(obj)
+        if(parameters.isNotEmpty()) {
+            parameters.forEach { val pair = getExampleParameter(it!!); obj[pair.first] = pair.second }
+            return toJson(obj)
+        } else {
+            return ""
+        }
     }
 
     /*Json представление объекта (response) результата запроса к endpoint */
-    fun getJsonOfResponse(response: Class<*>): String {
-        return ""
+    fun getJsonOfResponse(response: KType): String {
+        if(response.toString() == "kotlin.Unit") return ""
+        return toJson(getExampleResult(response))
     }
 
     /*Получение примера объекта для результата*/
     private fun getExampleResult(response: KType): Any {
         val clazz = response.jvmErasure.java
-         return when {
-             TypeSeparator.isCollectionSingle(clazz) -> createExampleCollectionClass(clazz)
-             TypeSeparator.isCollectionMap(clazz) -> createExampleMapClassResponse(response)
-             else -> {createExampleObjClass(clazz)}
-         }
+        val forList = response.arguments.first().type?.jvmErasure?.java
+        return when {
+            TypeSeparator.isCollectionSingle(clazz) -> createExampleCollectionClass(forList!!)
+            TypeSeparator.isCollectionMap(clazz) -> createExampleMapClassResponse(response)
+            else -> {
+                createExampleObjClass(clazz)
+            }
+        }
     }
 
     /*Получение примера объекта для параметра */
@@ -43,9 +49,13 @@ class GenerationJsonExamplesEndpoint {
                 val clazz = TypeSeparator.getObjCollectionSingleForParam(parameter)
                 return Pair(name, createExampleCollectionClass(clazz))
             }
+
             TypeSeparator.isCollectionMap(parameter.type) ->
                 Pair(name, createExampleMapClass(parameter))
-            else -> {return Pair(name, createExampleObjClass(parameter.type))}
+
+            else -> {
+                return Pair(name, createExampleObjClass(parameter.type))
+            }
         }
     }
 
@@ -54,17 +64,16 @@ class GenerationJsonExamplesEndpoint {
         return SerializationUtil.globalJsonMapper.writeValueAsString(obj)
     }
 
-
     /*Получение example Map объекта result*/
-    private fun createExampleMapClassResponse(type: KType): Any{
+    private fun createExampleMapClassResponse(type: KType): Any {
         val pair = TypeSeparator.getObjMapForResult(type)
-        return if(pair.toString().contains(findCollectionWords)){
+        return if (pair.toString().contains(findCollectionWords)) {
             "{[]}"
         } else {
             DashaObjectFactory().get(
-                Map::class.java,
-                pair.first,
-                pair.second
+                 Map::class.java,
+                 pair.first,
+                 pair.second
             ).firstNotNullOf { it }
         }
     }
@@ -72,13 +81,13 @@ class GenerationJsonExamplesEndpoint {
     /*Получение example Map объекта параметра*/
     private fun createExampleMapClass(parameter: Parameter): Any {
         val pair = TypeSeparator.getObjMapForParam(parameter)
-        return if(pair.toString().contains(findCollectionWords)){
+        return if (pair.toString().contains(findCollectionWords)) {
             "{[]}"
         } else {
             DashaObjectFactory().get(
-                Map::class.java,
-                pair.first,
-                pair.second
+                 Map::class.java,
+                 pair.first,
+                 pair.second
             ).firstNotNullOf { it }
         }
     }
@@ -86,8 +95,8 @@ class GenerationJsonExamplesEndpoint {
     /*Получение example Collection объекта*/
     private fun createExampleCollectionClass(clazz: Class<*>): Any {
         return EasyRandomUtil.easyRandom
-            .objects(clazz, 1)
-            .toList()
+             .objects(clazz, 1)
+             .toList()
     }
 
     /*Получение example composite объекта*/

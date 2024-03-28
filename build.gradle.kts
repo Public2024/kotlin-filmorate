@@ -34,6 +34,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.genthz/genthz-core
 	implementation("org.genthz:genthz-core:3.1.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// https://mvnrepository.com/artifact/uk.co.jemos.podam/podam
+	testImplementation("uk.co.jemos.podam:podam:7.1.0.RELEASE")
+
 
 
 }

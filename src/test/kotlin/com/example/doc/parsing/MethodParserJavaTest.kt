@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
-class MethodParserTest {
+class MethodParserJavaTest {
 
     @OptIn(ExperimentalStdlibApi::class)
     @Test
