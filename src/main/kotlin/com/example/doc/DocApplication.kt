@@ -4,10 +4,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class FilmorateKotlinApplication
+class DocApplication
 
 fun main(args: Array<String>) {
-    runApplication<FilmorateKotlinApplication>(*args)
+    runApplication<DocApplication>(*args)
 }
 
 

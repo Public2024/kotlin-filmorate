@@ -25,7 +25,6 @@ data class MethodToDoc(
     val response: String?
 )
 
-
 data class DocumentationEndpoint(
     val endpoint: EndpointType,
     val view: MethodToDoc?,

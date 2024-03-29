@@ -1,6 +1,7 @@
 package com.example.doc.parsing
 
 import com.example.doc.model.example.Genre
+import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
 import org.example.controllers.JavaControllerTest
 import org.junit.jupiter.api.Test
@@ -16,7 +17,7 @@ class MethodParserJavaTest {
     @Test
     fun `тест_java_get_возврат_примтивной_коллекции`() {
         val getMethod = JavaControllerTest()::class.java.methods.find { it.name == "returnList" }
-        val actualGetMethod = getMethod?.let { MethodParser().extractMethodInfo(it) }
+        val actualGetMethod = getMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedGetMethod = MethodView(
             name = "returnList",
             description = "",
@@ -25,7 +26,9 @@ class MethodParserJavaTest {
             result = OutputResult(
                 type = typeOf<List<String>>().javaType.toString(),
                 composite = null
-            )
+            ),
+            body = "",
+            response = ""
         )
         AssertionErrors.assertEquals("Pass", expectedGetMethod, actualGetMethod)
     }
@@ -33,7 +36,7 @@ class MethodParserJavaTest {
     @Test
     fun `тест_java_post_добавление_композитного_класса`() {
         val postMethod = JavaControllerTest()::class.java.methods.find { it.name == "addCompositeObj" }
-        val actualPostMethod = postMethod?.let { MethodParser().extractMethodInfo(it) }
+        val actualPostMethod = postMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedPostMethod = MethodView(
             name = "addCompositeObj",
             description = "",
@@ -51,7 +54,9 @@ class MethodParserJavaTest {
                     )
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
         AssertionErrors.assertEquals("Pass", expectedPostMethod, actualPostMethod)
     }
@@ -59,7 +64,8 @@ class MethodParserJavaTest {
     @Test
     fun `тест_java_delete_метод_void`() {
         val deleteMethod = JavaControllerTest()::class.java.methods.find { it.name == "deleteById" }
-        val actualPostMethod = deleteMethod?.let { MethodParser().extractMethodInfo(it) }
+        val actualPostMethod =
+            deleteMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedDeleteMethod = MethodView(
             name = "deleteById",
             description = "Удаление по id",
@@ -72,7 +78,9 @@ class MethodParserJavaTest {
                     classView = null
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
         AssertionErrors.assertEquals("Pass", expectedDeleteMethod, actualPostMethod)
     }
@@ -81,7 +89,7 @@ class MethodParserJavaTest {
     @Test
     fun `тест_java_put_метод_параметр_CompositeCollection`() {
         val putMethod = JavaControllerTest()::class.java.methods.find { it.name == "updateCollection" }
-        val actualPutMethod = putMethod?.let { MethodParser().extractMethodInfo(it) }
+        val actualPutMethod = putMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedPutMethod = MethodView(
             name = "updateCollection",
             description = "Обновление Composite Collection",
@@ -99,7 +107,9 @@ class MethodParserJavaTest {
                     )
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
         AssertionErrors.assertEquals("Pass", expectedPutMethod, actualPutMethod)
 
@@ -120,10 +130,12 @@ class MethodParserJavaTest {
             description = "",
             summary = "Метод, который ничего не возвращает",
             parameters = emptyList(),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
 
@@ -148,11 +160,13 @@ class MethodParserJavaTest {
             result = OutputResult(
                 type = Int::class.java.toString(),
                 composite = null
-            )
+            ),
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
 
     }
@@ -180,10 +194,12 @@ class MethodParserJavaTest {
                     description = "Информация о фильме",
                     fields = emptyList()
                 )
-            )
+            ),
+            body = "",
+            response = ""
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -206,11 +222,13 @@ class MethodParserJavaTest {
             result = OutputResult(
                 type = typeOf<List<String>>().javaType.toString(),
                 composite = null
-            )
+            ),
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -239,11 +257,13 @@ class MethodParserJavaTest {
                     description = "Информация о фильме",
                     fields = emptyList()
                 )
-            )
+            ),
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         /*        AssertionErrors.assertEquals("Pass", expected, actual)*/
     }
 
@@ -269,11 +289,13 @@ class MethodParserJavaTest {
                     classView = null
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -303,11 +325,13 @@ class MethodParserJavaTest {
                     )
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
 
@@ -333,10 +357,12 @@ class MethodParserJavaTest {
                     classView = null
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
 
         AssertionErrors.assertEquals("Pass", expected, actual)
     }
@@ -367,11 +393,13 @@ class MethodParserJavaTest {
                     )
                 )
             ),
-            result = null
+            result = null,
+            body = "",
+            response = ""
         )
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test)
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test)
         AssertionErrors.assertEquals("Pass", expected, actual)
 
     }
@@ -386,7 +414,7 @@ class MethodParserJavaTest {
         }
 
         val test = Test::class.java.methods[0]
-        val actual = MethodParser().extractMethodInfo(test).description
+        val actual = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(test).description
         AssertionErrors.assertEquals("Pass", "Метод для проверки аннотации с описанием", actual)
 
     }

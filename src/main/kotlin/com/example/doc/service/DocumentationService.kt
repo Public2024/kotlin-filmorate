@@ -8,7 +8,6 @@ import org.springframework.ui.Model
 class DocumentationService(
     private val endpointsFinder: ApplicationEndpointsFinder
 ) {
-
     /*Метод вывода документации*/
     fun buildDocumentation(model: Model): String {
         val endpoints = endpointsFinder.findAllEndpoints()
@@ -25,8 +24,8 @@ class DocumentationService(
                     parameters = point.method.parameters,
                     result = point.method.result,
                     classes = GetClassesOfEndpoint().getAllClassesRelatedToEndpoint(point.method),
-                    body = null,
-                    response = null
+                    body = point.method.body,
+                    response = point.method.response
                 )
             )
         }

@@ -123,25 +123,12 @@ class TypeSeparator {
             return (field.genericType as ParameterizedType).actualTypeArguments.first() as Class<*>
         }
 
-        /*Для получения объекта коллекции параметра метода*/
-        fun getObjCollectionSingleForParam(parameter: Parameter): Class<*> {
-            return (parameter.parameterizedType as ParameterizedType).actualTypeArguments.first() as Class<*>
-        }
 
-        /*Для получения объектов коллекции return type*/
+        /*Для получения объектов коллекции*/
         fun getObjMapForResult(type: KType): Pair<Type?, Type?> {
             val types = type.arguments
             val key = types[0].type?.javaType
             val value = types[1].type?.javaType
-            return Pair(key, value)
-        }
-
-
-        /*Для получения объектов (key, value).class */
-        fun getObjMapForParam(parameter: Parameter): Pair<Type, Type> {
-            val types = (parameter.parameterizedType as ParameterizedType).actualTypeArguments
-            val key = types[0]
-            val value = types[1]
             return Pair(key, value)
         }
 

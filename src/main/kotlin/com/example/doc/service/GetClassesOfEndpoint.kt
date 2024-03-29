@@ -4,10 +4,12 @@ import com.example.doc.parsing.ClassView
 import com.example.doc.parsing.InputParameter
 import com.example.doc.parsing.MethodView
 import com.example.doc.parsing.OutputResult
+import org.springframework.stereotype.Service
 
 
 /*
 * Класс для получения всех классов относящихся к endpoint*/
+@Service
 class GetClassesOfEndpoint {
     /*
     * Получение всех уникальных классов относящихся к endpoint */

@@ -101,12 +101,4 @@ object EasyRandomUtil {
                 },
             )
 
-    inline fun <reified T> EasyRandom.random(): T = this.nextObject(T::class.java)
-
-    inline fun <reified T> EasyRandom.random(
-        count: Int,
-        crossinline f: (T) -> T,
-    ): List<T> = this.objects(T::class.java, count).map { f(it) }.toList()
-
-    inline fun <reified T> EasyRandom.random(count: Int): List<T> = this.objects(T::class.java, count).asSequence().toList()
 }

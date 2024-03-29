@@ -5,6 +5,7 @@ import com.example.doc.model.example.User
 import com.example.doc.parsing.MethodParser
 import com.example.doc.service.ApplicationEndpoint
 import com.example.doc.service.ApplicationEndpointsFinder
+import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
@@ -20,7 +21,7 @@ class FilmControllerExample {
 
     @GetMapping("/endpoints")
     fun getEndPoints(): List<ApplicationEndpoint> {
-        val endPointFinder = ApplicationEndpointsFinder(MethodParser()).findAllEndpoints()
+        val endPointFinder = ApplicationEndpointsFinder(MethodParser(GenerationJsonExamplesEndpoint())).findAllEndpoints()
         return endPointFinder
     }
 

@@ -50,6 +50,9 @@
         <td colspan="2"><span th:text="${Doc.view.result?.type} ?: 'void' "> Type </span></td>
     </tr>
     <tr>
+        <td><span th:text="${Doc.view.body}"> </span></td>
+    </tr>
+    <tr>
         <span th:if="${not #lists.isEmpty(Doc.view.parameters)}">
             <table style="margin-top: 15px">
             <thead>

@@ -1,5 +1,6 @@
 package com.example.doc.parsing
 
+import com.example.doc.service.GenerationJsonExamplesEndpoint
 import com.example.doc.util.TypeSeparator
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -12,17 +13,19 @@ import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction
 
 @Component
-class MethodParser {
+class MethodParser(private val jsonExample: GenerationJsonExamplesEndpoint) {
 
     /*Парсинг метода в MethodView*/
     fun extractMethodInfo(method: Method): MethodView {
         val description = extractDescription(method)
         return MethodView(
-             name = method.name,
-             description = description?.description,
-             summary = description?.summary,
-             parameters = getAllParameters(method.kotlinFunction?.valueParameters),
-             result = getResult(method)
+            name = method.name,
+            description = description?.description,
+            summary = description?.summary,
+            parameters = getAllParameters(method.kotlinFunction?.valueParameters),
+            result = getResult(method),
+            body = jsonExample.getJsonOfBody(method.kotlinFunction?.valueParameters!!),
+            response = jsonExample.getJsonOfResponse(method.kotlinFunction?.returnType!!)
         )
     }
 
@@ -33,13 +36,13 @@ class MethodParser {
     }
 
     private data class MethodDescription(
-         val description: String,
-         val summary: String,
+        val description: String,
+        val summary: String,
     )
 
     /*Парсинг входящих параметров метода*/
     private fun getAllParameters(
-         parameters: List<KParameter>?
+        parameters: List<KParameter>?
     ): List<InputParameter>? {
         var required = false
         return parameters?.map { it ->
@@ -47,10 +50,10 @@ class MethodParser {
                 required = (it.annotations.find { it is Parameter } as Parameter).required
             }
             InputParameter(
-                 name = it.name,
-                 type = TypeSeparator.parseParameterTypeName(it.type),
-                 required = required,
-                 classView = checkOnCompositeParameter(it.type)
+                name = it.name,
+                type = TypeSeparator.parseParameterTypeName(it.type),
+                required = required,
+                classView = checkOnCompositeParameter(it.type)
             )
         }
     }
@@ -59,8 +62,8 @@ class MethodParser {
     private fun checkOnCompositeParameter(type: KType): ClassView? {
         val classParser = ClassParser()
         var aClass =
-             if (TypeSeparator.isPrimitive(type.jvmErasure.java)) null
-             else classParser.extractClassInfo(type.jvmErasure.java)
+            if (TypeSeparator.isPrimitive(type.jvmErasure.java)) null
+            else classParser.extractClassInfo(type.jvmErasure.java)
 
         /*Если collection*/
         if (TypeSeparator.isCollection(type.jvmErasure.javaObjectType)) {
@@ -78,29 +81,30 @@ class MethodParser {
         val returnType = method.kotlinFunction?.returnType ?: return null
         if (returnType.toString() == "kotlin.Unit") return null
         return OutputResult(
-             type = TypeSeparator.parseParameterTypeName(returnType), composite = checkOnCompositeParameter(returnType)
+            type = TypeSeparator.parseParameterTypeName(returnType), composite = checkOnCompositeParameter(returnType)
         )
     }
 }
 
 data class OutputResult(
-     val type: String,
-     val composite: ClassView?
-
+    val type: String,
+    val composite: ClassView?
 )
 
 data class InputParameter(
-     val name: String?,
-     val type: String,
-     val required: Boolean,
-     val classView: ClassView?
+    val name: String?,
+    val type: String,
+    val required: Boolean,
+    val classView: ClassView?
 )
 
 data class MethodView(
-     val name: String,
-     val description: String?,
-     val summary: String?,
-     val parameters: List<InputParameter>?,
-     val result: OutputResult?
+    val name: String,
+    val description: String?,
+    val summary: String?,
+    val parameters: List<InputParameter>?,
+    val result: OutputResult?,
+    val body: String?,
+    val response: String?
 )
 

@@ -6,16 +6,21 @@ import com.example.doc.model.example.User
 import com.example.doc.parsing.ClassParser
 import com.example.doc.parsing.ClassView
 import com.example.doc.parsing.MethodParser
+import com.example.doc.service.ApplicationEndpointsFinder
+import com.example.doc.service.DocumentationService
+import com.example.doc.service.GenerationJsonExamplesEndpoint
 import com.example.doc.util.EasyRandomUtil
 import com.example.doc.util.SerializationUtil.globalJsonMapper
 import com.fasterxml.jackson.core.type.TypeReference
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
+import net.bytebuddy.implementation.bytecode.assign.InstanceCheck
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.randomizers.collection.MapRandomizer
 import org.jeasy.random.*
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import java.lang.reflect.Field
 import java.lang.reflect.Parameter
@@ -25,11 +30,14 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.valueParameters
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction
 
 
 @SpringBootTest
-class FilmorateKotlinApplicationTests {
+class DocApplicationTests {
 
     @Test
     fun contextLoads() {
@@ -47,7 +55,7 @@ class FilmorateKotlinApplicationTests {
 
         val method = Test::class.java.declaredMethods[0]
 
-        val test = MethodParser().extractMethodInfo(method)
+        val test = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(method)
 
         println(test)
 
@@ -234,16 +242,6 @@ class FilmorateKotlinApplicationTests {
             }
         }
 
-        data class ForMap(
-            val key: Any,
-            val value: Any
-        )
-
-        class Expect<K, V>(k: K, v: V) {
-            var key = k
-            var value = v
-        }
-
         fun createExampleObjFromMap(parameter: Parameter): Any {
             val obj = mutableMapOf<Any, Any>()
             val key = (parameter.parameterizedType as ParameterizedType).actualTypeArguments[0] as Class<*>
@@ -251,17 +249,41 @@ class FilmorateKotlinApplicationTests {
             val exampleKey = EasyRandomUtil.easyRandom.nextObject(key)
 
             obj.put(key, value)
-/*            if(collections.contains(value)){
-                val exampleKey = EasyRandomUtil.easyRandom.objects(key::class.java, 1).toList().first()
-                val exampleValue = EasyRandomUtil.easyRandom.nextObject(value::class.java)
-                obj.put(exampleKey, exampleValue)
-            }*/
-
             return exampleKey
         }
 
+        val test = Test::class.java.declaredMethods[0].kotlinFunction?.valueParameters
+        fun createExampleObjClass(clazz: Class<*>): Any {
+            return EasyRandomUtil.easyRandom.nextObject(clazz)
+        }
 
-        val test = Test::class.java.declaredMethods[0].kotlinFunction?.returnType
+        println(test?.get(0)?.type?.jvmErasure?.java?.let { createExampleObjClass(it) })
+    }
+
+
+    @Test
+    fun `Поиск_всех_endpointов`(){
+
+        class Test {
+            @GetMapping("/v5")
+            @Operation(summary = "Метод, который возвращает коллекцию со сложным объектом")
+            fun returnCollectionComposite(model: Model ,film: Film, word: HashMap<User, Film>) : Map<User, Film> {
+                return emptyMap()
+            }
+
+            @GetMapping("/doc")
+            fun getDocumentation(model: Model): String {
+                val endPointFinder = ApplicationEndpointsFinder(MethodParser(GenerationJsonExamplesEndpoint()))
+                val generateDoc = DocumentationService(endPointFinder).buildDocumentation(model)
+                return generateDoc
+            }
+
+        }
+
+        val model = Test::class.java.declaredMethods[0]
+        val model2 = Test::class.java.declaredMethods[1]
+
+        val test = MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(model2).body
 
         println(test)
 

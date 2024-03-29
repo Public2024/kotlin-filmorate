@@ -3,14 +3,18 @@ package com.example.doc
 import com.example.doc.model.example.Film
 import com.example.doc.model.example.Genre
 import com.example.doc.model.example.User
+import com.example.doc.parsing.MethodParser
+import com.example.doc.service.ApplicationEndpointsFinder
+import com.example.doc.service.DocumentationService
 import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import java.time.LocalDateTime
 import java.util.HashMap
-import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.kotlinFunction
 
 class JsonExampleTest {
@@ -18,7 +22,8 @@ class JsonExampleTest {
     class Test1 {
         @GetMapping("/v")
         @Operation(summary = "")
-        fun testMethod(id: Int, film: List<Film>, word: HashMap<User, Film>, word2: Map<List<User>, List<Film>>): Map<String, Genre> {
+        fun testMethod(id: Int, film: List<Film>, word: HashMap<User,
+                Film>, word2: Map<List<User>, List<Film>>): Map<String, Genre> {
             return emptyMap()
         }
     }
@@ -33,52 +38,52 @@ class JsonExampleTest {
 
     @Test
     fun `представление_endpointa_без параметров`(){
-        val method = Test2::class.java.declaredMethods.find { it.name == "testMethod" }?.parameters
+        val method = Test2::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
         val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(method!!)
         Assertions.assertEquals ("" ,actualParameter)
     }
 
     @Test
     fun `представление_json_простого_объекта_параметра_endpoint`(){
-        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }!!.parameters
-        val parameter = listOf(method[0]).toTypedArray()
+        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
+        val parameter = listOf(method!![0])
         val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(parameter)
         Assertions.assertNotNull(actualParameter)
     }
 
     @Test
     fun `представление_json_Collection_объекта_параметра_endpoint`(){
-        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }!!.parameters
-        val parameter = listOf(method[1]).toTypedArray()
+        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
+        val parameter = listOf(method!![1])
         val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(parameter)
         Assertions.assertNotNull(actualParameter)
     }
 
     @Test
     fun `представление_json_Map_объекта_параметра_endpoint`(){
-        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }!!.parameters
-        val parameter = listOf(method[2]).toTypedArray()
+        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
+        val parameter = listOf(method!![2])
         val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(parameter)
         Assertions.assertNotNull(actualParameter)
     }
 
     @Test
     fun `представление_json_Map_объекта_параметра_endpoint_с_дженериками_Collection`(){
-        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }!!.parameters
-        val parameter = listOf(method[3]).toTypedArray()
+        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
+        val parameter = listOf(method!![3])
         val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(parameter)
         Assertions.assertNotNull(actualParameter)
     }
 
     @Test
     fun `представление_json_всех_параметров_метода`(){
-        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }!!.parameters
-        val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(method)
+        val method = Test1::class.java.declaredMethods.find { it.name == "testMethod" }?.kotlinFunction?.valueParameters
+        val actualParameter = GenerationJsonExamplesEndpoint().getJsonOfBody(method!!)
         Assertions.assertNotNull(actualParameter)
     }
 
     @Test
-    fun `представление_endpointa_без возвращаемого_параметра`(){
+    fun `представление_endpointa_без возвращаемого_результата`(){
         class Test3 {
             @GetMapping("/v")
             @Operation(summary = "")
@@ -101,7 +106,6 @@ class JsonExampleTest {
         }
         val method = Test4::class.java.declaredMethods.find { it.name == "testMethod" }!!.kotlinFunction?.returnType
         val actualResponse = GenerationJsonExamplesEndpoint().getJsonOfResponse(method!!)
-        println(actualResponse)
         Assertions.assertNotNull(actualResponse)
     }
 
@@ -144,7 +148,6 @@ class JsonExampleTest {
         }
         val method = Test7::class.java.declaredMethods.find { it.name == "testMethod" }!!.kotlinFunction?.returnType
         val actualResponse = GenerationJsonExamplesEndpoint().getJsonOfResponse(method!!)
-        println(actualResponse)
         Assertions.assertNotNull(actualResponse)
     }
 
