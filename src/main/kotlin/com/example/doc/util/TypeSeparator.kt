@@ -137,8 +137,8 @@ class TypeSeparator {
 
         private fun correctTypeName(type: List<String>): String {
             return type.filter { it.contains(Regex("[A-Z]")) }.map { it.replace(",", ";") }
-                .toString().replace(findCollectionWords, "Коллекция<")
-                .replace("""[,\]\[]""".toRegex(), "").replace(" ", "")
+                .toString().replace("""[,\]\[]""".toRegex(), "").replace(findCollectionWords, "[ ]<")
+                .replace(" ", "")
         }
 
         /*

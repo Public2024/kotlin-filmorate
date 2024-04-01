@@ -1,0 +1,32 @@
+table {
+          margin-top: 25px;
+          border-collapse: collapse;
+          background-color: yellow;
+          width: 1300px;
+        }
+       /* tr{
+            border-collapse: collapse;
+            width: 1300px;
+        }
+        tr.base_td {
+        background-color: yellow;
+        font-weight: 700;
+        }
+        td,
+        th {
+          padding: 1px;
+          *//* Поля вокруг содержимого таблицы *//*
+          border: 1px solid black;
+          *//* Параметры рамки *//*
+          word-break: break-word
+        }
+        th {
+          background: #ccc;
+          *//* Цвет фона *//*
+          text-align: center;
+          *//* Выравнивание по левому краю *//*
+        }
+        #name_endpoint {
+           color: blue;
+           padding-left: 11em;
+        }*/
