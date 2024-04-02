@@ -1,0 +1,49 @@
+.table_base {
+          padding: 1px;
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+        .table_parameters {
+          width: 800px;
+          table-layout: fixed;
+          padding-left: 3em;
+        }
+        .name_endpoint {
+           margin-top: 25px;
+           color: blue;
+           padding-left: 3em
+           }
+        .base_text{
+            margin-top: 5px;
+            padding-left: 3em;
+            font-weight: 700;
+            width: 300px
+        }
+        .information_text{
+           text-align: left;
+           font-family: Helvetica;
+           width: 400px
+        }
+        .tr_information {
+           height: 25px;
+        }
+        .json_example {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border: 1px double red;
+        }
+        .text_parameters_head {
+           text-align: left;
+           height: 25px
+           padding: 3px; /* Поля вокруг содержимого таблицы */
+           border: 1px solid black;
+           background-color: thistle;
+        }
+        .text_parameters {
+           text-align: left;
+           padding-left: 3em;
+           padding: 3px; /* Поля вокруг содержимого таблицы */
+           border: 1px solid black;
+        }

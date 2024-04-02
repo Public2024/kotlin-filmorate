@@ -3,54 +3,7 @@
 
 <head>
     <title>DocHTML</title>
-    <style>
-        .table_base {
-          padding: 1px;
-          border-collapse: collapse;
-          table-layout: fixed;
-
-        }
-        .name_endpoint {
-           margin-top: 25px;
-           color: blue;
-           padding-left: 3em
-           }
-        .base_text{
-            margin-top: 5px;
-            padding-left: 3em;
-            font-weight: 700;
-            width: 300px
-        }
-        .information_text{
-           text-align: left;
-           font-family: Helvetica;
-           width: 400px
-        }
-        .tr_information {
-           height: 25px;
-        }
-        .json_example {
-           word-wrap: break-word;
-           border: 1px solid red;
-           padding: 0 10px;
-           text-align: center;
-           width: 500px
-
-        }
-        .text_parameters_head {
-           text-align: left;
-           padding-left: 3em;
-           height: 25px
-        }
-        .text_parameters {
-           padding-left: 3em;
-        }
-        th {
-           text-align: left;
-           padding-left: 3em;
-           height: 25px
-        }
-    </style>
+    <link rel="stylesheet" href="/static/main.css">
 </head>
     <body>
     <table class ="table_base" th:each="Doc : ${DocumentationEndpoint}">
@@ -74,12 +27,20 @@
         <td class = "base_text"><span> Возвращаемый тип: </span></td>
         <td ><span th:text="${Doc.view.result?.type} ?: 'void' "> Type </span></td>
     </tr>
+            <table th:if = "${not #lists.isEmpty(Doc.view.response)}" style="padding-left: 3em; margin-top: 15px;">
+                <tr>
+                    <td>
+                        <div class="json_example" >
+                            <p th:text="'response: ' + ${Doc.view.response}"  style="white-space: pre"></p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
     <tr>
-        <span th:if="${not #lists.isEmpty(Doc.view.parameters)}">
-            <table class = "table_base">
+        <td>
+            <table th:if="${not #lists.isEmpty(Doc.view.parameters)}" class="table_parameters">
             <tr class="tr_information">
-                <td class="base_text"><span> Входящие параметры: </span></td>
-                <td class="information_text"><span> </span></td>
+                <td ><span> <b> Входящие параметры: </b>  </span></td>
             </tr>
             <tr>
                 <th class="text_parameters_head"> Имя параметра</th>
@@ -92,49 +53,45 @@
                 <td class="text_parameters"><span th:text="${parameter.required}"> Required </span></td>
             </tr>
         </table>
-        </span>
-        <span th:else></span>
+        </td>
     </tr>
     <tr>
-        <td>
-            <script id="json" src="${Doc.view.body}">
-            </script>
-            <script id = "json" src="${Doc.view.body}">
-                const jsonData = "${Doc.view.body}";
-                document.body.innerHTML = `<pre>${json, null, 2)}</pre>`;
-            </script>
-
-        </td>
-
-        <td > <pre> <code><span class = "json_example" th:text="${Doc.view.body}"> </span></code>  </pre> </td>
+        <table th:if = "${not #lists.isEmpty(Doc.view.body)}" style="padding-left: 3em; margin-top: 15px;">
+            <tr>
+                <td>
+                    <div class="json_example" >
+                        <p th:text="'body: ' + ${Doc.view.body}"  style="white-space: pre"></p>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </tr>
     <tr>
         <span class="base_text" th:if="${not #lists.isEmpty(Doc.view.classes)}">
-            <td ><span> Классы в endpoint: </span></td>
+            <td class="tr_information" ><span> Классы в endpoint: </span></td>
             <td class="information_text"><span> </span></td>
         </span>
             <span th:else></span>
     </tr>
     <tr>
-        <table class = "table_base" th:each="Class : ${Doc.view.classes}">
-
-            <tr>
+        <table th:each="Class : ${Doc.view.classes}" >
+            <tr class="tr_information" >
                 <td class="base_text" ><span> Наименование класса </span></td>
                 <td class="information_text"><span th:text="${Class.name}"> Наименование класса </span></td>
             </tr>
-            <tr>
+            <tr class="tr_information">
                 <td class="base_text"><span> Описание </span></td>
                 <td class="information_text"><span th:text="${Class.description}"> Описание </span></td>
             </tr>
             <tr>
                 <span th:if="${not #lists.isEmpty(Class.fields)}">
-                   <table class = "table_base">
+                   <table class = "table_parameters">
                     <tr >
-                        <th> Имя</th>
-                        <th> Тип</th>
-                        <th> Описание</th>
-                        <th> Пример</th>
-                        <th> Required</th>
+                        <th class="text_parameters_head"> Имя</th>
+                        <th class="text_parameters_head"> Тип</th>
+                        <th class="text_parameters_head"> Описание</th>
+                        <th class="text_parameters_head"> Пример</th>
+                        <th class="text_parameters_head"> Required</th>
                     </tr>
                     <tr th:each="field : ${Class.fields}">
                         <td class="text_parameters"><span th:text="${field.name}"> Наименование </span></td>

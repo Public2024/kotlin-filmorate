@@ -47,7 +47,7 @@ class GenerationJsonExamplesEndpoint {
 
     /*Сериализация объекта в Json */
     private fun toJson(obj: Any): String {
-        return SerializationUtil.globalJsonMapper.writeValueAsString(obj)
+        return SerializationUtil.globalJsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj)
     }
 
     /*Получение example Map объекта result*/

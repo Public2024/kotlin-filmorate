@@ -19,11 +19,11 @@ import java.time.LocalDate
 @Tag(name = "Контроллер фильмов", description = "API для CRUD фильмов")
 class FilmControllerExample {
 
-    @GetMapping("/endpoints")
+/*    @GetMapping("/endpoints")
     fun getEndPoints(): List<ApplicationEndpoint> {
         val endPointFinder = ApplicationEndpointsFinder(MethodParser(GenerationJsonExamplesEndpoint())).findAllEndpoints()
         return endPointFinder
-    }
+    }*/
 
     private val films = HashMap<Int, Film>(4)
 
