@@ -5,6 +5,7 @@ import com.example.doc.model.example.Genre
 import com.example.doc.model.example.User
 import com.example.doc.parsing.ClassParser
 import com.example.doc.parsing.ClassView
+import com.example.doc.parsing.FieldWithAnnotation
 import com.example.doc.parsing.MethodParser
 import com.example.doc.service.ApplicationEndpointsFinder
 import com.example.doc.service.DocumentationService
@@ -288,5 +289,20 @@ class DocApplicationTests {
         println(test)
 
 
+    }
+
+    @Test
+    fun `получение_примеров_полей_класса_с_easy_random`(){
+        val classView = ClassParser().extractClassInfo(User::class.java)
+
+        val example = EasyRandomUtil.easyRandom.nextObject(User::class.java.declaredFields.get(1).type).toString()
+
+        fun getExampleField(clazz: Class<*>) {
+            val fields = clazz.declaredFields
+            val examples = fields.map { EasyRandomUtil.easyRandom.nextObject(it.type) }
+            examples.forEach { println(it) }
+        }
+
+        println(classView)
     }
 }

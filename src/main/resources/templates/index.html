@@ -10,11 +10,11 @@
     <h1 class= "name_endpoint"> <span th:text="${Doc.view.name}"> </span> </h1>
     <tr class="tr_information" th:object="${Doc.endpoint}">
         <td class="base_text"><span > Описание: </span></td>
-        <td class="information_text"><span th:text="${Doc.view.description} ?: 'no description' "> Description </span></td>
+        <td class="information_text"><span th:text="${Doc.view.description} ?: 'нет описания' "> Description </span></td>
     </tr>
     <tr class="tr_information"  th:object = "${Doc.endpoint}">
         <td class = "base_text"><span> Дополнительная информация: </span></td>
-        <td class = "information_text"><span th:text="${Doc.view.summary} ?: 'no summary' "> Summary </span></td>
+        <td class = "information_text"><span th:text="${Doc.view.summary} ?: 'нет дополнительной информации' "> Summary </span></td>
     </tr>
     <tr class="tr_information" th:object = "${Doc.endpoint}">
         <td class = "base_text"><span> Расположение endpoint:  </span></td>
@@ -81,7 +81,7 @@
             </tr>
             <tr class="tr_information">
                 <td class="base_text"><span> Описание </span></td>
-                <td class="information_text"><span th:text="${Class.description}"> Описание </span></td>
+                <td class="information_text"><span th:text="${Class.description} ?: 'нет описания'"> Описание </span></td>
             </tr>
             <tr>
                 <span th:if="${not #lists.isEmpty(Class.fields)}">

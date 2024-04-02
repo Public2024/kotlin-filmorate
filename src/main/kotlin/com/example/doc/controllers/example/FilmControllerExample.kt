@@ -32,11 +32,11 @@ class FilmControllerExample {
     /**
      * Функция получения всех фильмов
      */
-/*    @GetMapping("/all")
+    @GetMapping("/all")
     @Operation(summary = "Показать все фильмы", description = "Показать все фильмы")
     fun returnAllFilms(): ArrayList<Film> {
         return ArrayList(films.values)
-    }*/
+    }
 
     /**
      * Функция создания нового фильма
@@ -59,7 +59,7 @@ class FilmControllerExample {
     /**
      * Функция изменения фильма
      */
-   /* @PutMapping
+    @PutMapping
     @Operation(summary = "Изменить фильм")
     fun changeFilm(@RequestParam(required = true) @RequestBody film: Film): Film {
         validateFilm(film)
@@ -68,7 +68,7 @@ class FilmControllerExample {
         else
             throw Exception("Неверный ID")
         return film
-    }*/
+    }
 
     /**
      * @suppress

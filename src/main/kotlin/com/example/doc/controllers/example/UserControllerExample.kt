@@ -23,15 +23,15 @@ class UserControllerExample {
     /**
      * Функция получения всех пользователей
      */
-   /* @GetMapping
+    @GetMapping
     @Operation(description = "Показать всех пользователей")
     fun returnAllUsers(): ArrayList<User> {
         return ArrayList(users.values)
     }
 
-    *//**
+    /**
      * Функция добавление нового пользователя
-     *//*
+     */
     @PostMapping
     @Operation(summary = "Добавить пользователя")
     fun createUser(@Parameter(required = true) @RequestBody user: User, number: Int): User {
@@ -40,9 +40,9 @@ class UserControllerExample {
         return user
     }
 
-    *//**
+    /**
      * Функция изменения пользователя
-     *//*
+     */
     @PutMapping
     @Operation(summary = "Обноваить пользователя")
     fun changeUser(@Parameter(required = true) @RequestBody user: User): User {
@@ -51,7 +51,7 @@ class UserControllerExample {
         else
             throw Exception("Неверный ID")
         return user;
-    }*/
+    }
 
     /**
      * @suppress

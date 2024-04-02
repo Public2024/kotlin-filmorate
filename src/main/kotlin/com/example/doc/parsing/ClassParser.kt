@@ -1,5 +1,6 @@
 package com.example.doc.parsing
 
+import com.example.doc.util.EasyRandomUtil
 import com.example.doc.util.TypeSeparator
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.stereotype.Component
@@ -32,7 +33,7 @@ class ClassParser() {
                 name = fieldWithAnnotation.field.name,
                 type = TypeSeparator.parseFieldTypeName(fieldWithAnnotation.field),
                 description = fieldWithAnnotation.annotation?.description,
-                example = fieldWithAnnotation.annotation?.example,
+                example = getExampleField(fieldWithAnnotation),
                 required = fieldWithAnnotation.annotation?.required,
                 classOfEnum = extractClassEnum(fieldWithAnnotation),
                 classOfComposite = extractOfCompositeClass(fieldWithAnnotation.field)
@@ -51,7 +52,6 @@ class ClassParser() {
             }
         }
     }
-
 
     /*Получение объекта класса коллекции*/
     private fun extractObjOfCollection(field: Field): ClassView? {
@@ -73,6 +73,11 @@ class ClassParser() {
             fields.find { it.name == f.name }
                 ?.let { FieldWithAnnotation(field = it, annotation = f.annotation) }!!
         }
+    }
+
+    private fun getExampleField(field: FieldWithAnnotation): String? {
+        return if(field.annotation?.example!="") field.annotation?.example
+        else EasyRandomUtil.easyRandom.nextObject(field.field.type).toString()
     }
 
     /*
