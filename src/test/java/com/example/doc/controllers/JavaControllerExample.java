@@ -1,4 +1,4 @@
-package org.example.controllers;
+package com.example.doc.controllers;
 
 import com.example.doc.model.example.Genre;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/test")
-public class JavaControllerTest {
+public class JavaControllerExample {
 
     @GetMapping("/get")
     @Operation(summary = "Возврат коллекции")
@@ -33,10 +33,5 @@ public class JavaControllerTest {
     @Operation(description = "Обновление Composite Collection")
     public void updateCollection (Collection<Genre> collection){
     }
-
-
-
-
-
-
 }
+

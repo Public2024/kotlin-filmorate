@@ -1,9 +1,9 @@
 package com.example.doc.parsing
 
+import com.example.doc.controllers.JavaControllerExample
 import com.example.doc.model.example.Genre
 import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
-import org.example.controllers.JavaControllerTest
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf
 
-class MethodParserJavaTest {
+class MethodParserTest {
 
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_java_get_возврат_примтивной_коллекции`() {
-        val getMethod = JavaControllerTest()::class.java.methods.find { it.name == "returnList" }
+        val getMethod = JavaControllerExample()::class.java.methods.find { it.name == "returnList" }
         val actualGetMethod = getMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedGetMethod = MethodView(
             name = "returnList",
@@ -35,7 +35,7 @@ class MethodParserJavaTest {
 
     @Test
     fun `тест_java_post_добавление_композитного_класса`() {
-        val postMethod = JavaControllerTest()::class.java.methods.find { it.name == "addCompositeObj" }
+        val postMethod = JavaControllerExample()::class.java.methods.find { it.name == "addCompositeObj" }
         val actualPostMethod = postMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedPostMethod = MethodView(
             name = "addCompositeObj",
@@ -63,7 +63,7 @@ class MethodParserJavaTest {
 
     @Test
     fun `тест_java_delete_метод_void`() {
-        val deleteMethod = JavaControllerTest()::class.java.methods.find { it.name == "deleteById" }
+        val deleteMethod = JavaControllerExample()::class.java.methods.find { it.name == "deleteById" }
         val actualPostMethod =
             deleteMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedDeleteMethod = MethodView(
@@ -88,7 +88,7 @@ class MethodParserJavaTest {
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_java_put_метод_параметр_CompositeCollection`() {
-        val putMethod = JavaControllerTest()::class.java.methods.find { it.name == "updateCollection" }
+        val putMethod = JavaControllerExample()::class.java.methods.find { it.name == "updateCollection" }
         val actualPutMethod = putMethod?.let { MethodParser(GenerationJsonExamplesEndpoint()).extractMethodInfo(it) }
         val expectedPutMethod = MethodView(
             name = "updateCollection",

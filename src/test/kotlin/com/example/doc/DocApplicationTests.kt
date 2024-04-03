@@ -5,7 +5,6 @@ import com.example.doc.model.example.Genre
 import com.example.doc.model.example.User
 import com.example.doc.parsing.ClassParser
 import com.example.doc.parsing.ClassView
-import com.example.doc.parsing.FieldWithAnnotation
 import com.example.doc.parsing.MethodParser
 import com.example.doc.service.ApplicationEndpointsFinder
 import com.example.doc.service.DocumentationService
@@ -15,10 +14,6 @@ import com.example.doc.util.SerializationUtil.globalJsonMapper
 import com.fasterxml.jackson.core.type.TypeReference
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
-import net.bytebuddy.implementation.bytecode.assign.InstanceCheck
-import org.jeasy.random.EasyRandom
-import org.jeasy.random.randomizers.collection.MapRandomizer
-import org.jeasy.random.*
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.ui.Model
@@ -31,7 +26,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.reflect.KParameter
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction

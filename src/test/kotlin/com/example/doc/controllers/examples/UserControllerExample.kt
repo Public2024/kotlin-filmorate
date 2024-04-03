@@ -1,9 +1,8 @@
-package com.example.doc.controllers.example
+package com.example.doc.controllers.examples
 
 import com.example.doc.model.example.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 

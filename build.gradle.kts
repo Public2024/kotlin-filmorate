@@ -19,8 +19,8 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
+	testImplementation(kotlin("test"))
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -34,11 +34,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.genthz/genthz-core
 	implementation("org.genthz:genthz-core:3.1.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	// https://mvnrepository.com/artifact/uk.co.jemos.podam/podam
-	testImplementation("uk.co.jemos.podam:podam:7.1.0.RELEASE")
-
-
-
+	testImplementation("org.assertj:assertj-core:3.25.3")
 }
 
 tasks.withType<KotlinCompile> {
@@ -51,6 +47,4 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-
-
 

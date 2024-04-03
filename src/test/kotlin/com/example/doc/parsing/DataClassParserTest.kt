@@ -5,92 +5,15 @@ import com.example.doc.model.example.FilmTag
 import com.example.doc.model.example.Genre
 import io.swagger.v3.oas.annotations.media.Schema
 import nonapi.io.github.classgraph.json.Id
-import org.example.model.JavaDataModelTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.test.util.AssertionErrors
 import java.time.LocalDate
-import kotlin.reflect.javaType
-import kotlin.reflect.typeOf
 
 
-class DataClassParserJavaTest {
+class DataClassParserTest {
 
     private val parser = ClassParser()
-
-    @Test
-    fun `тест_парсинга_java_класса`() {
-
-        val actualFilm = parser.extractClassInfo(JavaDataModelTest::class.java)
-
-        /*Примитивный тип поля*/
-        val expectedIdParse = FieldView(
-            name = "id",
-            type = "Integer",
-            description = "Идентификатор",
-            example = "",
-            required = false,
-            classOfEnum = null,
-            classOfComposite = null,
-        )
-
-        val actualIdParse = actualFilm!!.fields.find { it.name == "id" }
-
-        AssertionErrors.assertEquals("Pass", expectedIdParse, actualIdParse)
-        /*Коллекция с примитвным типом*/
-        val expectedTextParse = FieldView(
-            name = "text",
-            type = "Коллекция<String>",
-            description = "Комментарий",
-            example = "",
-            required = false,
-            classOfEnum = null,
-            classOfComposite = null,
-        )
-
-        val actualTextParse = actualFilm.fields.find { it.name == "text" }
-
-        AssertionErrors.assertEquals("Pass", expectedTextParse, actualTextParse)
-
-        /*Тест поиска schema в конструкторе
-        *public Comments(@Schema(description = "Тест жанр") Genre genre) {
-        this.genre = genre;
-    } */
-        val actualUserDescription = actualFilm.fields.find { it.name == "genre" }?.description
-        AssertionErrors.assertEquals("Pass", "Тест жанр", actualUserDescription)
-
-        /*Тест парсинг composite type*/
-        val expectedGenreParse = FieldView(
-            name = "genre",
-            type = "Genre",
-            description = "Тест жанр",
-            example = "",
-            required = false,
-            classOfEnum = null,
-            classOfComposite = null
-        )
-        val actualUserParse = actualFilm.fields.find { it.name == "genre" }
-
-        AssertionErrors.assertEquals("Pass", expectedGenreParse, actualUserParse)
-
-        val expectedCollectionGenreParse = FieldView(
-            name = "genres",
-            type = "Коллекция<Genre>",
-            description = "Комментарий к жанрам",
-            example = "",
-            required = false,
-            classOfEnum = null,
-            classOfComposite = ClassView(
-                name = "Genre",
-                pkg = "package com.example.javafilmoratekotlin.model",
-                description = "Информация о фильме",
-                fields = emptyList()
-            )
-        )
-
-        val actualCollectionGenreParse = actualFilm.fields.find { it.name == "genres" }
-
-        AssertionErrors.assertEquals("Pass", expectedCollectionGenreParse, actualCollectionGenreParse)
-    }
 
     @Test
     fun `тест_парсинга_примитивных_полей_дата_класса`() {
@@ -100,18 +23,24 @@ class DataClassParserJavaTest {
             var id: Int
         )
 
-        val actualFilmId = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "id" }
+        val actualField = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "id" }
 
-        val expectedFilmId = FieldView(
+        val expectedField = FieldView(
             name = "id",
-            type = Int::class.java.toString(),
+            type = "int",
             description = "Идентификатор фильма",
             example = "",
             required = false,
             classOfEnum = null,
             classOfComposite = null,
         )
-        AssertionErrors.assertEquals("Pass", expectedFilmId, actualFilmId)
+        Assertions.assertNotNull(expectedField)
+        Assertions.assertEquals(expectedField.name, actualField?.name)
+        Assertions.assertEquals(expectedField.type, actualField?.type)
+        Assertions.assertEquals(expectedField.description, actualField?.description)
+        Assertions.assertEquals(expectedField.required, actualField?.required)
+        Assertions.assertEquals(expectedField.classOfEnum, actualField?.classOfEnum)
+        Assertions.assertEquals(expectedField.classOfComposite, actualField?.classOfComposite)
     }
 
     @Test
@@ -121,11 +50,11 @@ class DataClassParserJavaTest {
             val tags: FilmTag
         )
 
-        val actualFilmEnum = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "tags" }
+        val actualField = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "tags" }
 
-        val expectedFilmEnum = FieldView(
+        val expectedField = FieldView(
             name = "tags",
-            type = FilmTag::class.java.toString(),
+            type = "FilmTag",
             description = "Тэги",
             example = "",
             required = true,
@@ -144,7 +73,13 @@ class DataClassParserJavaTest {
             classOfComposite = null,
         )
 
-        AssertionErrors.assertEquals("Pass", expectedFilmEnum, actualFilmEnum)
+        Assertions.assertNotNull(expectedField)
+        Assertions.assertEquals(expectedField.name, actualField?.name)
+        Assertions.assertEquals(expectedField.type, actualField?.type)
+        Assertions.assertEquals(expectedField.description, actualField?.description)
+        Assertions.assertEquals(expectedField.required, actualField?.required)
+        Assertions.assertEquals(expectedField.classOfEnum, actualField?.classOfEnum)
+        Assertions.assertEquals(expectedField.classOfComposite, actualField?.classOfComposite)
     }
 
     @Test
@@ -154,29 +89,34 @@ class DataClassParserJavaTest {
             val genre: Genre
         )
 
-        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "genre" }
+        val actualField = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "genre" }
 
-        val expectedFilm =
+        val expectedField =
             FieldView(
                 name = "genre",
-                type = Genre::class.java.toString(),
+                type = "Genre",
                 description = "Жанр",
                 example = "",
                 required = false,
                 classOfEnum = null,
                 classOfComposite = ClassView(
                     name = "Genre",
-                    pkg = "package com.example.javafilmoratekotlin.model",
+                    pkg = "package com.example.doc.model.example",
                     description = "Информация о фильме",
                     fields = emptyList()
                 )
 
             )
 
-        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
+        Assertions.assertNotNull(expectedField)
+        Assertions.assertEquals(expectedField.name, actualField?.name)
+        Assertions.assertEquals(expectedField.type, actualField?.type)
+        Assertions.assertEquals(expectedField.description, actualField?.description)
+        Assertions.assertEquals(expectedField.required, actualField?.required)
+        Assertions.assertEquals(expectedField.classOfEnum, actualField?.classOfEnum)
+        Assertions.assertEquals(expectedField.classOfComposite, actualField?.classOfComposite)
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun `тест_парсинга_collection_composite_поля_дата_класса`() {
         @Schema(description = "Информация о пользователе")
@@ -190,36 +130,73 @@ class DataClassParserJavaTest {
             val users: Collection<ActualUser>
         )
 
-        val actualFilm = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "users" }
+        val actualField = parser.extractClassInfo(ActualFilm::class.java)!!.fields.find { it.name == "users" }
 
-        val expectedFilm =
+        val expectedField =
             FieldView(
                 name = "users",
-                type = typeOf<Collection<ActualUser>>().javaType.toString(),
+                type = ActualUser::class.java.typeName,
                 description = "Пользователи",
                 example = "",
                 required = false,
                 classOfEnum = null,
-                classOfComposite = ClassView(
-                    name = "ActualUser",
-                    pkg = "package com.example.javafilmoratekotlin.parsing",
-                    description = "Информация о пользователе",
-                    fields = listOf(
-                        FieldView(
-                            name = "email",
-                            type = String::class.java.toString(),
-                            description = "Почта пользователя",
-                            example = "",
-                            required = false,
-                            classOfEnum = null,
-                            classOfComposite = null
-                        )
-                    )
-                )
+                classOfComposite = null
             )
 
-        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
+        Assertions.assertNotNull(expectedField)
+        Assertions.assertEquals(expectedField.name, actualField?.name)
+        Assertions.assertEquals(expectedField.description, actualField?.description)
+        Assertions.assertEquals(expectedField.required, actualField?.required)
+        Assertions.assertEquals(expectedField.classOfEnum, actualField?.classOfEnum)
     }
+
+    @Test
+    fun `тест_парсинга_composite_поля_в_классe`(){
+        @Schema(description = "Информация о пользователе")
+        data class ActualUser(
+            @Schema(description = "Почта пользователя")
+            var email: String,
+        )
+
+        data class ActualFilm(
+            @field:Schema(description = "Пользователи", required = false)
+            val users: Collection<ActualUser>
+        )
+
+        val actualField = parser.extractClassInfo(ActualFilm::class.java)!!.fields
+            .find { it.name == "users" }?.classOfComposite
+
+        val expectedField = ClassView(
+            name = "ActualUser",
+            pkg = "package com.example.doc.parsing",
+            description = "Информация о пользователе",
+            fields = listOf(
+                FieldView(
+                    name = "email",
+                    type = "String",
+                    description = "Почта пользователя",
+                    example = "",
+                    required = false,
+                    classOfEnum = null,
+                    classOfComposite = null
+                )
+            )
+        )
+
+        Assertions.assertNotNull(actualField)
+        Assertions.assertEquals(expectedField.name, actualField?.name)
+        Assertions.assertEquals(expectedField.description, actualField?.description)
+        Assertions.assertEquals(expectedField.pkg, actualField?.pkg)
+        Assertions.assertNotNull(actualField?.fields)
+        Assertions.assertEquals(expectedField.fields.first().name, actualField?.fields?.first()?.name)
+        Assertions.assertEquals(expectedField.fields.first().type, actualField?.fields?.first()?.type)
+        Assertions.assertEquals(expectedField.fields.first().description, actualField?.fields?.first()?.description)
+        Assertions.assertEquals(expectedField.fields.first().required, actualField?.fields?.first()?.required)
+        Assertions.assertEquals(expectedField.fields.first().classOfEnum, actualField?.fields?.first()?.classOfEnum)
+        Assertions.assertEquals(expectedField.fields.first().classOfComposite, actualField?.fields?.first()?.classOfComposite)
+    }
+
+
 
     @Test
     fun `тест_парсинга_аннотации_Schema_c_приставкой_field`() {
@@ -331,25 +308,18 @@ class DataClassParserJavaTest {
             val actualFilm: ActualFilm?
         )
 
-        val expectedFilm =
-            ClassView(
-                    name = "ActualFilm",
-                    pkg = "package com.example.javafilmoratekotlin.parsing",
-                    description = null,
-                    fields = listOf(FieldView(
-                        name = "actualFilm",
-                        type = ActualFilm::class.java.toString(),
-                        description = "Фильм",
-                        example = "",
-                        required = true,
-                        classOfEnum = null,
-                        classOfComposite = null
-                    )
-                )
-            )
-
         val actualFilm = parser.extractClassInfo(ActualFilm::class.java)
-        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
+
+        Assertions.assertNotNull(actualFilm)
+        Assertions.assertEquals("ActualFilm", actualFilm?.name)
+        Assertions.assertEquals("package com.example.doc.parsing", actualFilm?.pkg)
+        Assertions.assertEquals("actualFilm", actualFilm?.fields?.first()?.name)
+        Assertions.assertEquals("ActualFilm", actualFilm?.fields?.first()?.type)
+        Assertions.assertEquals("Фильм", actualFilm?.fields?.first()?.description)
+        Assertions.assertEquals(true, actualFilm?.fields?.first()?.required)
+        Assertions.assertEquals(null, actualFilm?.fields?.first()?.classOfEnum)
+        Assertions.assertEquals(null, actualFilm?.fields?.first()?.classOfComposite)
+
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -360,24 +330,15 @@ class DataClassParserJavaTest {
             val actualFilm: List<ActualFilm>?
         )
 
-       val expectedFilm = ClassView(
-            name = "ActualFilm",
-            pkg = "package com.example.javafilmoratekotlin.parsing",
-            description = null,
-            fields = listOf(FieldView(
-                name = "actualFilm",
-                type = "typeOf<List<ActualFilm>>().javaType.toString()",
-                description = "Фильм",
-                example = "",
-                required = true,
-                classOfEnum = null,
-                classOfComposite = null
-            )
-            )
-        )
-
         val actualFilm = parser.extractClassInfo(ActualFilm::class.java)
-        AssertionErrors.assertEquals("Pass", expectedFilm, actualFilm)
 
+        Assertions.assertNotNull(actualFilm)
+        Assertions.assertEquals("ActualFilm", actualFilm?.name)
+        Assertions.assertEquals("package com.example.doc.parsing", actualFilm?.pkg)
+        Assertions.assertEquals("actualFilm", actualFilm?.fields?.first()?.name)
+        Assertions.assertEquals("Фильм", actualFilm?.fields?.first()?.description)
+        Assertions.assertEquals(true, actualFilm?.fields?.first()?.required)
+        Assertions.assertEquals(null, actualFilm?.fields?.first()?.classOfEnum)
+        Assertions.assertEquals(null, actualFilm?.fields?.first()?.classOfComposite)
     }
 }

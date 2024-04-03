@@ -1,29 +1,21 @@
-package com.example.doc.controllers.example
+package com.example.doc.controllers.examples
 
 import com.example.doc.model.example.Film
 import com.example.doc.model.example.User
-import com.example.doc.parsing.MethodParser
-import com.example.doc.service.ApplicationEndpoint
-import com.example.doc.service.ApplicationEndpointsFinder
-import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
+
 /**
  * @property FilmControllerExample - контроллер фильмов
  */
+
 @RestController
 @RequestMapping()
 @Tag(name = "Контроллер фильмов", description = "API для CRUD фильмов")
 class FilmControllerExample {
-
-/*    @GetMapping("/endpoints")
-    fun getEndPoints(): List<ApplicationEndpoint> {
-        val endPointFinder = ApplicationEndpointsFinder(MethodParser(GenerationJsonExamplesEndpoint())).findAllEndpoints()
-        return endPointFinder
-    }*/
 
     private val films = HashMap<Int, Film>(4)
 
@@ -85,5 +77,4 @@ class FilmControllerExample {
     fun generateId(): Int {
         return id.inc()
     }
-
 }

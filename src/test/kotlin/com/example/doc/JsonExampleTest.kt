@@ -3,14 +3,10 @@ package com.example.doc
 import com.example.doc.model.example.Film
 import com.example.doc.model.example.Genre
 import com.example.doc.model.example.User
-import com.example.doc.parsing.MethodParser
-import com.example.doc.service.ApplicationEndpointsFinder
-import com.example.doc.service.DocumentationService
 import com.example.doc.service.GenerationJsonExamplesEndpoint
 import io.swagger.v3.oas.annotations.Operation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import java.time.LocalDateTime
 import java.util.HashMap
